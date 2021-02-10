@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Meal_Planner.Models
 {
-    public class BasicMealModel
+    public class MealModel
     {
         public int Id { get; set; }
         public string title { get; set; }

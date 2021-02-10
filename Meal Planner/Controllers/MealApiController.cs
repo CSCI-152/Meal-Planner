@@ -30,7 +30,7 @@ namespace Meal_Planner.Controllers
 
         // POST api/meals
         [HttpPost]
-        public ActionResult Post([FromBody] BasicMealModel value)
+        public ActionResult Post([FromBody] MealModel value)
         {
             return Ok(value);
         }

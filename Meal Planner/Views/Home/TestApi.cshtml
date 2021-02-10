@@ -60,24 +60,23 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script lang="en" type="text/javascript">
-
-    function SaveAPI(obj) {
-        $.ajax({
-            type: "POST",
-            async: true,
-            cache: false,
-            url: '/api/meals',
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify({ title: obj.title, instructions: obj.instructions }),
-            success: function (result) {
-                console.log('Saved: ' + result);//debug
-            },
-            error: function (xhr) {
-                console.log(xhr.responseText);
-                alert('Error! ' + xhr.responseText);
-            }
-        });
-    }
+        function SaveAPI(obj) {
+            $.ajax({
+                type: "POST",
+                async: true,
+                cache: false,
+                url: '/api/meals',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ title: obj.title, instructions: obj.instructions }),
+                success: function (result) {
+                    console.log('Saved: ' + result);//debug
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                    alert('Error! ' + xhr.responseText);
+                }
+            });
+        }
 
         function GetRandomRecipes() {
             const settings = {

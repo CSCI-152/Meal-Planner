@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@using Meal_Planner.Models
+@inject SignInManager<UserModel> SignInManager
+@inject UserManager<UserModel> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
