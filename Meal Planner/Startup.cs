@@ -49,7 +49,8 @@ namespace Meal_Planner
                 options.Cookie.Name = "MealPlan";
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-                options.LoginPath = "/Identity/Account/Login";
+                options.LoginPath = "/Login";
+                options.LogoutPath = "/Logout";
                 options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
                 options.SlidingExpiration = true;
             });
@@ -94,11 +95,15 @@ namespace Meal_Planner
 
             app.UseEndpoints(endpoints =>
             {
+                /*endpoints.MapControllerRoute(
+                    name: "identity",
+                    pattern: "Identity/Account",
+                    defaults: new { controller = "Identity", action = "Login" });*/
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
-                // endpoints.MapControllers();
+                //endpoints.MapControllers();
             });
         }
     }

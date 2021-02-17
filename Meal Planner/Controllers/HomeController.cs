@@ -24,8 +24,14 @@ namespace Meal_Planner.Controllers
         {
             return View();
         }
+
         [AllowAnonymous]
-        public IActionResult Privacy()
+        public IActionResult Knowledge()
+        {
+            return View();
+        }
+
+        public IActionResult Dashboard()
         {
             return View();
         }
