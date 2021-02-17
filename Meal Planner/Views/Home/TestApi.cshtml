@@ -1,83 +1,40 @@
 ﻿@*API found here: https://english.api.rakuten.net/spoonacular/api/recipe-food-nutrition *@
 @{
-    Layout = null;
+    ViewData["Title"] = "Testing Spoonacular API";
 }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Testing Spoonacular API</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Meal_Planner</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TestApi">Test Spoonacular API</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+<h1>@ViewData["Title"]</h1>
+<div class="container">
+    <main role="main" class="pb-3">
+        <div>
+            <input type="button" id="btnLoad" class="btn btn-info"
+                   value="Load Random Recipes"
+                   onclick="GetRandomRecipes()" />
+            <a class="btn btn-dark" asp-area="" asp-controller="Home" asp-action="TestApi">Clear </a>
+            <div id="btnOutput">
+                <ol id="recipes"></ol>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            <div>
-                <input type="button" id="btnLoad" class="btn btn-info"
-                       value="Load Random Recipes"
-                       onclick="GetRandomRecipes()" />
-                <a class="btn btn-dark" asp-area="" asp-controller="Home" asp-action="TestApi">Clear </a>
-                <div id="btnOutput">
-                    <ol id="recipes"></ol>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - Meal_Planner - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    </main>
+</div>
+@section Scripts {
     <script lang="en" type="text/javascript">
-
-    function SaveAPI(obj) {
-        $.ajax({
-            type: "POST",
-            async: true,
-            cache: false,
-            url: '/api/meals',
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify({ title: obj.title, instructions: obj.instructions }),
-            success: function (result) {
-                console.log('Saved: ' + result);//debug
-            },
-            error: function (xhr) {
-                console.log(xhr.responseText);
-                alert('Error! ' + xhr.responseText);
-            }
-        });
-    }
+        function SaveAPI(obj) {
+            $.ajax({
+                type: "POST",
+                async: true,
+                cache: false,
+                url: '/api/meals',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ title: obj.title, instructions: obj.instructions }),
+                success: function (result) {
+                    console.log('Saved: ' + result);//debug
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                    alert('Error! ' + xhr.responseText);
+                }
+            });
+        }
 
         function GetRandomRecipes() {
             const settings = {
@@ -98,7 +55,7 @@
                 var results;
                 //Loop through all recipes
                 response.recipes.forEach(function (element) {
-                     results = "<h2><li><a href=" + element.spoonacularSourceUrl + ">" + element.title + "</h2></a></br><img src=" + element.image + " height=220 width=350></br>";
+                    results = "<h2><li><a href=" + element.spoonacularSourceUrl + ">" + element.title + "</h2></a></br><img src=" + element.image + " height=220 width=350></br>";
                     //Loop through each recipe ingredients
                     results += "<h3>Ingredients:</h3>";
                     element.extendedIngredients.forEach(function (ingredient) {
@@ -113,5 +70,4 @@
             });
         }
     </script>
-</body>
-</html>
+}

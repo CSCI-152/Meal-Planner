@@ -1,4 +1,5 @@
 ﻿using Meal_Planner.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,12 +19,19 @@ namespace Meal_Planner.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous] //Allow the user to see the page without logging in
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        [AllowAnonymous]
+        public IActionResult Knowledge()
+        {
+            return View();
+        }
+
+        public IActionResult Dashboard()
         {
             return View();
         }
