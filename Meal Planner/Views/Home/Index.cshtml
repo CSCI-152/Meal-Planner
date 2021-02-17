@@ -1,8 +1,50 @@
-﻿@{
+﻿@{ // Needs Carousel rework
     ViewData["Title"] = "Home Page";
 }
-
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Meal planning made simple</h1>
+</div>
+<br />
+<div class="carousel slide" id="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#carousel" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel" data-slide-to="1"></li>
+        <li data-target="#carousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        @for (int i = 1; i < 4; i++)
+        {
+        <div class="carousel-item @(i == 1 ? Html.Raw("active") : "")">
+            <img class="d-block w-100" alt="Carousel Bootstrap First" src="/img/index@(i).jpg" />
+            <div class="carousel-caption d-none d-md-block">
+                <h4>
+                    @i
+                </h4>
+                <p>
+                    @i
+                </p>
+            </div>
+        </div>
+        }
+    </div> 
+    <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hiden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+<br />
+<div class="jumbotron">
+    <h2>
+        Are you tired of figuring out what to eat?
+    </h2>
+    <p>
+        This is a meal planning website containing everything needed to create healthy and sustainable meal plans. We encourage you to learn more about <a class="btn-link" asp-area="" asp-controller="Home" asp-action="Knowledge">diets and nutrition here</a>. To being your journey on creating your own meal plans <a class="btn-link" asp-area="" asp-controller="Home" asp-action="Dashboard">start here</a>.
+    </p>
+    <p>
+        <a class="btn btn-primary btn-large" asp-area="" asp-controller="Home" asp-action="Dashboard">Register</a>
+    </p>
 </div>

@@ -16,7 +16,6 @@ namespace Meal_Planner.Models
         public int Age { get; set; }
         public int Height { get; set; }
         public int Weight { get; set; }
-
         [MaxLength(100)]
         public string DietPreferences { get; set; }
     }
