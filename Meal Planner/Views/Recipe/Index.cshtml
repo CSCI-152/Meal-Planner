@@ -7,27 +7,38 @@
         <p class="lead text-muted">Find recipes to add to your meal planner.</p>
         <form>
             <div class="input-group">
-                <select class="custom-select d-block" id="diet-option" required>
+                <select class="custom-select d-block" id="diet-restrictions" required>
                     <option value="(None)">Diet Restrictions</option>
                     <option>(None)</option>
-                    <option>Atkins friendly</option>
-                    <option>Keto friendly</option>
-                    <option>Vegan friendly</option>
+                    <option>Gluten Free</option>
+                    <option>Ketogenic</option>
+                    <option>Vegetarian</option>
+                    <option>Lacto-Vegetarian</option>
+                    <option>Ovo-Vegetarian</option>
+                    <option>Vegan</option>
+                    <option>Pescetarian</option>
+                    <option>Paleo</option>
+                    <option>Primal</option>
+                    <option>Whole30</option>
                 </select>
                 <div class="invalid-feedback">
                     Please select a valid diet restriction
                 </div>
-                <select class="custom-select d-block" id="state" required>
-                    <option value="">Any other options?</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
+                <select class="custom-select d-block" id="intolerances" required>
+                    <option value="">Intolerances</option>
+                    <option>Dairy</option>
+                    <option>Peanut</option>
+                    <option>Soy</option>
+                    <option>Gluten</option>
+                    <option>Wheat</option>
+                    <option>Seafood</option>
+                    <option>Shellfish</option>
                 </select>
-                <input type="text" class="form-control w-50" placeholder="Search for...">
+                <input type="text" class="form-control w-50" id="search-recipes" placeholder="Search for...">
             </div>
             <p>
                 <a href="#" class="btn btn-primary my-2">Go to planner</a>
-                <a href="#" class="btn btn-secondary my-2">Search</a>
+                <a href="#" id="search-btn" class="btn btn-secondary my-2">Search</a>
             </p>
             <div class="custom-control custom-checkbox text-left">
                 <input type="checkbox" class="custom-control-input" id="customCheck1">
@@ -39,30 +50,90 @@
 
 <div class="album py-5">
     <div class="container">
-        <div class="row">
-            @for (int i = 0; i < 9; i++) // https://getbootstrap.com/docs/4.3/components/card/
-            {
-                <div class="col-md-4">
-                    <div class="card mb-4 shadow-sm">
-                        <img class="card-img-top" src="https://puu.sh/Hhr5S.png" alt="Card image cap">
-                        <div class="card-img-overlay">
-                            <h5 class="card-title">Test overlay</h5>
-                            <p class="card-text align-content-end">Quick Add</p>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-primary">View</button>
-                                    <button type="button" class="btn btn-sm btn-outline-success">Quick add</button>
+        <div class="row" id="search-results">
+            @*for (int i = 0; i < 9; i++) // https://getbootstrap.com/docs/4.3/components/card/
+                {
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <img class="card-img-top" src="https://puu.sh/Hhr5S.png" alt="Card image cap">
+                            <div class="card-img-overlay">
+                                <h5 class="card-title">Test overlay</h5>
+                                <p class="card-text align-content-end">Quick Add</p>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary">View</button>
+                                        <button type="button" class="btn btn-sm btn-outline-success">Quick add</button>
+                                    </div>
+                                    <small class="text-muted">9 mins</small>
                                 </div>
-                                <small class="text-muted">9 mins</small>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
+                }*@
         </div>
     </div>
 </div>
 <a asp-action="Index">Back to search</a>
+@section Scripts {
+    <script lang="en" type="text/javascript">
+        $(document).ready(function () {
+            $('#search-btn').click(function () {
+                searchRecipes();
+            });
+        });
+
+        function searchRecipes() {//query=burger&diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C%20gluten&number=10&offset=0&type=main%20course
+            var restrictions = $("#diet-restrictions option:selected").text();
+            var intolerances = $("#intolerances option:selected").text();
+            var queryString = $("#search-recipes").val();
+            var params = { 'query': queryString, 'diet': restrictions, 'intolerances': intolerances };
+
+            var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search?' + jQuery.param(params);
+            const settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                    "x-rapidapi-key": "4bf3ec1e54msh58354a1c923bbfap1eb315jsn2b0938461fb2",
+                    "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+                }
+            };
+
+            //Reset the results page
+            $("#search-results").empty();
+
+            $.ajax(settings).done(function (response) {
+                console.log(response); //log to browser console the api data
+
+                var searchResult = document.getElementById("search-results");
+                var results;
+                console.log("Results: " + response.totalResults);
+                if (response.totalResults === 0) {
+                    searchResult.insertAdjacentHTML('beforeend', "<h4>No results</h4>");
+                }
+                //Loop through all recipes
+                response.results.forEach(function (element) {
+                    /*
+                     * response.baseUri;
+                     * response.totalResults
+                     * element
+                     * id
+                     * image
+                     * readyinminutes
+                     * servings
+                     * sourceurl
+                     * title
+                     */
+                    console.log("Results: " + response.totalResults);
+                    results = "<div class=\"col-md-4\"> <div class=\"card mb-4 shadow-sm\"> <img class=\"card-img-top\" src=" + response.baseUri + element.image + " alt=" + element.title + "> <div class=\"card-img-overlay\"> <h5 class=\"card-title\">" + element.readyInMinutes + "</h5> <p class=\"card-text align-content-end\">Quick Add</p> </div> <div class=\"card-body\"> <p class=\"card-text\">" + element.title + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <button type=\"button\" class=\"btn btn-sm btn-outline-primary\">View</button> <button type=\"button\" class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in " + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
+                    //Insert to page HTML
+                    searchResult.insertAdjacentHTML('beforeend', results);
+                });
+            });
+        }
+    </script>
+}
