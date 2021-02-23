@@ -35,7 +35,7 @@ namespace Meal_Planner.Controllers
                 return NotFound();
             }
 
-            var recipeModel = await _context.RecipeModel
+            var recipeModel = await _context.RecipeModel.Include(a => a.ExtendedIngredients)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (recipeModel == null)
             {
@@ -55,6 +55,7 @@ namespace Meal_Planner.Controllers
                     response.EnsureSuccessStatusCode();
                     var result = await response.Content.ReadAsStringAsync();
                     RecipeModel stolen = JsonConvert.DeserializeObject<RecipeModel>(result);
+                    
                     _context.Add(stolen);
                     await _context.SaveChangesAsync();
                     //Add result to our database

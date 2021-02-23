@@ -5,11 +5,10 @@
     <div class="container">
         <h1 class="jumbotron-heading">Recipe Search</h1>
         <p class="lead text-muted">Find recipes to add to your meal planner.</p>
-        <form>
+        <form action="javascript:void(0);" onsubmit="searchRecipes()">
             <div class="input-group">
-                <select class="custom-select d-block" id="diet-restrictions" required>
-                    <option value="(None)">Diet Restrictions</option>
-                    <option>(None)</option>
+                <select class="custom-select d-block" id="diet-restrictions">
+                    <option value="">Diet Restrictions</option>
                     <option>Gluten Free</option>
                     <option>Ketogenic</option>
                     <option>Vegetarian</option>
@@ -21,10 +20,7 @@
                     <option>Primal</option>
                     <option>Whole30</option>
                 </select>
-                <div class="invalid-feedback">
-                    Please select a valid diet restriction
-                </div>
-                <select class="custom-select d-block" id="intolerances" required>
+                <select class="custom-select d-block" id="intolerances">
                     <option value="">Intolerances</option>
                     <option>Dairy</option>
                     <option>Peanut</option>
@@ -129,7 +125,7 @@
                      * title
                      */
                     console.log("Results: " + response.totalResults);
-                    results = "<div class=\"col-md-4\"> <div class=\"card mb-4 shadow-sm\"> <img class=\"card-img-top\" src=" + response.baseUri + element.image + " alt=" + element.title + "> <div class=\"card-img-overlay\"> <h5 class=\"card-title\">" + element.readyInMinutes + "</h5> <p class=\"card-text align-content-end\">Quick Add</p> </div> <div class=\"card-body\"> <p class=\"card-text\">" + element.title + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <button type=\"button\" class=\"btn btn-sm btn-outline-primary\">View</button> <button type=\"button\" class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in " + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
+                    results = "<div class=\"col-md-4\"> <div class=\"card mb-4 shadow-sm\"> <img class=\"card-img-top\" src=" + response.baseUri + element.image + " alt=" + element.title + "> <div class=\"card-img-overlay\"> <h5 class=\"card-title\">" + element.readyInMinutes + "</h5> <p class=\"card-text align-content-end\">Quick Add</p> </div> <div class=\"card-body\"> <p class=\"card-text\">" + element.title + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a href=\"/recipe/details/"+ element.id +"\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in " + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
                     //Insert to page HTML
                     searchResult.insertAdjacentHTML('beforeend', results);
                 });

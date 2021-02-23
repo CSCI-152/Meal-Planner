@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Meal_Planner.Models
 {
-    public class IngredientsModel
+    public class IngredientsModel //Rework to handle a nested model https://stackoverflow.com/questions/50653807/retrieve-value-from-nested-json
     {
         [Key]
         public Guid IngredientId { get; set; }

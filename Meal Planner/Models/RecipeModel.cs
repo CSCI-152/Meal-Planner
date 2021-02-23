@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -37,6 +38,8 @@ namespace Meal_Planner.Models
         public bool Ketogenic { get; set; }
         [MaxLength(4000)]
         public string Instructions { get; set; }
+        [JsonProperty("extendedIngredients")]
+        [Display(Name ="Ingredients")]
         public List<IngredientsModel> ExtendedIngredients { get; set; }
     }
 }
