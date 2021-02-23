@@ -9,20 +9,28 @@ using Meal_Planner.Data;
 using Meal_Planner.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Options;
 
 namespace Meal_Planner.Controllers
 {
     public class RecipeController : Controller
     {
+        private readonly SpoonacularApi _options;
         private readonly ApplicationDbContext _context;
 
-        public RecipeController(ApplicationDbContext context)
+        public RecipeController(IOptions<SpoonacularApi> options, ApplicationDbContext context)
         {
+            _options = options.Value;
             _context = context;
         }
 
         // GET: Recipe
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
+        {
+            return View(_options);
+        }
+
+        public async Task<IActionResult> Index2()
         {
             return View(await _context.RecipeModel.ToListAsync());
         }
@@ -46,8 +54,10 @@ namespace Meal_Planner.Controllers
                     RequestUri = new Uri("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/" + id + "/information"),
                     Headers =
                     {
-                        { "x-rapidapi-key", "4bf3ec1e54msh58354a1c923bbfap1eb315jsn2b0938461fb2" },
-                        { "x-rapidapi-host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com" },
+                        { _options.Key.KeyHeader, _options.Key.ApiKey },
+                        {_options.Key.HostHeader, _options.Key.Host },
+                        //{ "x-rapidapi-key", "4bf3ec1e54msh58354a1c923bbfap1eb315jsn2b0938461fb2" },
+                        //{ "x-rapidapi-host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com" },
                     },
                 };
                 using (var response = await client.SendAsync(request))
@@ -55,8 +65,8 @@ namespace Meal_Planner.Controllers
                     response.EnsureSuccessStatusCode();
                     var result = await response.Content.ReadAsStringAsync();
                     RecipeModel stolen = JsonConvert.DeserializeObject<RecipeModel>(result);
-                    
-                    _context.Add(stolen);
+
+                    _context.Add(stolen);//details 966429 breaks model
                     await _context.SaveChangesAsync();
                     //Add result to our database
                     return View(stolen);

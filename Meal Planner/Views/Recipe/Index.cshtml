@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Meal_Planner.Models.SpoonacularApi
+@{
     ViewData["Title"] = "Create";
 }
 <section class="root jumbotron text-center">
@@ -94,8 +95,8 @@
                 "url": url,
                 "method": "GET",
                 "headers": {
-                    "x-rapidapi-key": "4bf3ec1e54msh58354a1c923bbfap1eb315jsn2b0938461fb2",
-                    "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+                    "@Model.Key.KeyHeader": "@Model.Key.ApiKey",
+                    "@Model.Key.HostHeader": "@Model.Key.Host"
                 }
             };
 
