@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Meal_Planner.Data;
 using Meal_Planner.Models;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace Meal_Planner.Controllers
 {
@@ -37,9 +39,29 @@ namespace Meal_Planner.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (recipeModel == null)
             {
-                return NotFound();
+                var client = new HttpClient();
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/" + id + "/information"),
+                    Headers =
+                    {
+                        { "x-rapidapi-key", "4bf3ec1e54msh58354a1c923bbfap1eb315jsn2b0938461fb2" },
+                        { "x-rapidapi-host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com" },
+                    },
+                };
+                using (var response = await client.SendAsync(request))
+                {
+                    response.EnsureSuccessStatusCode();
+                    var result = await response.Content.ReadAsStringAsync();
+                    RecipeModel stolen = JsonConvert.DeserializeObject<RecipeModel>(result);
+                    _context.Add(stolen);
+                    await _context.SaveChangesAsync();
+                    //Add result to our database
+                    return View(stolen);
+                }
             }
-
+            ViewData["Cache"] = "- Displaying from DB!";
             return View(recipeModel);
         }
 
@@ -54,7 +76,7 @@ namespace Meal_Planner.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RecipeId,Title,Image,Servings,ReadyInMinutes,SourceName,SourceUrl,AggregateLikes,HealthScore,PricePerServing,DairyFree,GlutenFree,Vegan,Vegetarian,Ketogenic,Instructions")] RecipeModel recipeModel)
+        public async Task<IActionResult> Create([Bind("RecipeId,Id,Title,Image,Servings,ReadyInMinutes,SourceName,SourceUrl,AggregateLikes,HealthScore,PricePerServing,DairyFree,GlutenFree,Vegan,Vegetarian,Ketogenic,Instructions")] RecipeModel recipeModel)
         {
             if (ModelState.IsValid)
             {

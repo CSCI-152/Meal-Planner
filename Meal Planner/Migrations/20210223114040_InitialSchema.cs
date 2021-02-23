@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Meal_Planner.Migrations
 {
-    public partial class IntialSchema : Migration
+    public partial class InitialSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -57,12 +57,39 @@ namespace Meal_Planner.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    instructions = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    title = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    instructions = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Meals", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RecipeModel",
+                columns: table => new
+                {
+                    RecipeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    Servings = table.Column<int>(type: "int", nullable: false),
+                    ReadyInMinutes = table.Column<int>(type: "int", nullable: false),
+                    SourceName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    SourceUrl = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    AggregateLikes = table.Column<int>(type: "int", nullable: false),
+                    HealthScore = table.Column<decimal>(type: "decimal(6,2)", nullable: false),
+                    PricePerServing = table.Column<decimal>(type: "decimal(6,2)", nullable: false),
+                    DairyFree = table.Column<bool>(type: "bit", nullable: false),
+                    GlutenFree = table.Column<bool>(type: "bit", nullable: false),
+                    Vegan = table.Column<bool>(type: "bit", nullable: false),
+                    Vegetarian = table.Column<bool>(type: "bit", nullable: false),
+                    Ketogenic = table.Column<bool>(type: "bit", nullable: false),
+                    Instructions = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecipeModel", x => x.RecipeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -171,6 +198,35 @@ namespace Meal_Planner.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "IngredientsModel",
+                columns: table => new
+                {
+                    IngredientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Aisle = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Amount = table.Column<decimal>(type: "decimal(6,2)", nullable: false),
+                    Consistency = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    MetricAmount = table.Column<int>(type: "int", nullable: false),
+                    MetricAmountUnit = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ImperialAmount = table.Column<int>(type: "int", nullable: false),
+                    ImperialUnit = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Original = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    RecipeModelRecipeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IngredientsModel", x => x.IngredientId);
+                    table.ForeignKey(
+                        name: "FK_IngredientsModel_RecipeModel_RecipeModelRecipeId",
+                        column: x => x.RecipeModelRecipeId,
+                        principalTable: "RecipeModel",
+                        principalColumn: "RecipeId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -209,6 +265,16 @@ namespace Meal_Planner.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IngredientsModel_RecipeModelRecipeId",
+                table: "IngredientsModel",
+                column: "RecipeModelRecipeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecipeModel_Id",
+                table: "RecipeModel",
+                column: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -229,6 +295,9 @@ namespace Meal_Planner.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "IngredientsModel");
+
+            migrationBuilder.DropTable(
                 name: "Meals");
 
             migrationBuilder.DropTable(
@@ -236,6 +305,9 @@ namespace Meal_Planner.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "RecipeModel");
         }
     }
 }
