@@ -32,6 +32,10 @@ namespace Meal_Planner
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
+            //Load AppSettings.json 'SpoonacularApi { }' block into the SpoonacularApi model
+            services.Configure<SpoonacularApi>(
+                        Configuration.GetSection("SpoonacularApi"));
+
             services.AddDefaultIdentity<UserModel>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;

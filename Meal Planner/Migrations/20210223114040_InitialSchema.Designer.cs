@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Meal_Planner.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210210223027_IntialSchema")]
-    partial class IntialSchema
+    [Migration("20210223114040_InitialSchema")]
+    partial class InitialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,6 +21,62 @@ namespace Meal_Planner.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
 
+            modelBuilder.Entity("Meal_Planner.Models.IngredientsModel", b =>
+                {
+                    b.Property<Guid>("IngredientId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Aisle")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(6,2)");
+
+                    b.Property<string>("Consistency")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Image")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("ImperialAmount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImperialUnit")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("MetricAmount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MetricAmountUnit")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Original")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid?>("RecipeModelRecipeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("IngredientId");
+
+                    b.HasIndex("RecipeModelRecipeId");
+
+                    b.ToTable("IngredientsModel");
+                });
+
             modelBuilder.Entity("Meal_Planner.Models.MealModel", b =>
                 {
                     b.Property<int>("Id")
@@ -29,14 +85,82 @@ namespace Meal_Planner.Migrations
                         .UseIdentityColumn();
 
                     b.Property<string>("instructions")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
 
                     b.Property<string>("title")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Meals");
+                });
+
+            modelBuilder.Entity("Meal_Planner.Models.RecipeModel", b =>
+                {
+                    b.Property<Guid>("RecipeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AggregateLikes")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("DairyFree")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("GlutenFree")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("HealthScore")
+                        .HasColumnType("decimal(6,2)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Image")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Instructions")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<bool>("Ketogenic")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("PricePerServing")
+                        .HasColumnType("decimal(6,2)");
+
+                    b.Property<int>("ReadyInMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Servings")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SourceName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("SourceUrl")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("Vegan")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Vegetarian")
+                        .HasColumnType("bit");
+
+                    b.HasKey("RecipeId");
+
+                    b.HasIndex("Id");
+
+                    b.ToTable("RecipeModel");
                 });
 
             modelBuilder.Entity("Meal_Planner.Models.UserModel", b =>
@@ -256,6 +380,13 @@ namespace Meal_Planner.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Meal_Planner.Models.IngredientsModel", b =>
+                {
+                    b.HasOne("Meal_Planner.Models.RecipeModel", null)
+                        .WithMany("ExtendedIngredients")
+                        .HasForeignKey("RecipeModelRecipeId");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -305,6 +436,11 @@ namespace Meal_Planner.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Meal_Planner.Models.RecipeModel", b =>
+                {
+                    b.Navigation("ExtendedIngredients");
                 });
 #pragma warning restore 612, 618
         }

@@ -21,18 +21,23 @@ namespace Meal_Planner.Migrations
 
             modelBuilder.Entity("Meal_Planner.Models.IngredientsModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("IngredientId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Aisle")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(6,2)");
+
                     b.Property<string>("Consistency")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.Property<string>("Image")
                         .HasMaxLength(100)
@@ -60,15 +65,12 @@ namespace Meal_Planner.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("RecipeModelRecipeId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("RecipeModelId")
-                        .HasColumnType("int");
+                    b.HasKey("IngredientId");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("RecipeModelId");
+                    b.HasIndex("RecipeModelRecipeId");
 
                     b.ToTable("IngredientsModel");
                 });
@@ -95,22 +97,24 @@ namespace Meal_Planner.Migrations
 
             modelBuilder.Entity("Meal_Planner.Models.RecipeModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("RecipeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AggregateLikes")
                         .HasColumnType("int");
 
-                    b.Property<int>("DairyFree")
-                        .HasColumnType("int");
+                    b.Property<bool>("DairyFree")
+                        .HasColumnType("bit");
 
-                    b.Property<int>("GlutenFree")
-                        .HasColumnType("int");
+                    b.Property<bool>("GlutenFree")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("HealthScore")
                         .HasColumnType("decimal(6,2)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.Property<string>("Image")
                         .HasMaxLength(250)
@@ -120,16 +124,13 @@ namespace Meal_Planner.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<int>("Ketogenic")
-                        .HasColumnType("int");
+                    b.Property<bool>("Ketogenic")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("PricePerServing")
                         .HasColumnType("decimal(6,2)");
 
                     b.Property<int>("ReadyInMinutes")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
                     b.Property<int>("Servings")
@@ -147,15 +148,15 @@ namespace Meal_Planner.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("Vegan")
-                        .HasColumnType("int");
+                    b.Property<bool>("Vegan")
+                        .HasColumnType("bit");
 
-                    b.Property<int>("Vegetarian")
-                        .HasColumnType("int");
+                    b.Property<bool>("Vegetarian")
+                        .HasColumnType("bit");
 
-                    b.HasKey("Id");
+                    b.HasKey("RecipeId");
 
-                    b.HasIndex("RecipeId");
+                    b.HasIndex("Id");
 
                     b.ToTable("RecipeModel");
                 });
@@ -380,8 +381,8 @@ namespace Meal_Planner.Migrations
             modelBuilder.Entity("Meal_Planner.Models.IngredientsModel", b =>
                 {
                     b.HasOne("Meal_Planner.Models.RecipeModel", null)
-                        .WithMany("Ingredients")
-                        .HasForeignKey("RecipeModelId");
+                        .WithMany("ExtendedIngredients")
+                        .HasForeignKey("RecipeModelRecipeId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -437,7 +438,7 @@ namespace Meal_Planner.Migrations
 
             modelBuilder.Entity("Meal_Planner.Models.RecipeModel", b =>
                 {
-                    b.Navigation("Ingredients");
+                    b.Navigation("ExtendedIngredients");
                 });
 #pragma warning restore 612, 618
         }
