@@ -2,14 +2,16 @@
 @{
     ViewData["Title"] = "Create";
 }
+@section Style {
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-select.min.css" />
+}
 <section class="root jumbotron text-center">
     <div class="container">
         <h1 class="jumbotron-heading">Recipe Search</h1>
         <p class="lead text-muted">Find recipes to add to your meal planner.</p>
         <form action="javascript:void(0);" onsubmit="searchRecipes()">
             <div class="input-group">
-                <select class="custom-select d-block" id="diet-restrictions">
-                    <option value="">Diet Restrictions</option>
+                <select class="form-control selectpicker mx-sm-1 d-block" id="diet-restrictions" title="Diet Restrictions">
                     <option>Gluten Free</option>
                     <option>Ketogenic</option>
                     <option>Vegetarian</option>
@@ -21,8 +23,7 @@
                     <option>Primal</option>
                     <option>Whole30</option>
                 </select>
-                <select class="custom-select d-block" id="intolerances">
-                    <option value="">Intolerances</option>
+                <select multiple data-style="bg-white" class="form-control selectpicker" id="intolerances" title="Intolerances">
                     <option>Dairy</option>
                     <option>Peanut</option>
                     <option>Soy</option>
@@ -31,11 +32,11 @@
                     <option>Seafood</option>
                     <option>Shellfish</option>
                 </select>
-                <input type="text" class="form-control w-50" id="search-recipes" placeholder="Search for...">
+                <input type="text" class="form-control mx-sm-1 w-50" id="search-recipes" placeholder="Search for...">
             </div>
             <p>
-                <a href="#" class="btn btn-primary my-2">Go to planner</a>
-                <a href="#" id="search-btn" class="btn btn-secondary my-2">Search</a>
+                <a href="#" class="btn btn-outline-primary my-2">Go to planner</a>
+                <a href="#" id="search-btn" class="btn btn-primary my-2">Search</a>
             </p>
             <div class="custom-control custom-checkbox text-left">
                 <input type="checkbox" class="custom-control-input" id="customCheck1">
@@ -75,24 +76,41 @@
 </div>
 <a asp-action="Index">Back to search</a>
 @section Scripts {
+    <script src="~/lib/bootstrap/dist/js/bootstrap-select.min.js"></script>
     <script lang="en" type="text/javascript">
         $(document).ready(function () {
+            $('#intolerances').selectpicker();
             $('#search-btn').click(function () {
                 searchRecipes();
             });
         });
 
         function searchRecipes() {//query=burger&diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C%20gluten&number=10&offset=0&type=main%20course
+            var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search';
+            var paramUrl = new URL(url);
             var restrictions = $("#diet-restrictions option:selected").text();
-            var intolerances = $("#intolerances option:selected").text();
-            var queryString = $("#search-recipes").val();
-            var params = { 'query': queryString, 'diet': restrictions, 'intolerances': intolerances };
 
-            var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search?' + jQuery.param(params);
+            if (restrictions != "Diet Restrictions") {
+                paramUrl.searchParams.set("diet", restrictions);
+            }
+
+            var intolerances = $("#intolerances option:selected").map(function () {
+                return $(this).text();
+            }).get().join(',');
+            if (intolerances != "") {
+                paramUrl.searchParams.set("intolerances", intolerances);
+            }
+            var queryString = $("#search-recipes").val();
+            //var params = { 'query': queryString, 'diet': restrictions, 'intolerances': intolerances };
+            //var params = { 'query': queryString };
+
+            //var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search?' + jQuery.param(params);
+            paramUrl.searchParams.set("query", queryString);//Add query string
+            console.log("URL: " + paramUrl);
             const settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": url,
+                "url": paramUrl,
                 "method": "GET",
                 "headers": {
                     "@Model.Key.KeyHeader": "@Model.Key.ApiKey",
