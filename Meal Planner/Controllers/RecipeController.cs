@@ -7,20 +7,30 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Meal_Planner.Data;
 using Meal_Planner.Models;
+using System.Net.Http;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Options;
 
 namespace Meal_Planner.Controllers
 {
     public class RecipeController : Controller
     {
+        private readonly SpoonacularApi _options;
         private readonly ApplicationDbContext _context;
 
-        public RecipeController(ApplicationDbContext context)
+        public RecipeController(IOptions<SpoonacularApi> options, ApplicationDbContext context)
         {
+            _options = options.Value;
             _context = context;
         }
 
         // GET: Recipe
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
+        {
+            return View(_options);
+        }
+
+        public async Task<IActionResult> Index2()
         {
             return View(await _context.RecipeModel.ToListAsync());
         }
@@ -33,13 +43,36 @@ namespace Meal_Planner.Controllers
                 return NotFound();
             }
 
-            var recipeModel = await _context.RecipeModel
+            var recipeModel = await _context.RecipeModel.Include(a => a.ExtendedIngredients)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (recipeModel == null)
             {
-                return NotFound();
-            }
+                var client = new HttpClient();
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/" + id + "/information"),
+                    Headers =
+                    {
+                        { _options.Key.KeyHeader, _options.Key.ApiKey },
+                        {_options.Key.HostHeader, _options.Key.Host },
+                        //{ "x-rapidapi-key", "4bf3ec1e54msh58354a1c923bbfap1eb315jsn2b0938461fb2" },
+                        //{ "x-rapidapi-host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com" },
+                    },
+                };
+                using (var response = await client.SendAsync(request))
+                {
+                    response.EnsureSuccessStatusCode();
+                    var result = await response.Content.ReadAsStringAsync();
+                    RecipeModel stolen = JsonConvert.DeserializeObject<RecipeModel>(result);
 
+                    _context.Add(stolen);//details 966429 breaks model
+                    await _context.SaveChangesAsync();
+                    //Add result to our database
+                    return View(stolen);
+                }
+            }
+            ViewData["Cache"] = "- Displaying from DB!";
             return View(recipeModel);
         }
 
@@ -54,7 +87,7 @@ namespace Meal_Planner.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RecipeId,Title,Image,Servings,ReadyInMinutes,SourceName,SourceUrl,AggregateLikes,HealthScore,PricePerServing,DairyFree,GlutenFree,Vegan,Vegetarian,Ketogenic,Instructions")] RecipeModel recipeModel)
+        public async Task<IActionResult> Create([Bind("RecipeId,Id,Title,Image,Servings,ReadyInMinutes,SourceName,SourceUrl,AggregateLikes,HealthScore,PricePerServing,DairyFree,GlutenFree,Vegan,Vegetarian,Ketogenic,Instructions")] RecipeModel recipeModel)
         {
             if (ModelState.IsValid)
             {

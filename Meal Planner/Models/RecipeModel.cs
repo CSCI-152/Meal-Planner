@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,11 +9,13 @@ using System.Threading.Tasks;
 
 namespace Meal_Planner.Models
 {
-    [Index(nameof(RecipeId))] //Index the Recipe ID so we can search our localDB first before using spoonacular API
+    [Index(nameof(Id))] //Index the Recipe ID so we can search our localDB first before using spoonacular API
     public class RecipeModel
     {
+        [Key]
+        public Guid RecipeId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
-        public int RecipeId { get; set; }
         [MaxLength(1000)]
         public string Title { get; set; }
         [MaxLength(250)]
@@ -28,13 +31,15 @@ namespace Meal_Planner.Models
         public decimal HealthScore { get; set; }
         [Column(TypeName = "decimal(6,2)")]
         public decimal PricePerServing { get; set; }
-        public int DairyFree { get; set; }
-        public int GlutenFree { get; set; }
-        public int Vegan { get; set; }
-        public int Vegetarian { get; set; }
-        public int Ketogenic { get; set; }
+        public bool DairyFree { get; set; }
+        public bool GlutenFree { get; set; }
+        public bool Vegan { get; set; }
+        public bool Vegetarian { get; set; }
+        public bool Ketogenic { get; set; }
         [MaxLength(4000)]
         public string Instructions { get; set; }
-        public List<IngredientsModel> Ingredients { get; set; }
+        [JsonProperty("extendedIngredients")]
+        [Display(Name ="Ingredients")]
+        public List<IngredientsModel> ExtendedIngredients { get; set; }
     }
 }
