@@ -13,8 +13,8 @@ namespace Meal_Planner.Models
         [PersonalData]
         [MaxLength(100)]
         public string Name { get; set; }
-        public string email { get; set; }
         public int Age { get; set; }
+        [MaxLength(100)]
         public string Gender { get; set; }
         public int Height { get; set; }
         public int Weight { get; set; }
