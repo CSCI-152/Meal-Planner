@@ -4,6 +4,7 @@
 }
 @section Style {
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css"/>
     <style type="text/css">
         .hidden {
             display: none;
@@ -39,15 +40,14 @@
                 </select>
                 <input type="text" class="form-control mx-sm-1 w-50" id="search-recipes" placeholder="Search for...">
             </div>
-
-            <div class="input-group card hidden my-5" id="adv-search">
+            <div class="card hidden my-5" id="adv-search">
                 <div class="card-header">
                     Advanced Search
                 </div>
-                <div class="card-body form-row my-1">
-                    Recipe calories: <b>€ 10</b> <input id="ex1" type="text" class="span2" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]" /> <b>€ 1000</b>
-                    Protein calories: <b>€ 10</b> <input id="ex2" type="text" class="span2" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]" /> <b>€ 1000</b>
-                    Fats calories: <b>€ 10</b> <input id="ex3" type="text" class="span2" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]" /> <b>€ 1000</b>
+                <div class="card-body my-1">
+                    Filter by price interval: <b>€ 10</b> <input id="ex2" type="text" class="form-control span2" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]" /> <b>€ 1000</b>
+                    Protein calories:
+                    Fats calories:
                 </div>
             </div>
             <p>
@@ -94,7 +94,7 @@
 <a asp-action="Index">Back to search</a>
 @section Scripts {
     <script src="~/lib/bootstrap/dist/js/bootstrap-select.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap-slider.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
     <script lang="en" type="text/javascript">
         var oldSearch;
         var reqLimit = @Model.Key.RequestLimit;
@@ -109,9 +109,9 @@
             $('#adv-search-btn').click(function () {
                 $('#adv-search').toggleClass('hidden');
             });
-            $("#ex1").slider();
-            $("#ex2").slider();
-            $("#ex3").slider();
+            $("#ex2").slider({});
+            //$("#ex2").slider();
+            //$("#ex3").slider();
 
         });
         function searchRecipes() {//query=burger&diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C%20gluten&number=10&offset=0&type=main%20course
