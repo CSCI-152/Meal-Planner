@@ -16,15 +16,15 @@ namespace Meal_Planner.Models
         public Guid RecipeId { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
-        [MaxLength(1000)]
+        [MaxLength(2000)]
         public string Title { get; set; }
-        [MaxLength(250)]
+        [MaxLength(500)]
         public string Image { get; set; }
         public int Servings { get; set; }
         public int ReadyInMinutes { get; set; }
-        [MaxLength(1000)]
+        [MaxLength(2000)]
         public string SourceName { get; set; }
-        [MaxLength(250)]
+        [MaxLength(1000)]
         public string SourceUrl { get; set; }
         public int AggregateLikes { get; set; }
         [Column(TypeName = "decimal(6,2)")]
@@ -36,10 +36,10 @@ namespace Meal_Planner.Models
         public bool Vegan { get; set; }
         public bool Vegetarian { get; set; }
         public bool Ketogenic { get; set; }
-        [MaxLength(4000)]
+        [MaxLength(7000)]
         public string Instructions { get; set; }
         [JsonProperty("extendedIngredients")]
         [Display(Name ="Ingredients")]
-        public List<IngredientsModel> ExtendedIngredients { get; set; }
+        public virtual ICollection<IngredientsModel> ExtendedIngredients { get; set; }
     }
 }

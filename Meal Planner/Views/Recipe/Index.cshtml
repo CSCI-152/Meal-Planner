@@ -78,14 +78,28 @@
 @section Scripts {
     <script src="~/lib/bootstrap/dist/js/bootstrap-select.min.js"></script>
     <script lang="en" type="text/javascript">
+        var oldSearch;
+        var reqLimit = @Model.Key.RequestLimit;
         $(document).ready(function () {
             $('#intolerances').selectpicker();
             $('#search-btn').click(function () {
-                searchRecipes();
+                console.log("Limit: " + @Model.Key.RequestLimit);
+                if (oldSearch != $("#search-recipes").val())
+                    searchRecipes();
+                oldSearch = $("#search-recipes").val();
             });
         });
-
         function searchRecipes() {//query=burger&diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C%20gluten&number=10&offset=0&type=main%20course
+            if (oldSearch == $("#search-recipes").val())
+                return;
+
+            //Block sending more API requests
+            if (reqLimit == 0) {
+                alert("API Search Limit reached");
+                return;
+            }
+
+            oldSearch = $("#search-recipes").val();
             var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search';
             var paramUrl = new URL(url);
             var restrictions = $("#diet-restrictions option:selected").text();
@@ -120,10 +134,17 @@
 
             //Reset the results page
             $("#search-results").empty();
+            //Check headers
+            //x-ratelimit-requests-remaining: 4991
+            //x-ratelimit-results-remaining: 19975
 
-            $.ajax(settings).done(function (response) {
+            $.ajax(settings).done(function (response, status, xhr) {
                 console.log(response); //log to browser console the api data
-
+                reqLimit = xhr.getResponseHeader('x-ratelimit-requests-remaining');
+                console.log("API Request limit: \t" + reqLimit + "/" + xhr.getResponseHeader('X-RateLimit-requests-Limit') +
+                    "\nAPI Result limit: \t" + xhr.getResponseHeader('x-ratelimit-results-remaining') + "/" + xhr.getResponseHeader('X-RateLimit-results-Limit'));
+                //Send API header to API
+                $.post("/Recipe/UpdateApi", { RequestLimit: reqLimit }, function (result) { console.log(result) });
                 var searchResult = document.getElementById("search-results");
                 var results;
                 console.log("Results: " + response.totalResults);

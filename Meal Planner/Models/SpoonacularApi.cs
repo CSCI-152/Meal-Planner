@@ -15,5 +15,6 @@ namespace Meal_Planner.Models
         public string ApiKey { get; set; }
         public string HostHeader { get; set; }
         public string Host { get; set; }
+        public int RequestLimit { get; set; }
     }
 }

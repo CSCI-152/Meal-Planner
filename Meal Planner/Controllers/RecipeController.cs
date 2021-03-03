@@ -45,6 +45,12 @@ namespace Meal_Planner.Controllers
 
             var recipeModel = await _context.RecipeModel.Include(a => a.ExtendedIngredients)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            //Prevent calling the API if we exceed the limit
+            if (recipeModel == null && _options.Key.RequestLimit == 0)
+            {
+                return NotFound();
+            }
             if (recipeModel == null)
             {
                 var client = new HttpClient();
@@ -64,9 +70,14 @@ namespace Meal_Planner.Controllers
                 {
                     response.EnsureSuccessStatusCode();
                     var result = await response.Content.ReadAsStringAsync();
-                    RecipeModel stolen = JsonConvert.DeserializeObject<RecipeModel>(result);
 
-                    _context.Add(stolen);//details 966429 breaks model
+                    //Get header values and save them to our RequestLimit
+                    var headerLimit = response.Headers.GetValues("x-ratelimit-requests-remaining").FirstOrDefault();
+                    _options.Key.RequestLimit = Int32.Parse(headerLimit);
+
+                    RecipeModel stolen = JsonConvert.DeserializeObject<RecipeModel>(result);
+                    
+                    _context.Add(stolen);//details 966429 and 578451 breaks model
                     await _context.SaveChangesAsync();
                     //Add result to our database
                     return View(stolen);
@@ -176,6 +187,19 @@ namespace Meal_Planner.Controllers
             _context.RecipeModel.Remove(recipeModel);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Recipe/UpdateApi/5
+        [HttpPost]
+        public IActionResult UpdateApi([Bind("RequestLimit")] KeySettings setr)
+        {
+            if (setr.RequestLimit >= 0)
+            {
+                _options.Key.RequestLimit = setr.RequestLimit;
+                return Json("OK " + setr.RequestLimit);
+            }
+            else
+                return NotFound();
         }
 
         private bool RecipeModelExists(int id)
