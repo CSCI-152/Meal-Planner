@@ -1,13 +1,38 @@
-﻿@model Meal_Planner.Models.RecipeModel 
+﻿@model Meal_Planner.Models.RecipeModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Details"; <!-- Document Header Starts -->
 }
 
 <h1>Details</h1>
 
 <div>
+    <div class="float-right">
+        <a href="#" id="addToPlanner" class="btn btn-outline-primary">Add to Meal Plan</a>
+    </div>
     <h4>RecipeModel @ViewData["Cache"]</h4>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <img id="recipeImg" class="img-fluid" src="https://via.placeholder.com/750" />
+                <div id='ImgContainerDiv'> </div>
+
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+                <script type="text/javascript">
+                    
+                </script>
+            </div>
+            <div class="col">
+                <pre id="spoonacular-ingredients" style="display:none">model=>model.id</pre>
+                <div id="spoonacular-nutrition-visualizer"></div>
+                <script type="text/javascript">
+                    var spoonacularServings = 1;
+                </script>
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+                <script type="text/javascript" src="https://spoonacular.com/cdn/spoonacular-1.6.min.js"></script>
+            </div>
+        </div>
+    </div>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -101,12 +126,6 @@
             @Html.DisplayFor(model => model.Ketogenic)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Instructions)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Instructions)
-        </dd>
-        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ExtendedIngredients)
         </dt>
         <dd class="col-sm-10">
@@ -118,9 +137,62 @@
                 }
             </ol>
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Instructions)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Instructions)
+        </dd>
+
     </dl>
 </div>
+
+<div class="album py-5">
+    <div class="container">
+        <h1>Hello Test</h1>
+    </div>
+</div>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section Scripts {
+    <script lang="en" type="text/javascript">
+
+        function GetNutritionVisual() {
+            const settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/1003464/nutritionWidget",
+                "method": "GET",
+                "headers": {
+                    "accept": "text/html",
+                    "x-rapidapi-key": "233fcd5469msh50148c2c9897d40p10f14cjsneaa6c8580ee8",
+                    "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+                }
+            };
+
+            $.ajax(settings).done(function (response) {
+                console.log(response); //log to browser console the api data
+
+                var recipeList = document.getElementById("recipes");
+                var results;
+                //Loop through all recipes
+                response.recipes.forEach(function (element) {
+                    results = "<h2><li><a href=" + element.spoonacularSourceUrl + ">" + element.title + "</h2></a></br><img src=" + element.image + " height=220 width=350></br>";
+                    //Loop through each recipe ingredients
+                    results += "<h3>Ingredients:</h3>";
+                    element.extendedIngredients.forEach(function (ingredient) {
+                        results += "<img src=https://spoonacular.com/cdn/ingredients_100x100/" + ingredient.image + " alt=\"" + ingredient.name + "\"/>";
+                    });
+                    results += "<pre>" + element.instructions + "</pre ></li >";
+
+                    //Insert to page HTML
+                    recipeList.insertAdjacentHTML('beforeend', results);
+                });
+            });
+        }
+    </script>
+}
