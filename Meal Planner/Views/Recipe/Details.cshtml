@@ -4,26 +4,48 @@
     ViewData["Title"] = Model.Title; 
 }
 
+
 <div>
     <div class="float-right">
         <a href="#" id="addToPlanner" class="btn btn-outline-primary">Add to Meal Plan</a>
     </div>
     <h4>@ViewData["Title"]</h4>
+    <hr />
     <div class="container">
-        <div id="test1"></div>
+
         <div class="row">
             <div class="col">
                 <img id="recipeImg" class="img-fluid" src="https://via.placeholder.com/750" />
+                <br /><br />
+                <h3>Ingredients</h3>
+                <br />
+                <dl>
+                    <dd class="col-sm-10">
+                        @*@Html.DisplayFor(model => model.ExtendedIngredients)*@
+                        <ol>
+                            @foreach (var item in @Model.ExtendedIngredients)
+                            {
+                                <li>@item.Name</li>
+                            }
+                        </ol>
+                    </dd>
+                </dl>
             </div>
             <div class="col">
+                <h5>Recipe Nutrition Breakdown</h5>
+                <div id="test1"></div>
                 <pre id="spoonacular-ingredients" style="display:none"></pre>
-                <div id="spoonacular-nutrition-visualizer"></div>
+                <div id="spoonacular-nutrition-visualizer" style="display:none"></div>
             </div>
         </div>
     </div>
+
     <hr />
+    <!--        Left for refrence
+    <h3>Ingredients</h3>
+    <br />
     <dl class="row">
-        <dt class="col-sm-2">
+         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Id)
         </dt>
         <dd class="col-sm-10">
@@ -115,30 +137,20 @@
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ExtendedIngredients)
-        </dt>
-        <dd class="col-sm-10">
-            @*@Html.DisplayFor(model => model.ExtendedIngredients)*@
-            <ol>
-                @foreach (var item in @Model.ExtendedIngredients)
-                {
-                    <li>@item.Name</li>
-                }
-            </ol>
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Instructions)
-        </dt>
+           </dt>-->
+
+    <h3>Directions</h3>
+    <br />
+    <dl>
+        <!--<dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Instructions)
+        </dt>-->
+
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Instructions)
         </dd>
 
     </dl>
-</div>
-
-<div class="album py-5">
-    <div class="container">
-        <h1>Hello Test</h1>
-    </div>
 </div>
 
 <div>
@@ -157,7 +169,7 @@
             const settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/1003464/nutritionWidget",
+                "url": "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/" + @Model.Id + "/nutritionWidget",
                 "method": "GET",
                 "headers": {
                     "accept": "text/html",
@@ -170,10 +182,19 @@
                 console.log(response); //log to browser console the api data
 
                 var recipeImg = '@Model.Image';
-                $('#recipeImg').attr('src', recipeImg);//replace placeholder image src attribute with recipeImg
-                $("#test1").append(response);//inject response result into
+                $('#recipeImg').attr('src', recipeImg);     //replace placeholder image src attribute with recipeImg
+                $("#test1").append(response);               //inject response result into
             });
+
+        function htmlDecode(input) {
+            var doc = new DOMParser().parseFromString(input, "text/html");
+            return doc.documentElement.textContent;
+            }
+
+            $("#instructions").append(htmlDecode("@Model.Instructions"));   //inject response result into
         }
+
         GetNutritionVisual();
+        htmlDecode();   // FIXME: format recipe instructions 
     </script>
 }
