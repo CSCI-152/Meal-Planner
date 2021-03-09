@@ -4,6 +4,12 @@
 }
 @section Style {
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css"/>
+    <style type="text/css">
+        .hidden {
+            display: none;
+        }
+    </style>
 }
 <section class="root jumbotron text-center">
     <div class="container">
@@ -12,7 +18,7 @@
         <form action="javascript:void(0);" onsubmit="searchRecipes()">
             <div class="input-group">
                 <select class="form-control selectpicker mx-sm-1 d-block" id="diet-restrictions" title="Diet Restrictions">
-                    <option>Gluten Free</option>
+                    <!--Not a valid diet in API <option>Gluten Free</option>-->
                     <option>Ketogenic</option>
                     <option>Vegetarian</option>
                     <option>Lacto-Vegetarian</option>
@@ -34,13 +40,24 @@
                 </select>
                 <input type="text" class="form-control mx-sm-1 w-50" id="search-recipes" placeholder="Search for...">
             </div>
+            <div class="card hidden my-5" id="adv-search">
+                <div class="card-header">
+                    Advanced Search
+                </div>
+                <div class="card-body my-1">
+                    Filter by price interval: <b>€ 10</b> <input id="ex2" type="text" class="form-control span2" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]" /> <b>€ 1000</b>
+                    Protein calories:
+                    Fats calories:
+                </div>
+            </div>
             <p>
                 <a href="#" class="btn btn-outline-primary my-2">Go to planner</a>
+                <a href="#" id="adv-search-btn" class="btn btn-outline-primary my-2">Advanced Search</a>
                 <a href="#" id="search-btn" class="btn btn-primary my-2">Search</a>
             </p>
             <div class="custom-control custom-checkbox text-left">
-                <input type="checkbox" class="custom-control-input" id="customCheck1">
-                <label class="custom-control-label" for="customCheck1">Ignore Personal Preferences</label>
+                <input type="checkbox" class="custom-control-input" id="personalPrefs">
+                <label class="custom-control-label" for="personalPrefs">Ignore Personal Preferences</label>
             </div>
         </form>
     </div>
@@ -77,6 +94,7 @@
 <a asp-action="Index">Back to search</a>
 @section Scripts {
     <script src="~/lib/bootstrap/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
     <script lang="en" type="text/javascript">
         var oldSearch;
         var reqLimit = @Model.Key.RequestLimit;
@@ -88,6 +106,13 @@
                     searchRecipes();
                 oldSearch = $("#search-recipes").val();
             });
+            $('#adv-search-btn').click(function () {
+                $('#adv-search').toggleClass('hidden');
+            });
+            $("#ex2").slider({});
+            //$("#ex2").slider();
+            //$("#ex3").slider();
+
         });
         function searchRecipes() {//query=burger&diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C%20gluten&number=10&offset=0&type=main%20course
             if (oldSearch == $("#search-recipes").val())
@@ -114,6 +139,11 @@
             if (intolerances != "") {
                 paramUrl.searchParams.set("intolerances", intolerances);
             }
+
+            //testing
+            paramUrl.searchParams.set("addRecipeInformation", true);
+            paramUrl.searchParams.set("addRecipeNutrition", true);
+
             var queryString = $("#search-recipes").val();
             //var params = { 'query': queryString, 'diet': restrictions, 'intolerances': intolerances };
             //var params = { 'query': queryString };
@@ -165,7 +195,16 @@
                      * title
                      */
                     console.log("Results: " + response.totalResults);
-                    results = "<div class=\"col-md-4\"> <div class=\"card mb-4 shadow-sm\"> <img class=\"card-img-top\" src=" + response.baseUri + element.image + " alt=" + element.title + "> <div class=\"card-img-overlay\"> <h5 class=\"card-title\">" + element.readyInMinutes + "</h5> <p class=\"card-text align-content-end\">Quick Add</p> </div> <div class=\"card-body\"> <p class=\"card-text\">" + element.title + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a href=\"/recipe/details/"+ element.id +"\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in " + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
+                    results = "<div class=\"col-md-4\"> <div class=\"card mb-4 shadow-sm\"> <img class=\"card-img-top\" src="
+                        + response.baseUri + element.image + " alt=" + element.title
+                        + "> <div class=\"card-img-overlay\"> <h5 class=\"card-title\">"
+                        + element.readyInMinutes
+                        + "</h5> <p class=\"card-text align-content-end\">Quick Add</p> </div> <div class=\"card-body\"> <p class=\"card-text\">"
+                        + element.title
+                        + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a href=\"/recipe/details/"
+                        + element.id
+                        + "\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
+                        + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
                     //Insert to page HTML
                     searchResult.insertAdjacentHTML('beforeend', results);
                 });

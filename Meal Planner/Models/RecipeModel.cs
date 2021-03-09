@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Meal_Planner.Models
+namespace Meal_Planner.Models       // converting JSON results
 {
     [Index(nameof(Id))] //Index the Recipe ID so we can search our localDB first before using spoonacular API
     public class RecipeModel
