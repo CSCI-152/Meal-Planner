@@ -1,0 +1,204 @@
+﻿@model Meal_Planner.Models.SpoonacularApi
+@{
+    ViewData["Title"] = "Meal Plan";
+}
+@section Style {
+
+}
+<section class="root jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">Meal Planning</h1>
+        <p class="lead text-muted">Check Browser Console for data when clicking buttons</p>
+        <div id="saved-output"></div>
+        <div id="output"></div>
+        <div id="register-out"></div>
+        <form>
+            <p>
+                <a href="#" id="create-btn" class="btn btn-outline-primary my-2">Generate Key</a>
+                <a href="#" id="add-btn" class="btn btn-outline-primary my-2">Add Mock Data</a>
+                <a href="#" id="get-btn" class="btn btn-outline-primary my-2">Get Plan Data</a>
+            </p>
+        </form>
+    </div>
+</section>
+<a asp-action="Index">Back to top</a>
+@section Scripts {
+    <script lang="en" type="text/javascript">
+        var oldSearch;
+        var reqLimit = @Model.Key.RequestLimit;
+        $(document).ready(function () {
+             $('#create-btn').click(function () {
+                 console.log("Key: @ViewData["key"]");//?apiKey=YOUR-API-KEY
+                 registerUser();
+             });
+            $('#add-btn').click(function () {
+                 //AddDataForUser();//c# controller way
+                sendPostData();
+            });
+            $('#get-btn').click(function () {
+                getPostData();
+            })
+        });
+
+        function sendPostData() {
+            var url = 'https://api.spoonacular.com/mealplanner/api-76891-pizza/items?apiKey=cc3a1f5670574b379c682e1e1ce052af&hash=ce93ada0e3fda7ef5a211cc5bdb5ddb33f9257e8';
+
+            var object = {
+                "date": Math.floor(new Date().getTime() / 1000.0),
+                "slot": 1,
+                "position": 0,
+                "type": "RECIPE",
+                "value": {
+                    "id": 296216,
+                    "servings": 2,
+                }
+            };
+
+            $.post(url, JSON.stringify(object),
+                function (result) {
+                    console.log("Add Result: " + JSON.stringify(result));
+                    $("#output").append(JSON.stringify(result));
+                });
+        }
+
+
+        function getPostData() {
+            var date = new Date(Date.now()); //2020-06-01
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var con = year + "-" + month + "-" + day;
+            var url = 'https://api.spoonacular.com/mealplanner/api-76891-pizza/day/'+con + '?apiKey=cc3a1f5670574b379c682e1e1ce052af&hash=ce93ada0e3fda7ef5a211cc5bdb5ddb33f9257e8';
+
+            $.get(url, null,
+                function (result) {
+                    console.log("Get Result: " + JSON.stringify(result));
+                    $("#saved-output").html(JSON.stringify(result));
+                });
+        }
+
+        function AddDataForUser() {
+            $.post("/Plan/Add", { Id: 1},
+                function (result) {
+                    console.log("Add Result: " + JSON.stringify(result));
+                    $("#output").append(JSON.stringify(result));
+                });
+        }
+
+        function registerUser() {
+            var key = '?apiKey=@ViewData["key"]';
+            var url = 'https://api.spoonacular.com/users/connect' + key;
+            var data = {"username":"pizza2"};
+            const settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "data": JSON.stringify(data),
+                "method": "POST",
+            };
+            $.ajax(settings).done(function (response, status, xhr) {
+                console.log(response); //log to browser console the api data
+               // console.log("API Requests Used: \t[" + xhr.getResponseHeader('x-api-quota-used') + "]" + " Request Cost: [" + xhr.getResponseHeader('x-api-quota-request')+"]");
+                //Send API header to API
+                $.post("/Plan/Initialize", { Username: response.username, Hash: response.hash, ApiKey: "@ViewData["key"]" }, function (result) { console.log("Registration Result: " + JSON.stringify(result)); $("#register-out").html(JSON.stringify(result)); });
+            });
+        }
+
+        function searchRecipes() {//query=burger&diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C%20gluten&number=10&offset=0&type=main%20course
+            if (oldSearch == $("#search-recipes").val())
+                return;
+
+            //Block sending more API requests
+            if (reqLimit == 0) {
+                alert("API Search Limit reached");
+                return;
+            }
+
+            oldSearch = $("#search-recipes").val();
+            var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search';
+            var paramUrl = new URL(url);
+            var restrictions = $("#diet-restrictions option:selected").text();
+
+            if (restrictions != "Diet Restrictions") {
+                paramUrl.searchParams.set("diet", restrictions);
+            }
+
+            var intolerances = $("#intolerances option:selected").map(function () {
+                return $(this).text();
+            }).get().join(',');
+            if (intolerances != "") {
+                paramUrl.searchParams.set("intolerances", intolerances);
+            }
+
+            //testing
+            paramUrl.searchParams.set("addRecipeInformation", true);
+            paramUrl.searchParams.set("addRecipeNutrition", true);
+
+            var queryString = $("#search-recipes").val();
+            //var params = { 'query': queryString, 'diet': restrictions, 'intolerances': intolerances };
+            //var params = { 'query': queryString };
+
+            //var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search?' + jQuery.param(params);
+            paramUrl.searchParams.set("query", queryString);//Add query string
+            console.log("URL: " + paramUrl);
+            const settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": paramUrl,
+                "method": "GET",
+                "headers": {
+                    "@Model.Key.KeyHeader": "@Model.Key.ApiKey",
+                    "@Model.Key.HostHeader": "@Model.Key.Host"
+                }
+            };
+
+            //Reset the results page
+            $("#search-results").empty();
+            //Check headers
+            //x-ratelimit-requests-remaining: 4991
+            //x-ratelimit-results-remaining: 19975
+
+            $.ajax(settings).done(function (response, status, xhr) {
+                console.log(response); //log to browser console the api data
+                reqLimit = xhr.getResponseHeader('x-ratelimit-requests-remaining');
+                console.log("API Request limit: \t" + reqLimit + "/" + xhr.getResponseHeader('X-RateLimit-requests-Limit') +
+                    "\nAPI Result limit: \t" + xhr.getResponseHeader('x-ratelimit-results-remaining') + "/" + xhr.getResponseHeader('X-RateLimit-results-Limit'));
+                //Send API header to API
+                $.post("/Recipe/UpdateApi", { RequestLimit: reqLimit }, function (result) { console.log(result) });
+                var searchResult = document.getElementById("search-results");
+                var results;
+                console.log("Results: " + response.totalResults);
+                if (response.totalResults === 0) {
+                    searchResult.insertAdjacentHTML('beforeend', "<h4>No results</h4>");
+                }
+                //Loop through all recipes
+                response.results.forEach(function (element) {
+                    /*
+                     * response.baseUri;
+                     * response.totalResults
+                     * element
+                     * id
+                     * image
+                     * readyinminutes
+                     * servings
+                     * sourceurl
+                     * title
+                     */
+                    console.log("Results: " + response.totalResults);
+                    results = "<div class=\"col-md-4\"> <div class=\"card mb-4 shadow-sm\"> <img class=\"card-img-top\" src="
+                        + response.baseUri + element.image + " alt=" + element.title
+                        + "> <div class=\"card-img-overlay\"> <h5 class=\"card-title\">"
+                        + element.readyInMinutes
+                        + "</h5> <p class=\"card-text align-content-end\">Quick Add</p> </div> <div class=\"card-body\"> <p class=\"card-text\">"
+                        + element.title
+                        + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a href=\"/recipe/details/"
+                        + element.id
+                        + "\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
+                        + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
+                    //Insert to page HTML
+                    searchResult.insertAdjacentHTML('beforeend', results);
+                });
+            });
+        }
+    </script>
+}
