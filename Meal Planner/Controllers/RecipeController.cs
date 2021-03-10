@@ -82,7 +82,7 @@ namespace Meal_Planner.Controllers
 
                     if (realTitle != urlTitle)
                     {
-                        string url = "/Recipe/Details/" +  realTitle + "/" + id;
+                        string url = "/Recipe/" + realTitle + "/" + id;
                         return new RedirectResult(url, true);
                     }
 

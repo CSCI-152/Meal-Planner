@@ -104,9 +104,10 @@ namespace Meal_Planner
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "Recipe",
-                    pattern: "{controller=Recipe}/{action=Details}/{title?}/{id?}");
+                    pattern: "{controller=Recipe}/{title?}/{id?}",
+                    defaults: new { controller = "Recipe", action = "Details", });
                 endpoints.MapRazorPages();
-                //endpoints.MapControllers();
+                //endpoints.MapControllers(); //Only for API Controllers
             });
         }
     }
