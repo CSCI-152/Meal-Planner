@@ -106,6 +106,13 @@
                     searchRecipes();
                 oldSearch = $("#search-recipes").val();
             });
+            $('#search-recipes').keypress((e) => {      // allows search to be initiated with the enter key
+                if (e.which === 13) { //13 is enter key
+                    if (oldSearch != $("#search-recipes").val())
+                        searchRecipes();
+                    oldSearch = $("#search-recipes").val();
+                }
+            }) 
             $('#adv-search-btn').click(function () {
                 $('#adv-search').toggleClass('hidden');
             });
