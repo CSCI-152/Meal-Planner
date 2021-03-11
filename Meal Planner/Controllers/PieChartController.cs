@@ -18,7 +18,7 @@ namespace Meal_Planner.Controllers
 			dataPoints.Add(new DataPoint("Fats", 13));
 			dataPoints.Add(new DataPoint("Protein", 8));
 
-			ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
+			ViewData["DataPoints"] = JsonConvert.SerializeObject(dataPoints);
 
 			return View();
 		}

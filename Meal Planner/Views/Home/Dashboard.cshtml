@@ -61,38 +61,27 @@
     </div>
     <div id="chartContainer"></div>
 </div>
-
 @section Scripts
 {
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script type="text/javascript">
-            window.onload = function () {
-			var chart = new CanvasJS.Chart("chartContainer", {
-				// theme: "light2",
-				animationEnabled: true,
-				title: {
-					text: "Macro Distrubution"
-				},
-				/*subtitles: [
-					{ text: "Try Resizing the Browser" }
-				],*/
-				data: [
-				{
-					type: "doughnut", //change type to bar, line, area, pie, etc
-					dataPoints: [
-					{ x: 10, y: 71 },
-					{ x: 20, y: 55 },
-					{ x: 30, y: 50 },
-                        ]
-
-                    //Uncomment this to add data coming from the controller
-					//Sets the ChartDataPoints:
-                    @Html.Raw(ViewBag.DataPoints),
-				}
-				]
-			});
-                chart.render();
-            };
+        window.onload = function() {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                // theme: "light2",
+                animationEnabled: true,
+                title: {
+                    text: "Macro Distrubution"
+                },
+                /*subtitles: [
+        	        { text: "Try Resizing the Browser" }
+                ],*/
+                data: [{
+                    type: "doughnut", //change type to bar, line, area, pie, etc
+                    dataPoints: @Html.Raw(ViewData["datapoints"])
+                }]
+            });
+            chart.render();
+        };
     </script>
 }
 
