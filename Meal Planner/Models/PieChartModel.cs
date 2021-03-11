@@ -7,9 +7,9 @@ using System.Runtime.Serialization;
 namespace Meal_Planner.Models
 {
 	[DataContract]
-	public class ChartDataPoint
+	public class DataPoint
     {
-		public ChartDataPoint(string label, double y)
+		public DataPoint(string label, double y)	// no 'x' value needed for pie chart
 		{
 			this.Label = label;
 			this.Y = y;

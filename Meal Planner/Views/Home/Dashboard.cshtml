@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Meal_Planner.Models.DataPoint
+@{
     ViewData["Title"] = "Dashboard";
 }
 
@@ -92,7 +93,8 @@
                         ]
 
                     //Uncomment this to add data coming from the controller
-					//Sets the ChartDataPoints: @Html.Raw(ViewBag.DataPoints),
+					//Sets the ChartDataPoints:
+                    @Html.Raw(ViewBag.DataPoints),
 				}
 				]
 			});
@@ -104,7 +106,12 @@
 </div>
 <div style="margin-bottom: 120px"></div>
 
-<!--
+@section Scripts
+{
+
+}
+
+<!--    Left For refrence
     <div class="container-fluid">
         <div class="row">
         </div>

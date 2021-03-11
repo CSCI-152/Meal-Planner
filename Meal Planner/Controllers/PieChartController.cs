@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Meal_Planner.Models;
 
-namespace Meal_Planner.Models
+namespace Meal_Planner.Controllers
 {
     public class PieChartController : Controller
     {
-		public ActionResult Index()
+		public ActionResult Dashboard()
 		{
-			List<ChartDataPoint> dataPoints = new List<ChartDataPoint>();
+			List<DataPoint> dataPoints = new List<DataPoint>();
 
-			dataPoints.Add(new ChartDataPoint("Carbohydrates", 25));    // controller will need to get actual values to fill in for constants
-			dataPoints.Add(new ChartDataPoint("Fats", 13));
-			dataPoints.Add(new ChartDataPoint("Protein", 8));
+			dataPoints.Add(new DataPoint("Carbohydrates", 25));    // controller will need to get actual values to fill in for constants
+			dataPoints.Add(new DataPoint("Fats", 13));
+			dataPoints.Add(new DataPoint("Protein", 8));
 
 			ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
 
