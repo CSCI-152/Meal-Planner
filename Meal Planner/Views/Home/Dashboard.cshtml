@@ -3,76 +3,69 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<!DOCTYPE html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-    <title>Index</title>
-</head>
-
-<div style="margin-top: 140px">
-    <div class="container-fluid">
-
-        <div class="p-3 mb-2 bg-info text-white">
-            <div class="container">
-                <div class="row">
-                    <div class="col">
-                        Monday
-                    </div>
-                    <div class="col">
-                        Tuesday
-                    </div>
-                    <div class="col">
-                        Wednesday
-                    </div>
-                    <div class="col">
-                        Thursday
-                    </div>
-                    <div class="col">
-                        Friday
-                    </div>
-                    <div class="col">
-                        Saturday
-                    </div>
-                    <div class="col">
-                        Sunday
-                    </div>
+<div class="container-fluid">
+    <div class="p-3 mb-2 bg-info text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    Monday
+                </div>
+                <div class="col">
+                    Tuesday
+                </div>
+                <div class="col">
+                    Wednesday
+                </div>
+                <div class="col">
+                    Thursday
+                </div>
+                <div class="col">
+                    Friday
+                </div>
+                <div class="col">
+                    Saturday
+                </div>
+                <div class="col">
+                    Sunday
                 </div>
             </div>
-            <br />
         </div>
-
         <br />
-        <div class="card-deck">
-            <div class="card">
-                <img class="card-img-top" src="..." alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                </div>
+    </div>
+    <br />
+    <div class="card-deck">
+        <div class="card">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
             </div>
-            <div class="card">
-                <img class="card-img-top" src="..." alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                </div>
+        </div>
+        <div class="card">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
             </div>
-            <div class="card">
-                <img class="card-img-top" src="..." alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                </div>
+        </div>
+        <div class="card">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
             </div>
         </div>
     </div>
-    <div>
-        <div id="chartContainer"></div>
-        <script type="text/javascript">
+    <div id="chartContainer"></div>
+</div>
+
+@section Scripts
+{
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script type="text/javascript">
             window.onload = function () {
 			var chart = new CanvasJS.Chart("chartContainer", {
 				// theme: "light2",
@@ -100,18 +93,11 @@
 			});
                 chart.render();
             };
-        </script>
-        <br />
-    </div>
-</div>
-<div style="margin-bottom: 120px"></div>
-
-@section Scripts
-{
-
+    </script>
 }
 
-<!--    Left For refrence
+@* C# Commenting out
+    <!--    Left For refrence
     <div class="container-fluid">
         <div class="row">
         </div>
@@ -421,4 +407,4 @@
         </div>
     </div>
     </div>
-    -->
+    -->*@
