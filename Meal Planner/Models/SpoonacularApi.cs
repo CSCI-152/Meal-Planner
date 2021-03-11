@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Meal_Planner.Models
+namespace Meal_Planner.Models       // model for
 {
     public class SpoonacularApi
     {
