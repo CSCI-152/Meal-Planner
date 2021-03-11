@@ -46,6 +46,18 @@ namespace Meal_Planner.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required(ErrorMessage = "Name is required")]  
+            [StringLength(100)]  
+            public string Name { get; set; }
+
+            [Required(ErrorMessage = "Height is required")]
+            [Display(Name = "Height in cm")]
+            public int Height { get; set; }
+
+            [Required(ErrorMessage = "Weight is required")]
+            [Display(Name = "Weight in kg")]
+            public int Weight { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
