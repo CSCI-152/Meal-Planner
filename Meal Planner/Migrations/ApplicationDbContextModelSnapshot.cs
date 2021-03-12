@@ -106,10 +106,12 @@ namespace Meal_Planner.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Hash")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -247,6 +249,9 @@ namespace Meal_Planner.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("SpoonAccountId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -266,6 +271,8 @@ namespace Meal_Planner.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("SpoonAccountId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -410,6 +417,15 @@ namespace Meal_Planner.Migrations
                     b.HasOne("Meal_Planner.Models.RecipeModel", null)
                         .WithMany("ExtendedIngredients")
                         .HasForeignKey("RecipeModelRecipeId");
+                });
+
+            modelBuilder.Entity("Meal_Planner.Models.UserModel", b =>
+                {
+                    b.HasOne("Meal_Planner.Models.MealPlanUser", "SpoonAccount")
+                        .WithMany()
+                        .HasForeignKey("SpoonAccountId");
+
+                    b.Navigation("SpoonAccount");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

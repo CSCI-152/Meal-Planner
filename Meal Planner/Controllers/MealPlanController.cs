@@ -1,12 +1,15 @@
 ﻿using Meal_Planner.Data;
 using Meal_Planner.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,20 +17,61 @@ namespace Meal_Planner.Controllers
 {
     public class MealPlanController : Controller
     {
-        private readonly SpoonacularApi _options;
         private readonly ApplicationDbContext _context;
-        public MealPlanController(IOptions<SpoonacularApi> options, ApplicationDbContext context)
+        public MealPlanController(ApplicationDbContext context)
         {
-            _options = options.Value;
             _context = context;
         }
 
         [Route("Plan")]
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            RandomSpoonacularApiKey d = new();
-            ViewData["key"] = d.Generate();
-            return View(_options);
+            //Get the current user's Id
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = claim.Value;
+
+            //Find the current user's account based on Id
+            var currentUser = await _context.Users
+                .Include(s => s.SpoonAccount)
+                .Where(m => m.Id == userId)
+                .FirstOrDefaultAsync();
+
+            //If the SpoonAccount column is null--register an account
+            if (currentUser.SpoonAccount == null)
+            {
+                //Get a Random Spoonacular Key
+                var key = new RandomSpoonacularApiKey().Generate();
+
+                //Build data to send
+                string json = JsonConvert.SerializeObject(new { username = User.Identity.Name });
+
+                //Api Registration Request
+                using (var client = new HttpClient())
+                {
+                    var response = await client.PostAsync(
+                        "https://api.spoonacular.com/users/connect?apiKey=" + key,
+                         new StringContent(json, Encoding.UTF8, "application/json"));
+
+                    //If the response is successful
+                    if (response != null)
+                    {
+                        var data = await response.Content.ReadAsStringAsync();
+                        //return Ok(data);
+                        //Convert the response into the MealPlanUser model
+                        MealPlanUser created = JsonConvert.DeserializeObject<MealPlanUser>(data);
+                        created.ApiKey = key;
+                        //Add the data to our account
+                        currentUser.SpoonAccount = created;
+
+                        //Save the changes to the database
+                        _context.Entry(currentUser).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+            //Send the current user to the view to access API data
+            return View();
         }
 
         // POST: Recipe/UpdateApi/5
@@ -64,12 +108,12 @@ namespace Meal_Planner.Controllers
                 };
                 using (var response = await client.SendAsync(request))
                 {
-                   // response.EnsureSuccessStatusCode();
+                    // response.EnsureSuccessStatusCode();
                     var result = await response.Content.ReadAsStringAsync();
                     //Get header values and save them to our RequestLimit
                     //var headerLimit = response.Headers.GetValues("x-ratelimit-requests-remaining").FirstOrDefault();
 
-                   // RecipeModel recipeRequest = JsonConvert.DeserializeObject<RecipeModel>(result);
+                    // RecipeModel recipeRequest = JsonConvert.DeserializeObject<RecipeModel>(result);
 
                     //   _context.Add(recipeRequest);//details 966429 and 578451 breaks model         // this saves the data to the DB, removed because it caused crashes
                     //   await _context.SaveChangesAsync();

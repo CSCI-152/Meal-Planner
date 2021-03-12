@@ -13,6 +13,5 @@ namespace Meal_Planner.Data
 
         public DbSet<MealModel> Meals { get; set; }
         public DbSet<RecipeModel> RecipeModel { get; set; }
-        public DbSet<MealPlanUser> MealPlanUser { get; set; }
     }
 }

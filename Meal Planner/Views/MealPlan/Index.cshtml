@@ -1,4 +1,5 @@
-﻿@model Meal_Planner.Models.SpoonacularApi
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<UserModel> UserManager
 @{
     ViewData["Title"] = "Meal Plan";
 }
@@ -9,12 +10,17 @@
     <div class="container">
         <h1 class="jumbotron-heading">Meal Planning</h1>
         <p class="lead text-muted">Check Browser Console for data when clicking buttons</p>
-        <div id="saved-output"></div>
+        <div id="macros"></div>
+        <div class="album py-5">
+            <div class="container">
+                <div class="row" id="saved-output"></div>
+            </div>
+        </div>
         <div id="output"></div>
         <div id="register-out"></div>
         <form>
             <p>
-                <a href="#" id="create-btn" class="btn btn-outline-primary my-2">Generate Key</a>
+                <a href="#" id="get-my-btn" class="btn btn-outline-primary my-2">View My Spoon Account</a>
                 <a href="#" id="add-btn" class="btn btn-outline-primary my-2">Add Mock Data</a>
                 <a href="#" id="get-btn" class="btn btn-outline-primary my-2">Get Plan Data</a>
             </p>
@@ -24,32 +30,48 @@
 <a asp-action="Index">Back to top</a>
 @section Scripts {
     <script lang="en" type="text/javascript">
-        var oldSearch;
-        var reqLimit = @Model.Key.RequestLimit;
+        var user = "@UserManager.GetUserAsync(User).Result.SpoonAccount.Username";
+        var hash = "@UserManager.GetUserAsync(User).Result.SpoonAccount.Hash";
+        var key = "@UserManager.GetUserAsync(User).Result.SpoonAccount.ApiKey";
+
         $(document).ready(function () {
-             $('#create-btn').click(function () {
-                 console.log("Key: @ViewData["key"]");//?apiKey=YOUR-API-KEY
-                 registerUser();
+            $('#get-my-btn').click(function () {
+                $("#output").empty();
+                $("#saved-output").empty();
+                $("#macros").empty();
+                 getMyData();
              });
             $('#add-btn').click(function () {
-                 //AddDataForUser();//c# controller way
+                $("#output").empty();
+                $("#saved-output").empty();
+                $("#macros").empty();
                 sendPostData();
             });
             $('#get-btn').click(function () {
+                $("#saved-output").empty();
+                $("#output").empty();
+                $("#macros").empty();
                 getPostData();
             })
         });
 
+        function getMyData() {
+            $("#output").append("User: " + user + "<br/>");
+            $("#output").append("API Key: " + key + "<br/>");
+            $("#output").append("Hash: " + hash);
+        }
+
         function sendPostData() {
-            var url = 'https://api.spoonacular.com/mealplanner/api-76891-pizza/items?apiKey=cc3a1f5670574b379c682e1e1ce052af&hash=ce93ada0e3fda7ef5a211cc5bdb5ddb33f9257e8';
+            var url = 'https://api.spoonacular.com/mealplanner/' + user + '/items?apiKey=' + key + '&hash=' + hash;
 
             var object = {
-                "date": Math.floor(new Date().getTime() / 1000.0),
+                "date": @DateTimeOffset.Now.ToUnixTimeSeconds(),
                 "slot": 1,
                 "position": 0,
                 "type": "RECIPE",
                 "value": {
-                    "id": 296216,
+                    "title": "Random title"+getRandomInt(40000),
+                    "id": getRandomInt(40000),
                     "servings": 2,
                 }
             };
@@ -61,19 +83,41 @@
                 });
         }
 
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
 
         function getPostData() {
-            var date = new Date(Date.now()); //2020-06-01
+            var date = new Date(@DateTimeOffset.Now.ToUnixTimeSeconds() * 1000); //Epoch time in milliseconds for JS
             var year = date.getFullYear();
             var month = date.getMonth() + 1;
             var day = date.getDate();
-            var con = year + "-" + month + "-" + day;
-            var url = 'https://api.spoonacular.com/mealplanner/api-76891-pizza/day/'+con + '?apiKey=cc3a1f5670574b379c682e1e1ce052af&hash=ce93ada0e3fda7ef5a211cc5bdb5ddb33f9257e8';
+            var YMD = year + "-" + month + "-" + day;
+            var url = 'https://api.spoonacular.com/mealplanner/' + user + '/day/' + YMD + '?apiKey=' + key + '&hash=' + hash;
 
             $.get(url, null,
                 function (result) {
                     console.log("Get Result: " + JSON.stringify(result));
-                    $("#saved-output").html(JSON.stringify(result));
+
+                    //Display macros
+                    result.nutritionSummary.nutrients.forEach(function (m) {
+                        $("#macros").append("<span class='badge badge-secondary'>" + m.title + ": " + m.amount + m.unit + "</span> ");
+                    });
+
+                    //Display meals
+                    result.items.forEach(function (element) {
+
+                        res = '<div class="col-md-4"><div class="card mb-4 shadow-sm" style="width: 18rem;">' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title">' + element.value.title + '</h5>' + 
+                            '<h6 class="card-subtitle mb-2 text-muted">' + 'Servings: '+element.value.servings+ '<br/>Id: ' + element.id +'</h6>' + 
+                                '<p class="card-text">Recipe Id: ' + element.value.id + '</p>' + 
+                            '</div>' +
+                            '</div></div>';
+
+                        //Insert to page HTML
+                        $("#saved-output").append(res);
+                    });
                 });
         }
 
@@ -83,25 +127,6 @@
                     console.log("Add Result: " + JSON.stringify(result));
                     $("#output").append(JSON.stringify(result));
                 });
-        }
-
-        function registerUser() {
-            var key = '?apiKey=@ViewData["key"]';
-            var url = 'https://api.spoonacular.com/users/connect' + key;
-            var data = {"username":"pizza2"};
-            const settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": url,
-                "data": JSON.stringify(data),
-                "method": "POST",
-            };
-            $.ajax(settings).done(function (response, status, xhr) {
-                console.log(response); //log to browser console the api data
-               // console.log("API Requests Used: \t[" + xhr.getResponseHeader('x-api-quota-used') + "]" + " Request Cost: [" + xhr.getResponseHeader('x-api-quota-request')+"]");
-                //Send API header to API
-                $.post("/Plan/Initialize", { Username: response.username, Hash: response.hash, ApiKey: "@ViewData["key"]" }, function (result) { console.log("Registration Result: " + JSON.stringify(result)); $("#register-out").html(JSON.stringify(result)); });
-            });
         }
 
         function searchRecipes() {//query=burger&diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C%20gluten&number=10&offset=0&type=main%20course
@@ -127,7 +152,7 @@
                 return $(this).text();
             }).get().join(',');
             if (intolerances != "") {
-                paramUrl.searchParams.set("intolerances", intolerances);
+                paramUrl.searchParams.set("ModelntolerancesKey", intolerances);
             }
 
             //testing
@@ -147,8 +172,6 @@
                 "url": paramUrl,
                 "method": "GET",
                 "headers": {
-                    "@Model.Key.KeyHeader": "@Model.Key.ApiKey",
-                    "@Model.Key.HostHeader": "@Model.Key.Host"
                 }
             };
 
