@@ -20,5 +20,6 @@ namespace Meal_Planner.Models
         public int Weight { get; set; }
         [MaxLength(100)]
         public string DietPreferences { get; set; }
+        public MealPlanUser SpoonAccount { get; set; }
     }
 }
