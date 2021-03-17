@@ -31,9 +31,64 @@
                 <span asp-validation-for="Input.Weight" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Input.Gender"></label>
+                <span asp-validation-for="Input.Gender" class="text-danger"></span>
+                <select asp-for="Input.Gender" class="form-control">
+                    @{
+                        var genders = new List<string> {
+                            "Male",
+                            "Female"
+                        };
+                    }
+                    @foreach (var g in genders)
+                    {
+                        bool isSelected = g == Model.Input.Gender;
+                        if (isSelected)
+                        {
+                            <option value="@g" selected>@g</option>
+                        }
+                        else
+                        {
+                            <option value="@g">@g</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Birthday"></label>
+                <input asp-for="Input.Birthday" class="form-control" />
+                <span asp-validation-for="Input.Birthday" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Input.Diet"></label>
-                <input asp-for="Input.Diet" class="form-control" />
                 <span asp-validation-for="Input.Diet" class="text-danger"></span>
+                <select asp-for="Input.Diet" class="form-control">
+                    @{
+                        var dietList = new List<string> {
+                            "Ketogenic",
+                            "Vegetarian",
+                            "Lacto-Vegetarian",
+                            "Ovo-Vegetarian",
+                            "Vegan",
+                            "Pescetarian",
+                            "Paleo",
+                            "Primal",
+                            "Whole30"
+                        };
+                    }
+                    @foreach (var diet in dietList)
+                    {
+                        bool isSelected = diet == Model.Input.Diet;
+                        if (isSelected)
+                        {
+                            <option value="@diet" selected>@diet</option>
+                        }
+                        else
+                        {
+                            <option value="@diet">@diet</option>
+                        }
+                    }
+                </select>
             </div>
             <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
         </form>

@@ -13,9 +13,36 @@
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Input.Name"></label>
                 <input asp-for="Input.Name" class="form-control" />
                 <span asp-validation-for="Input.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Birthday"></label>
+                <input asp-for="Input.Birthday" class="form-control" />
+                <span asp-validation-for="Input.Birthday" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Gender"></label>
+                <span asp-validation-for="Input.Gender" class="text-danger"></span>
+                <select asp-for="Input.Gender" class="form-control">
+                    @{
+                        var genders = new List<string> {
+                            "Male",
+                            "Female"
+                        };
+                    }
+                    @foreach (var g in genders)
+                    {
+
+                        <option value="@g">@g</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="Input.Weight"></label>
@@ -26,11 +53,6 @@
                 <label asp-for="Input.Height"></label>
                 <input asp-for="Input.Height" class="form-control" />
                 <span asp-validation-for="Input.Height" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Input.Password"></label>
