@@ -1,8 +1,95 @@
-﻿@{
+﻿@model Meal_Planner.Models.DataPoint
+@{
     ViewData["Title"] = "Dashboard";
 }
+
 <div class="container-fluid">
-    <div class="row">
+    <div class="p-3 mb-2 bg-info text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    Monday
+                </div>
+                <div class="col">
+                    Tuesday
+                </div>
+                <div class="col">
+                    Wednesday
+                </div>
+                <div class="col">
+                    Thursday
+                </div>
+                <div class="col">
+                    Friday
+                </div>
+                <div class="col">
+                    Saturday
+                </div>
+                <div class="col">
+                    Sunday
+                </div>
+            </div>
+        </div>
+        <br />
+    </div>
+    <br />
+    <div class="card-deck">
+        <div class="card">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
+        <div class="card">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
+        <div class="card">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
+    </div>
+    <div id="chartContainer"></div>
+</div>
+@section Scripts
+{
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                // theme: "light2",
+                animationEnabled: true,
+                title: {
+                    text: "Macro Distrubution"
+                },
+                /*subtitles: [
+        	        { text: "Try Resizing the Browser" }
+                ],*/
+                data: [{
+                    type: "doughnut", //change type to bar, line, area, pie, etc
+                    dataPoints: @Html.Raw(ViewData["datapoints"])
+                }]
+            });
+            chart.render();
+        };
+    </script>
+}
+
+@* C# Commenting out
+    <!--    Left For refrence
+    <div class="container-fluid">
+        <div class="row">
+        </div>
         <div class="col-md-12">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
@@ -118,8 +205,8 @@
                         </div>
                     </div>
                 </div>
-            </div> 
-            
+            </div>
+
             <span class="badge badge-success">Label</span>
             <button type="button" class="btn btn-primary">
                 Button
@@ -308,4 +395,5 @@
             </ul>
         </div>
     </div>
-</div>
+    </div>
+    -->*@

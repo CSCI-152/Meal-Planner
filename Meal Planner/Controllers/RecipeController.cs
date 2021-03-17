@@ -36,7 +36,7 @@ namespace Meal_Planner.Controllers
         }
 
         // GET: Recipe/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string title)
         {
             if (id == null)
             {
@@ -75,15 +75,23 @@ namespace Meal_Planner.Controllers
                     var headerLimit = response.Headers.GetValues("x-ratelimit-requests-remaining").FirstOrDefault();
                     _options.Key.RequestLimit = Int32.Parse(headerLimit);
 
-                    RecipeModel stolen = JsonConvert.DeserializeObject<RecipeModel>(result);
-                    
-                    _context.Add(stolen);//details 966429 and 578451 breaks model
-                    await _context.SaveChangesAsync();
+                    RecipeModel recipeRequest = JsonConvert.DeserializeObject<RecipeModel>(result);
+
+                    string realTitle = URLFunctions.URLFriendly(recipeRequest.Title);
+                    string urlTitle = (title ?? "").Trim().ToLower();
+
+                    if (realTitle != urlTitle)
+                    {
+                        string url = "/Recipe/" + realTitle + "/" + id;
+                        return new RedirectResult(url, true);
+                    }
+
+                    //   _context.Add(recipeRequest);//details 966429 and 578451 breaks model         // this saves the data to the DB, removed because it caused crashes
+                    //   await _context.SaveChangesAsync();
                     //Add result to our database
-                    return View(stolen);
+                    return View(recipeRequest);
                 }
             }
-            ViewData["Cache"] = "- Displaying from DB!";
             return View(recipeModel);
         }
 
