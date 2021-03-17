@@ -63,9 +63,10 @@
 
         function sendPostData() {
             var url = 'https://api.spoonacular.com/mealplanner/' + user + '/items?apiKey=' + key + '&hash=' + hash;
-
+            var d = new Date();
+            var offset = d.getTimezoneOffset() * 60 * (-1);              // get user's offset from UTC in minutes, convert to seconds
             var object = {
-                "date": @DateTimeOffset.Now.ToUnixTimeSeconds(),
+                "date": (Math.floor(Date.now() / 1000) + offset),        // API uses seconds, Date.now() gives in milliseconds 
                 "slot": 1,
                 "position": 0,
                 "type": "RECIPE",
@@ -88,7 +89,7 @@
         }
 
         function getPostData() {
-            var date = new Date(@DateTimeOffset.Now.ToUnixTimeSeconds() * 1000); //Epoch time in milliseconds for JS
+            var date = new Date(Math.floor(Date.now())); //Epoch time in milliseconds for JS
             var year = date.getFullYear();
             var month = date.getMonth() + 1;
             var day = date.getDate();
@@ -109,9 +110,9 @@
 
                         res = '<div class="col-md-4"><div class="card mb-4 shadow-sm" style="width: 18rem;">' +
                             '<div class="card-body">' +
-                            '<h5 class="card-title">' + element.value.title + '</h5>' + 
-                            '<h6 class="card-subtitle mb-2 text-muted">' + 'Servings: '+element.value.servings+ '<br/>Id: ' + element.id +'</h6>' + 
-                                '<p class="card-text">Recipe Id: ' + element.value.id + '</p>' + 
+                            '<h5 class="card-title">' + element.value.title + '</h5>' +
+                            '<h6 class="card-subtitle mb-2 text-muted">' + 'Servings: '+element.value.servings+ '<br/>Id: ' + element.id +'</h6>' +
+                                '<p class="card-text">Recipe Id: ' + element.value.id + '</p>' +
                             '</div>' +
                             '</div></div>';
 
