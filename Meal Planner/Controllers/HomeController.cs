@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -36,6 +37,13 @@ namespace Meal_Planner.Controllers
         [Route("Dashboard")]
         public IActionResult Dashboard()
         {
+            List<DataPoint> dataPoints = new List<DataPoint>();
+
+            dataPoints.Add(new DataPoint("Carbohydrates", 25));    // controller will need to get actual values to fill in for constants
+            dataPoints.Add(new DataPoint("Fats", 13));
+            dataPoints.Add(new DataPoint("Protein", 8));
+
+            ViewData["DataPoints"] = JsonConvert.SerializeObject(dataPoints);
             return View();
         }
 
