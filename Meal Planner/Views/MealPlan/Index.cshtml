@@ -88,6 +88,19 @@
             return Math.floor(Math.random() * Math.floor(max));
         }
 
+        function deleteMeal(id) {
+            console.log(id);
+            $.ajax({
+                url: "https://api.spoonacular.com/mealplanner/" + user + "/items/" + id + "?hash=" + hash + "&apiKey=" + key,
+                method: 'delete',
+                success: function (result) {
+                    console.log(JSON.stringify(result));
+                    var element = $('#delete-recipe-' + id).parent();
+                    element.remove('.card');
+                }
+            });
+        }
+
         function getPostData() {
             var date = new Date(Math.floor(Date.now())); //Epoch time in milliseconds for JS
             var year = date.getFullYear();
@@ -114,7 +127,7 @@
                             '<h6 class="card-subtitle mb-2 text-muted">' + 'Servings: '+element.value.servings+ '<br/>Id: ' + element.id +'</h6>' +
                                 '<p class="card-text">Recipe Id: ' + element.value.id + '</p>' +
                             '</div>' +
-                            '</div></div>';
+                            '<button class="btn btn-outline-danger" id="delete-recipe-' + element.id + '" onclick="deleteMeal('+element.id+')">Delete</button></div></div>';
 
                         //Insert to page HTML
                         $("#saved-output").append(res);
