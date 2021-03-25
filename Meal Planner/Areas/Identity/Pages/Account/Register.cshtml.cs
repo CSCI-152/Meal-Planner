@@ -67,6 +67,9 @@ namespace Meal_Planner.Areas.Identity.Pages.Account
             [Display(Name = "Date of birth")]
             public DateTime Birthday { get; set; }
 
+            [Display(Name = "Diet preference")]
+            public string Diet { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
