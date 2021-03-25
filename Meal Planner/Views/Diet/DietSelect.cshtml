@@ -7,6 +7,15 @@
     .row-floating {
         position: relative;
     }
+
+    .my-sidebar {
+        -ms-flex: 0 0 250px;
+        flex: 0 0 250px;
+    }
+
+    .center {
+        text-align: center;
+    }
 </style>
 
 <script>
@@ -21,7 +30,7 @@
     });
 </script>
 
-<h1>DietView</h1>
+<div class="center"><h1>Available Diets</h1></div>
 
 <br />
 <br />
@@ -31,42 +40,98 @@
     <div class="row">
 
 
-
-        <div class="col">
-            <div class="row-fluid clearfix">
-                <div id="list-example" class="list-group row-floating">
-                    <a class="list-group-item list-group-item-action" href="#list-item-1">Item 1</a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-2">Item 2</a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-3">Item 3</a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-4">Item 4</a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-5">Item 5</a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-6">Item 6</a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-7">Item 7</a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-8">Item 8</a>
+        <div class="col my-sidebar">
+            <div class="col">
+                <div class="row-fluid clearfix">
+                    <div id="list-example" class="list-group row-floating">
+                        <a class="list-group-item list-group-item-action" href="#list-item-glutenfree">Gluten Free</a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-ketogenic">Ketogenic</a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-vegetarian">Vegetarian</a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-lacto-vegetarian">Lacto-Vegetarian</a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-ovo-vegetarian">Ovo-Vegetarian</a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-vegan">Vegan</a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-pescetarian">Pescetarian</a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-paleo">Paleo</a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-primal">Primal</a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-whole30">Whole30</a>
+                    </div>
                 </div>
             </div>
         </div>
 
 
-
         <div class="col">
             <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
-                <h4 id="list-item-1">Item 1</h4>
-                <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                <h4 id="list-item-2">Item 2</h4>
-                <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                <h4 id="list-item-3">Item 3</h4>
-                <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                <h4 id="list-item-4">Item 4</h4>
-                <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                <h4 id="list-item-5">Item 5</h4>
-                <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                <h4 id="list-item-6">Item 6</h4>
-                <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                <h4 id="list-item-7">Item 7</h4>
-                <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                <h4 id="list-item-8">Item 8</h4>
-                <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
+
+                <h4 id="list-item-glutenfree"></h4>
+                <img class="d-block w-100" src="/img/glutenfree.png" />
+                <br />
+                <p>Eliminating gluten means avoiding wheat, barley, rye, and other gluten-containing grains and foods made from them (or that may have been cross contaminated).</p>
+
+                <br />
+
+                <h4 id="list-item-ketogenic"></h4>
+                <img class="d-block w-100" src="/img/keto.png" />
+                <br />
+                <p>The keto diet is based more on the ratio of fat, protein, and carbs in the diet rather than specific ingredients. Generally speaking, high fat, protein-rich foods are acceptable and high carbohydrate foods are not.</p>
+
+                <br />
+
+                <h4 id="list-item-vegetarian"></h4>
+                <img class="d-block w-100" src="/img/vegetarian.png" />
+                <br />
+                <p>No ingredients may contain meat or meat by-products, such as bones or gelatin.</p>
+
+                <br />
+
+                <h4 id="list-item-lacto-vegetarian"></h4>
+                <img class="d-block w-100" src="/img/lacto-veg.png" />
+                <br />
+                <p>All ingredients must be vegetarian and none of the ingredients can be or contain egg.</p>
+
+                <br />
+
+                <h4 id="list-item-ovo-vegetarian"></h4>
+                <img class="d-block w-100" src="/img/ovo-veg.png" />
+                <br />
+                <p>All ingredients must be vegetarian and none of the ingredients can be or contain dairy.</p>
+
+                <br />
+
+                <h4 id="list-item-vegan"></h4>
+                <img class="d-block w-100" src="/img/vegan.png" />
+                <br />
+                <p>No ingredients may contain meat or meat by-products, such as bones or gelatin, nor may they contain eggs, dairy, or honey.</p>
+
+                <br />
+
+                <h4 id="list-item-pescetarian"></h4>
+                <img class="d-block w-100" src="/img/pesc.png" />
+                <br />
+                <p>Everything is allowed except meat and meat by-products - some pescetarians eat eggs and dairy, some do not.</p>
+
+                <br />
+
+                <h4 id="list-item-paleo"></h4>
+                <img class="d-block w-100" src="/img/paleo.png" />
+                <br />
+                <p>Allowed ingredients include meat (especially grass fed), fish, eggs, vegetables, some oils (e.g. coconut and olive oil), and in smaller quantities, fruit, nuts, and sweet potatoes. We also allow honey and maple syrup (popular in Paleo desserts, but strict Paleo followers may disagree). Ingredients not allowed include legumes (e.g. beans and lentils), grains, dairy, refined sugar, and processed foods.</p>
+
+                <br />
+
+                <h4 id="list-item-primal"></h4>
+                <img class="d-block w-100" src="/img/primal.png" />
+                <br />
+                <p>Very similar to Paleo, except dairy is allowed - think raw and full fat milk, butter, ghee, etc.</p>
+
+                <br />
+
+                <h4 id="list-item-whole30"></h4>
+                <img class="d-block w-100" src="/img/whole30.png" />
+                <br />
+                <p>Allowed ingredients include meat, fish/seafood, eggs, vegetables, fresh fruit, coconut oil, olive oil, small amounts of dried fruit and nuts/seeds. Ingredients not allowed include added sweeteners (natural and artificial, except small amounts of fruit juice), dairy (except clarified butter or ghee), alcohol, grains, legumes (except green beans, sugar snap peas, and snow peas), and food additives, such as carrageenan, MSG, and sulfites.</p>
+
+
             </div>
         </div>
 
