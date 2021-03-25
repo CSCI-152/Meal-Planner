@@ -4,14 +4,16 @@ using Meal_Planner.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Meal_Planner.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210316145625_newRegister")]
+    partial class newRegister
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,31 +97,6 @@ namespace Meal_Planner.Migrations
                     b.ToTable("Meals");
                 });
 
-            modelBuilder.Entity("Meal_Planner.Models.MealPlanUser", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ApiKey")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Hash")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MealPlanUser");
-                });
-
             modelBuilder.Entity("Meal_Planner.Models.RecipeModel", b =>
                 {
                     b.Property<Guid>("RecipeId")
@@ -194,8 +171,8 @@ namespace Meal_Planner.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Birthday")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -249,9 +226,6 @@ namespace Meal_Planner.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("SpoonAccountId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -271,8 +245,6 @@ namespace Meal_Planner.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("SpoonAccountId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -417,15 +389,6 @@ namespace Meal_Planner.Migrations
                     b.HasOne("Meal_Planner.Models.RecipeModel", null)
                         .WithMany("ExtendedIngredients")
                         .HasForeignKey("RecipeModelRecipeId");
-                });
-
-            modelBuilder.Entity("Meal_Planner.Models.UserModel", b =>
-                {
-                    b.HasOne("Meal_Planner.Models.MealPlanUser", "SpoonAccount")
-                        .WithMany()
-                        .HasForeignKey("SpoonAccountId");
-
-                    b.Navigation("SpoonAccount");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
