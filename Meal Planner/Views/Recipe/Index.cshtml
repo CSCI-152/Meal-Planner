@@ -225,6 +225,7 @@
             //Check headers
             //x-ratelimit-requests-remaining: 4991
             //x-ratelimit-results-remaining: 19975
+            $("#search-results").append('<div class="spinner-border" role="status"><span class= "sr-only">Searching...</span ></div >');
 
             $.ajax(settings).done(function (response, status, xhr) {
                 console.log(response); //log to browser console the api data
@@ -233,6 +234,10 @@
                     "\nAPI Result limit: \t" + xhr.getResponseHeader('x-ratelimit-results-remaining') + "/" + xhr.getResponseHeader('X-RateLimit-results-Limit'));
                 //Send API header to API
                 $.post("/Recipe/UpdateApi", { RequestLimit: reqLimit }, function (result) { console.log(result) });
+
+                //Remove the loading html
+                $("#search-results").empty();
+
                 var searchResult = document.getElementById("search-results");
                 var results;
                 console.log("Results: " + response.totalResults);
