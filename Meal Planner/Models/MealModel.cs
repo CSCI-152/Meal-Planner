@@ -10,10 +10,6 @@ namespace Meal_Planner.Models
     {
         public int Id { get; set; }
         [MaxLength(1000)]
-        public string title { get; set; }
-        [MaxLength(4000)]
-        public string instructions { get; set; }
-
-        //public List<ingredients> {get;set;}
+        public string Title { get; set; }
     }
 }

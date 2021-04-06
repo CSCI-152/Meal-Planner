@@ -21,5 +21,6 @@ namespace Meal_Planner.Models
         [MaxLength(100)]
         public string DietPreferences { get; set; }
         public MealPlanUser SpoonAccount { get; set; }
+        public ICollection<UserMealPlan> Meals { get; set; }
     }
 }

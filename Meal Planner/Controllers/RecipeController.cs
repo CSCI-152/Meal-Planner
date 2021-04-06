@@ -17,17 +17,19 @@ namespace Meal_Planner.Controllers
     {
         private readonly SpoonacularApi _options;
         private readonly ApplicationDbContext _context;
+        public SearchViewModel Options2 = new(); //Why does this work and not {get;set;} ????
 
         public RecipeController(IOptions<SpoonacularApi> options, ApplicationDbContext context)
         {
             _options = options.Value;
+            Options2.Spoonacular = _options;
             _context = context;
         }
 
         // GET: Recipe
         public IActionResult Index()
         {
-            return View(_options);
+            return View(Options2);
         }
 
         public async Task<IActionResult> Index2()
