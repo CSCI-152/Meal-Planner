@@ -17,17 +17,19 @@ namespace Meal_Planner.Controllers
     {
         private readonly SpoonacularApi _options;
         private readonly ApplicationDbContext _context;
+        public SearchViewModel Options2 = new(); //Why does this work and not {get;set;} ????
 
         public RecipeController(IOptions<SpoonacularApi> options, ApplicationDbContext context)
         {
             _options = options.Value;
+            Options2.Spoonacular = _options;
             _context = context;
         }
 
         // GET: Recipe
         public IActionResult Index()
         {
-            return View(_options);
+            return View(Options2);
         }
 
         public async Task<IActionResult> Index2()
@@ -36,7 +38,7 @@ namespace Meal_Planner.Controllers
         }
 
         // GET: Recipe/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string title)
         {
             if (id == null)
             {
@@ -76,6 +78,15 @@ namespace Meal_Planner.Controllers
                     _options.Key.RequestLimit = Int32.Parse(headerLimit);
 
                     RecipeModel recipeRequest = JsonConvert.DeserializeObject<RecipeModel>(result);
+
+                    string realTitle = URLFunctions.URLFriendly(recipeRequest.Title);
+                    string urlTitle = (title ?? "").Trim().ToLower();
+
+                    if (realTitle != urlTitle)
+                    {
+                        string url = "/Recipe/" + realTitle + "/" + id;
+                        return new RedirectResult(url, true);
+                    }
 
                     //   _context.Add(recipeRequest);//details 966429 and 578451 breaks model         // this saves the data to the DB, removed because it caused crashes
                     //   await _context.SaveChangesAsync();

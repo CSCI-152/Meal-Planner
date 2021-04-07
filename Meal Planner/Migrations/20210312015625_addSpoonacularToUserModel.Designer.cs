@@ -4,14 +4,16 @@ using Meal_Planner.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Meal_Planner.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210312015625_addSpoonacularToUserModel")]
+    partial class addSpoonacularToUserModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,6 +75,26 @@ namespace Meal_Planner.Migrations
                     b.HasIndex("RecipeModelRecipeId");
 
                     b.ToTable("IngredientsModel");
+                });
+
+            modelBuilder.Entity("Meal_Planner.Models.MealModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("instructions")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("title")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Meals");
                 });
 
             modelBuilder.Entity("Meal_Planner.Models.MealPlanUser", b =>
@@ -166,28 +188,6 @@ namespace Meal_Planner.Migrations
                     b.ToTable("RecipeModel");
                 });
 
-            modelBuilder.Entity("Meal_Planner.Models.UserMealPlan", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserModelId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserModelId");
-
-                    b.ToTable("UserMealPlan");
-                });
-
             modelBuilder.Entity("Meal_Planner.Models.UserModel", b =>
                 {
                     b.Property<string>("Id")
@@ -196,8 +196,8 @@ namespace Meal_Planner.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Birthday")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -421,13 +421,6 @@ namespace Meal_Planner.Migrations
                         .HasForeignKey("RecipeModelRecipeId");
                 });
 
-            modelBuilder.Entity("Meal_Planner.Models.UserMealPlan", b =>
-                {
-                    b.HasOne("Meal_Planner.Models.UserModel", null)
-                        .WithMany("Meals")
-                        .HasForeignKey("UserModelId");
-                });
-
             modelBuilder.Entity("Meal_Planner.Models.UserModel", b =>
                 {
                     b.HasOne("Meal_Planner.Models.MealPlanUser", "SpoonAccount")
@@ -491,11 +484,6 @@ namespace Meal_Planner.Migrations
             modelBuilder.Entity("Meal_Planner.Models.RecipeModel", b =>
                 {
                     b.Navigation("ExtendedIngredients");
-                });
-
-            modelBuilder.Entity("Meal_Planner.Models.UserModel", b =>
-                {
-                    b.Navigation("Meals");
                 });
 #pragma warning restore 612, 618
         }

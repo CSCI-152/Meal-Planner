@@ -1,10 +1,9 @@
-﻿@model Meal_Planner.Models.SpoonacularApi
-@{
+﻿@{
     ViewData["Title"] = "Create";
 }
 @section Style {
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-select.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css" />
     <style type="text/css">
         .hidden {
             display: none;
@@ -13,6 +12,7 @@
 }
 <section class="root jumbotron text-center">
     <div class="container">
+        <partial name="_AddMealModalPartial" /> @*Partial view for the add to meal plan popup*@
         <h1 class="jumbotron-heading">Recipe Search</h1>
         <p class="lead text-muted">Find recipes to add to your meal planner.</p>
         <form action="javascript:void(0);" onsubmit="searchRecipes()">
@@ -45,9 +45,9 @@
                     Advanced Search
                 </div>
                 <div class="card-body my-1">
-                    Filter by price interval: <b>€ 10</b> <input id="ex2" type="text" class="form-control span2" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]" /> <b>€ 1000</b>
-                    Protein calories:
-                    Fats calories:
+                    Filter calories: <b>0</b> <input id="cal-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="1500" data-slider-step="5" data-slider-value="[0,1000]" /> <b>1500 cals</b> <br />
+                    Filter fats: <b>0</b> <input id="fat-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,100]" /> <b>500g</b> <br />
+                    Filter protein: <b>0</b> <input id="pro-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,70]" /> <b>500g</b>
                 </div>
             </div>
             <p>
@@ -93,15 +93,16 @@
 </div>
 <a asp-action="Index">Back to search</a>
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script src="~/lib/bootstrap/dist/js/bootstrap-select.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
     <script lang="en" type="text/javascript">
         var oldSearch;
-        var reqLimit = @Model.Key.RequestLimit;
+        var reqLimit = @Model.Spoonacular.Key.RequestLimit;
         $(document).ready(function () {
             $('#intolerances').selectpicker();
             $('#search-btn').click(function () {
-                console.log("Limit: " + @Model.Key.RequestLimit);
+                console.log("Limit: " + @Model.Spoonacular.Key.RequestLimit);
                 if (oldSearch != $("#search-recipes").val())
                     searchRecipes();
                 oldSearch = $("#search-recipes").val();
@@ -112,15 +113,65 @@
                         searchRecipes();
                     oldSearch = $("#search-recipes").val();
                 }
-            }) 
+            });
             $('#adv-search-btn').click(function () {
                 $('#adv-search').toggleClass('hidden');
             });
-            $("#ex2").slider({});
-            //$("#ex2").slider();
-            //$("#ex3").slider();
+            $("#cal-slider").slider({});
+            $("#fat-slider").slider({});
+            $("#pro-slider").slider({});
 
+            $('#addMealModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data('id'); // Extract info from data-* attributes
+                var title = button.data('title');
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                modal.find('.modal-title').text(title);
+                modal.find('#modal-recipe-id').val(id);
+                modal.find('#modal-recipe-title').val(title);
+            });
+            $('#addMealModal').on('hidden.bs.modal', function (event) {
+                // Destroy modal
+                console.log("KILL MODEL");
+                $(this).find('form').trigger('reset');
+            });
+            $('#save-to-planner').click(function () {
+                var btn = $('#save-to-planner');
+
+
+                if ($('#MealPlanAdd_Date').val().length > 0) { //date is required
+                    //Change button text
+                    btn.html("Adding...");
+                    btn.prop('disabled', true);
+                    setTimeout(function () {//Just in case it fails
+                        btn.html("Add to plan");
+                        btn.prop('disabled', false);
+                    }, 5000);
+
+                    console.log($('#MealPlanAdd_Date').val());
+                    console.log("To epoch: " + Date.parse($('#MealPlanAdd_Date').val()) / 1000);
+
+                    //Send post request
+                    $.post("/Plan/add", {
+                        'MealPlanAdd.Meal.Servings': $('#MealPlanAdd_Meal_Servings').val(),
+                        'MealPlanAdd.Slot': $('#MealPlanAdd_Slot').val(),
+                        'MealPlanAdd.Type': "RECIPE",
+                        'MealPlanAdd.Date': $('#MealPlanAdd_Date').val(),
+                        'MealPlanAdd.Meal.Id': $('#modal-recipe-id').val(),
+                        'MealPlanAdd.Meal.Title': $('#modal-recipe-title').val(),
+                        '__RequestVerificationToken': $("input[name=__RequestVerificationToken]").val()
+                    }, function (result) {
+                        console.log(result);
+                        $('#addMealModal').modal('hide');
+                        btn.html("Add to plan");
+                        btn.prop('disabled', false);
+                    });
+                }
+            });
         });
+
         function searchRecipes() {//query=burger&diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C%20gluten&number=10&offset=0&type=main%20course
             if (oldSearch == $("#search-recipes").val())
                 return;
@@ -164,8 +215,8 @@
                 "url": paramUrl,
                 "method": "GET",
                 "headers": {
-                    "@Model.Key.KeyHeader": "@Model.Key.ApiKey",
-                    "@Model.Key.HostHeader": "@Model.Key.Host"
+                    "@Model.Spoonacular.Key.KeyHeader": "@Model.Spoonacular.Key.ApiKey",
+                    "@Model.Spoonacular.Key.HostHeader": "@Model.Spoonacular.Key.Host"
                 }
             };
 
@@ -174,6 +225,7 @@
             //Check headers
             //x-ratelimit-requests-remaining: 4991
             //x-ratelimit-results-remaining: 19975
+            $("#search-results").append('<div class="spinner-border" role="status"><span class= "sr-only">Searching...</span ></div >');
 
             $.ajax(settings).done(function (response, status, xhr) {
                 console.log(response); //log to browser console the api data
@@ -182,6 +234,10 @@
                     "\nAPI Result limit: \t" + xhr.getResponseHeader('x-ratelimit-results-remaining') + "/" + xhr.getResponseHeader('X-RateLimit-results-Limit'));
                 //Send API header to API
                 $.post("/Recipe/UpdateApi", { RequestLimit: reqLimit }, function (result) { console.log(result) });
+
+                //Remove the loading html
+                $("#search-results").empty();
+
                 var searchResult = document.getElementById("search-results");
                 var results;
                 console.log("Results: " + response.totalResults);
@@ -210,7 +266,7 @@
                         + element.title
                         + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a href=\"/recipe/details/"
                         + element.id
-                        + "\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
+                        + "\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" data-toggle=\"modal\" data-target=\"#addMealModal\" data-id=" + JSON.stringify(element.id) + " data-title=" + JSON.stringify(element.title) + " + class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
                         + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
                     //Insert to page HTML
                     searchResult.insertAdjacentHTML('beforeend', results);

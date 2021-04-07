@@ -46,6 +46,27 @@ namespace Meal_Planner.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required(ErrorMessage = "Name is required")]
+            [StringLength(100)]
+            public string Name { get; set; }
+
+            [Required(ErrorMessage = "Height is required")]
+            [Display(Name = "Height in cm")]
+            public int Height { get; set; }
+
+            [Required(ErrorMessage = "Weight is required")]
+            [Display(Name = "Weight in kg")]
+            public int Weight { get; set; }
+
+            [Required(ErrorMessage = "Pick a gender")]
+            [Display(Name = "Gender")]
+            public string Gender { get; set; }
+
+            [Required]
+            [DataType(DataType.Date)]
+            [Display(Name = "Date of birth")]
+            public DateTime Birthday { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -75,7 +96,7 @@ namespace Meal_Planner.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new UserModel { UserName = Input.Email, Email = Input.Email };
+                var user = new UserModel { Name = Input.Name, Birthday = Input.Birthday, Height = Input.Height, Weight = Input.Weight, Gender = Input.Gender, UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

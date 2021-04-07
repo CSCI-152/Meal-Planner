@@ -13,12 +13,14 @@ namespace Meal_Planner.Models
         [PersonalData]
         [MaxLength(100)]
         public string Name { get; set; }
-        public int Age { get; set; }
+        public DateTime Birthday { get; set; }
         [MaxLength(100)]
         public string Gender { get; set; }
         public int Height { get; set; }
         public int Weight { get; set; }
         [MaxLength(100)]
         public string DietPreferences { get; set; }
+        public MealPlanUser SpoonAccount { get; set; }
+        public ICollection<UserMealPlan> Meals { get; set; }
     }
 }

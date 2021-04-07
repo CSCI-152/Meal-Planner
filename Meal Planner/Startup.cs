@@ -99,15 +99,15 @@ namespace Meal_Planner
 
             app.UseEndpoints(endpoints =>
             {
-                /*endpoints.MapControllerRoute(
-                    name: "identity",
-                    pattern: "Identity/Account",
-                    defaults: new { controller = "Identity", action = "Login" });*/
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "Recipe",
+                    pattern: "{controller=Recipe}/{title?}/{id?}",
+                    defaults: new { controller = "Recipe", action = "Details" });
                 endpoints.MapRazorPages();
-                //endpoints.MapControllers();
+                //endpoints.MapControllers(); //Only for API Controllers
             });
         }
     }

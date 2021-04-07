@@ -40,12 +40,22 @@ namespace Meal_Planner.Areas.Identity.Pages.Account.Manage
             public string Name { get; set; }
 
             [Required]
-            [Display(Name = "Height")]
+            [DataType(DataType.Date)]
+            [Display(Name="Date of birth")]
+            public DateTime Birthday { get; set; }
+
+            [Required]
+            [Display(Name = "Height in cm")]
             public int Height { get; set; }
 
             [Required]
-            [Display(Name = "Weight")]
+            [Display(Name = "Weight in kg")]
             public int Weight { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Gender")]
+            public string Gender { get; set; }
 
             [Required]
             [DataType(DataType.Text)]
@@ -63,6 +73,8 @@ namespace Meal_Planner.Areas.Identity.Pages.Account.Manage
             Input = new InputModel
             {
                 Name = user.Name,
+                Birthday = user.Birthday,
+                Gender = user.Gender,
                 Height = user.Height,
                 Weight = user.Weight,
                 Diet = user.DietPreferences
@@ -110,6 +122,16 @@ namespace Meal_Planner.Areas.Identity.Pages.Account.Manage
             if (Input.Name != user.Name)
             {
                 user.Name = Input.Name;
+            }
+
+            if (Input.Birthday != user.Birthday) //TODO Compare dates properly
+            {
+                user.Birthday = Input.Birthday;
+            }
+
+            if(Input.Gender != user.Gender)
+            {
+                user.Gender = Input.Gender;
             }
 
             if (Input.Height != user.Height)

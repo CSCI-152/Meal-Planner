@@ -26,12 +26,15 @@ namespace Meal_Planner.Controllers
             return View();
         }
 
+        [Route("Diet-Info")]
         [AllowAnonymous]
-        public IActionResult Knowledge()
+        public IActionResult DietInfo()
         {
+            
             return View();
         }
 
+        [Route("Dashboard")]
         public IActionResult Dashboard()
         {
             List<DataPoint> dataPoints = new List<DataPoint>();
