@@ -1,45 +1,33 @@
 ﻿
 @{
-    ViewData["Title"] = "DietView";
+    ViewData["Title"] = "Diet View";
 }
 
-<style>
-    .row-floating {
-        position: relative;
-    }
-
-    .my-sidebar {
-        -ms-flex: 0 0 250px;
-        flex: 0 0 250px;
-    }
-
-    .center {
-        text-align: center;
-    }
-</style>
-
-<script>
-    var offsetTop = $('.row-floating').offset().top;
-    var actualWidth = $('.row-floating').width();
-    $(window).scroll(function () {
-        if (window.scrollY >= offsetTop) {
-            $('.row-floating').css('position', 'fixed').css('top', 0).css('width', actualWidth);
-        } else {
-            $('.row-floating').css('position', 'relative').css('top', 'auto').css('width', 'auto');
+@section style {
+    <style>
+        .row-floating {
+            position: relative;
         }
-    });
-</script>
+
+        .my-sidebar {
+            -ms-flex: 0 0 250px;
+            flex: 0 0 250px;
+        }
+
+        .center {
+            text-align: center;
+        }
+    </style>
+}
 
 <div class="center"><h1>Available Diets</h1></div>
+<h3 class="text-muted center">Currently using @ViewData["diet"]</h3>
 
 <br />
 <br />
 
 <div class="container-fluid">
-
     <div class="row">
-
-
         <div class="col my-sidebar">
             <div class="col">
                 <div class="row-fluid clearfix">
@@ -59,84 +47,117 @@
             </div>
         </div>
 
-
         <div class="col">
             <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
+                <form id="dietForm" asp-antiforgery="true">
+                    <h4 id="list-item-glutenfree"></h4>
+                    <img class="d-block w-100" src="/img/glutenfree.png" />
+                    @*Add button with a value that matches the available Diet Preferences*@
+                    @*Gluten Free doesn't actually have a diet preference with our API limits but I'm leaving it here for reference*@
+                    <button class="btn btn-outline-info diet" value="Gluten Free">Add to account</button>
+                    <br />
+                    <p>Eliminating gluten means avoiding wheat, barley, rye, and other gluten-containing grains and foods made from them (or that may have been cross contaminated).</p>
 
-                <h4 id="list-item-glutenfree"></h4>
-                <img class="d-block w-100" src="/img/glutenfree.png" />
-                <br />
-                <p>Eliminating gluten means avoiding wheat, barley, rye, and other gluten-containing grains and foods made from them (or that may have been cross contaminated).</p>
+                    <br />
 
-                <br />
+                    <h4 id="list-item-ketogenic"></h4>
+                    <img class="d-block w-100" src="/img/keto.png" />
+                    @**The value must be equal to the values inside the user profile in order to work properly*@
+                    <button class="btn btn-outline-info diet" value="Ketogenic">Add to account</button>
+                    <br />
+                    <p>The keto diet is based more on the ratio of fat, protein, and carbs in the diet rather than specific ingredients. Generally speaking, high fat, protein-rich foods are acceptable and high carbohydrate foods are not.</p>
 
-                <h4 id="list-item-ketogenic"></h4>
-                <img class="d-block w-100" src="/img/keto.png" />
-                <br />
-                <p>The keto diet is based more on the ratio of fat, protein, and carbs in the diet rather than specific ingredients. Generally speaking, high fat, protein-rich foods are acceptable and high carbohydrate foods are not.</p>
+                    <br />
 
-                <br />
+                    <h4 id="list-item-vegetarian"></h4>
+                    <img class="d-block w-100" src="/img/vegetarian.png" />
+                    <br />
+                    <p>No ingredients may contain meat or meat by-products, such as bones or gelatin.</p>
 
-                <h4 id="list-item-vegetarian"></h4>
-                <img class="d-block w-100" src="/img/vegetarian.png" />
-                <br />
-                <p>No ingredients may contain meat or meat by-products, such as bones or gelatin.</p>
+                    <br />
 
-                <br />
+                    <h4 id="list-item-lacto-vegetarian"></h4>
+                    <img class="d-block w-100" src="/img/lacto-veg.png" />
+                    <br />
+                    <p>All ingredients must be vegetarian and none of the ingredients can be or contain egg.</p>
 
-                <h4 id="list-item-lacto-vegetarian"></h4>
-                <img class="d-block w-100" src="/img/lacto-veg.png" />
-                <br />
-                <p>All ingredients must be vegetarian and none of the ingredients can be or contain egg.</p>
+                    <br />
 
-                <br />
+                    <h4 id="list-item-ovo-vegetarian"></h4>
+                    <img class="d-block w-100" src="/img/ovo-veg.png" />
+                    <br />
+                    <p>All ingredients must be vegetarian and none of the ingredients can be or contain dairy.</p>
 
-                <h4 id="list-item-ovo-vegetarian"></h4>
-                <img class="d-block w-100" src="/img/ovo-veg.png" />
-                <br />
-                <p>All ingredients must be vegetarian and none of the ingredients can be or contain dairy.</p>
+                    <br />
 
-                <br />
+                    <h4 id="list-item-vegan"></h4>
+                    <img class="d-block w-100" src="/img/vegan.png" />
+                    <br />
+                    <p>No ingredients may contain meat or meat by-products, such as bones or gelatin, nor may they contain eggs, dairy, or honey.</p>
 
-                <h4 id="list-item-vegan"></h4>
-                <img class="d-block w-100" src="/img/vegan.png" />
-                <br />
-                <p>No ingredients may contain meat or meat by-products, such as bones or gelatin, nor may they contain eggs, dairy, or honey.</p>
+                    <br />
 
-                <br />
+                    <h4 id="list-item-pescetarian"></h4>
+                    <img class="d-block w-100" src="/img/pesc.png" />
+                    <br />
+                    <p>Everything is allowed except meat and meat by-products - some pescetarians eat eggs and dairy, some do not.</p>
 
-                <h4 id="list-item-pescetarian"></h4>
-                <img class="d-block w-100" src="/img/pesc.png" />
-                <br />
-                <p>Everything is allowed except meat and meat by-products - some pescetarians eat eggs and dairy, some do not.</p>
+                    <br />
 
-                <br />
+                    <h4 id="list-item-paleo"></h4>
+                    <img class="d-block w-100" src="/img/paleo.png" />
+                    <br />
+                    <p>Allowed ingredients include meat (especially grass fed), fish, eggs, vegetables, some oils (e.g. coconut and olive oil), and in smaller quantities, fruit, nuts, and sweet potatoes. We also allow honey and maple syrup (popular in Paleo desserts, but strict Paleo followers may disagree). Ingredients not allowed include legumes (e.g. beans and lentils), grains, dairy, refined sugar, and processed foods.</p>
 
-                <h4 id="list-item-paleo"></h4>
-                <img class="d-block w-100" src="/img/paleo.png" />
-                <br />
-                <p>Allowed ingredients include meat (especially grass fed), fish, eggs, vegetables, some oils (e.g. coconut and olive oil), and in smaller quantities, fruit, nuts, and sweet potatoes. We also allow honey and maple syrup (popular in Paleo desserts, but strict Paleo followers may disagree). Ingredients not allowed include legumes (e.g. beans and lentils), grains, dairy, refined sugar, and processed foods.</p>
+                    <br />
 
-                <br />
+                    <h4 id="list-item-primal"></h4>
+                    <img class="d-block w-100" src="/img/primal.png" />
+                    <br />
+                    <p>Very similar to Paleo, except dairy is allowed - think raw and full fat milk, butter, ghee, etc.</p>
 
-                <h4 id="list-item-primal"></h4>
-                <img class="d-block w-100" src="/img/primal.png" />
-                <br />
-                <p>Very similar to Paleo, except dairy is allowed - think raw and full fat milk, butter, ghee, etc.</p>
+                    <br />
 
-                <br />
-
-                <h4 id="list-item-whole30"></h4>
-                <img class="d-block w-100" src="/img/whole30.png" />
-                <br />
-                <p>Allowed ingredients include meat, fish/seafood, eggs, vegetables, fresh fruit, coconut oil, olive oil, small amounts of dried fruit and nuts/seeds. Ingredients not allowed include added sweeteners (natural and artificial, except small amounts of fruit juice), dairy (except clarified butter or ghee), alcohol, grains, legumes (except green beans, sugar snap peas, and snow peas), and food additives, such as carrageenan, MSG, and sulfites.</p>
-
-
+                    <h4 id="list-item-whole30"></h4>
+                    <img class="d-block w-100" src="/img/whole30.png" />
+                    <br />
+                    <p>Allowed ingredients include meat, fish/seafood, eggs, vegetables, fresh fruit, coconut oil, olive oil, small amounts of dried fruit and nuts/seeds. Ingredients not allowed include added sweeteners (natural and artificial, except small amounts of fruit juice), dairy (except clarified butter or ghee), alcohol, grains, legumes (except green beans, sugar snap peas, and snow peas), and food additives, such as carrageenan, MSG, and sulfites.</p>
+                </form>
             </div>
         </div>
-
-
     </div>
 </div>
 
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#dietForm").submit(function (e) {
+                e.preventDefault(e);
+            });
 
+            var offsetTop = $('.row-floating').offset().top;
+            var actualWidth = $('.row-floating').width();
+            $(window).scroll(function () {
+                if (window.scrollY >= offsetTop) {
+                    $('.row-floating').css('position', 'fixed').css('top', 0).css('width', actualWidth);
+                } else {
+                    $('.row-floating').css('position', 'relative').css('top', 'auto').css('width', 'auto');
+                }
+            });
+
+            $(".diet").on('click', function () {
+                dietPreference($(this).val());
+            });
+
+            function dietPreference(diet) {
+                $.post("/Diet/Update", {
+                    'dietPreferences': diet,
+                    '__RequestVerificationToken': $("input[name=__RequestVerificationToken]").val()
+                }, function (result) {
+                    location.reload();
+                });
+            }
+        });
+    </script>
+}
