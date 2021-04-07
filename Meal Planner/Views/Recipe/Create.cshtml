@@ -1,0 +1,105 @@
+﻿@model Meal_Planner.Models.RecipeModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>RecipeModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image" class="control-label"></label>
+                <input asp-for="Image" class="form-control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Servings" class="control-label"></label>
+                <input asp-for="Servings" class="form-control" />
+                <span asp-validation-for="Servings" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReadyInMinutes" class="control-label"></label>
+                <input asp-for="ReadyInMinutes" class="form-control" />
+                <span asp-validation-for="ReadyInMinutes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SourceName" class="control-label"></label>
+                <input asp-for="SourceName" class="form-control" />
+                <span asp-validation-for="SourceName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SourceUrl" class="control-label"></label>
+                <input asp-for="SourceUrl" class="form-control" />
+                <span asp-validation-for="SourceUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AggregateLikes" class="control-label"></label>
+                <input asp-for="AggregateLikes" class="form-control" />
+                <span asp-validation-for="AggregateLikes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HealthScore" class="control-label"></label>
+                <input asp-for="HealthScore" class="form-control" />
+                <span asp-validation-for="HealthScore" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PricePerServing" class="control-label"></label>
+                <input asp-for="PricePerServing" class="form-control" />
+                <span asp-validation-for="PricePerServing" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DairyFree" class="control-label"></label>
+                <input asp-for="DairyFree" class="form-control" />
+                <span asp-validation-for="DairyFree" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GlutenFree" class="control-label"></label>
+                <input asp-for="GlutenFree" class="form-control" />
+                <span asp-validation-for="GlutenFree" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vegan" class="control-label"></label>
+                <input asp-for="Vegan" class="form-control" />
+                <span asp-validation-for="Vegan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vegetarian" class="control-label"></label>
+                <input asp-for="Vegetarian" class="form-control" />
+                <span asp-validation-for="Vegetarian" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ketogenic" class="control-label"></label>
+                <input asp-for="Ketogenic" class="form-control" />
+                <span asp-validation-for="Ketogenic" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Instructions" class="control-label"></label>
+                <input asp-for="Instructions" class="form-control" />
+                <span asp-validation-for="Instructions" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

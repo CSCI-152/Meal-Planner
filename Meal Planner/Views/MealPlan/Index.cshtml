@@ -1,0 +1,185 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<UserModel> UserManager
+@{
+    ViewData["Title"] = "Meal Plan";
+}
+@section Style {
+
+}
+<section class="root jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">Meal Planning</h1>
+        <p class="lead text-muted">Check Browser Console for data when clicking buttons</p>
+        <div id="macros"></div>
+        <div class="album py-5">
+            <div class="container">
+                <div class="row" id="saved-output"></div>
+            </div>
+        </div>
+        <div id="output"></div>
+        <div id="register-out"></div>
+        <form>
+            <p>
+                <a href="#" id="get-my-btn" class="btn btn-outline-primary my-2">View My Spoon Account</a>
+                <a href="#" id="add-btn" class="btn btn-outline-primary my-2">Add Mock Data</a>
+                <a href="#" id="get-btn" class="btn btn-outline-primary my-2">Get Plan Data</a>
+            </p>
+        </form>
+    </div>
+</section>
+<a asp-action="Index">Back to top</a>
+@section Scripts {
+    <script lang="en" type="text/javascript">
+        var user = "@UserManager.GetUserAsync(User).Result.SpoonAccount.Username";
+        var hash = "@UserManager.GetUserAsync(User).Result.SpoonAccount.Hash";
+        var key = "@UserManager.GetUserAsync(User).Result.SpoonAccount.ApiKey";
+
+        $(document).ready(function () {
+            $('#get-my-btn').click(function () {
+                $("#output").empty();
+                $("#saved-output").empty();
+                $("#macros").empty();
+                 getMyData();
+             });
+            $('#add-btn').click(function () {
+                $("#output").empty();
+                $("#saved-output").empty();
+                $("#macros").empty();
+                sendPostData();
+            });
+            $('#get-btn').click(function () {
+                $("#saved-output").empty();
+                $("#output").empty();
+                $("#macros").empty();
+                getWeekPlan();
+            })
+        });
+
+        function getMyData() {
+            $("#output").append("User: " + user + "<br/>");
+            $("#output").append("API Key: " + key + "<br/>");
+            $("#output").append("Hash: " + hash);
+        }
+
+        function sendPostData() {
+            var url = 'https://api.spoonacular.com/mealplanner/' + user + '/items?apiKey=' + key + '&hash=' + hash;
+            var d = new Date();
+            var offset = d.getTimezoneOffset() * 60 * (-1);              // get user's offset from UTC in minutes, convert to seconds
+            var object = {
+                "date": (Math.floor(Date.now() / 1000) + offset),        // API uses seconds, Date.now() gives in milliseconds
+                "slot": 1,
+                "position": 0,
+                "type": "RECIPE",
+                "value": {
+                    "title": "Random title"+getRandomInt(40000),
+                    "id": getRandomInt(40000),
+                    "servings": 2,
+                }
+            };
+
+            $.post(url, JSON.stringify(object),
+                function (result) {
+                    console.log("Add Result: " + JSON.stringify(result));
+                    $("#output").append(JSON.stringify(result));
+                });
+        }
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
+
+        function setToMonday(date) {
+            console.log("Date before: " + date);
+            var day = date.getDay() || 7;
+            if (day !== 1)
+                date.setHours(-24 * (day - 1));
+            return date;
+        }
+
+        function deleteMeal(id) {
+            console.log(id);
+            $.ajax({
+                url: "https://api.spoonacular.com/mealplanner/" + user + "/items/" + id + "?hash=" + hash + "&apiKey=" + key,
+                method: 'delete',
+                success: function (result) {
+                    console.log(JSON.stringify(result));
+                    var element = $('#delete-recipe-' + id).parent();
+                    element.remove('.card');
+                }
+            });
+        }
+
+        function getWeekPlan() {
+            var date = setToMonday(new Date(Math.floor(Date.now()))); //Get the monday date from the current day of the week
+            console.log("New date: " + date + " Day: " + date.getDate());
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var YMD = year + "-" + month + "-" + day;
+            var url = 'https://api.spoonacular.com/mealplanner/' + user + '/week/' + YMD + '?apiKey=' + key + '&hash=' + hash;
+
+            $.get(url, null,
+                function (result) {
+                    console.log("Get Result: " + JSON.stringify(result));
+                    result.days.forEach(function (day) {
+                        $("<div/>").attr('id', 'm' + day.day).appendTo('#macros'); //[Macros] Create div for each day    
+                        //Create card for macros
+                        var macroCard = '<div class="col-md-4"><div class="card" style="width: 12rem;"><div class="card-header">' + day.day + '</div ><div class="card-body" id=c' + day.day + '></div></div></div>';
+                        $("#m" + day.day).append(macroCard);
+
+                        //Display macros
+                        day.nutritionSummary.nutrients.forEach(function (macro) {
+                            $('#c' + day.day).append("<span class='badge badge-secondary'> " + macro.title + ": " + macro.amount + macro.unit + "</span> ");
+                        });
+                        console.log("Day: " + day.day);
+
+                        //[Meals] Create div for each day
+                        $("<div/>").attr('id', 'p' + day.day).appendTo('#saved-output'); //Create div for each day
+
+                        //Create card of the day
+                        var dayCard = '<div class="col-md-4"><div class="card" style="width: 18rem;">' +
+                            '<div class="card-header">' +
+                                day.day +
+                            '</div>' +
+                            '<ul class="list-group list-group-flush" id=d' + day.day +'></ul></div></div>';
+                            $("#p" + day.day).append(dayCard); //start the day card
+
+                            //Display meals
+                        day.items.forEach(function (item, index) {
+                            console.log("Length: " + day.items.length);
+                            console.log("Current index: " + index);
+                            //var add = '<li class="list-group-item">' + item.value.title + '</li>';
+
+                            res = '<div class="card mb-4 shadow-sm" style="width: 18rem;">' +
+                                '<div class="card-body">' +
+                                '<h5 class="card-title">' + item.value.title + '</h5>' +
+                                '<h6 class="card-subtitle mb-2 text-muted">' + 'Servings: ' + item.value.servings + '<br/>Id: ' + item.id + '</h6>' +
+                                '<p class="card-text">' + mealType(item.slot) + '</p>' +
+                                '</div>' +
+                                '<button class="btn btn-outline-danger btn-sm" id="delete-recipe-' + item.id + '" onclick="deleteMeal(' + item.id + ')">Delete</button></div>';
+
+                            //Append results to the card
+                            $("#d" + day.day).append(res);
+                        });
+                    });
+                });
+        }
+
+        function mealType(id) {
+            let result = ({
+                1: 'Breakfast',
+                2: 'Lunch',
+                3: 'Dinner'
+            })[id] ?? 'Lunch'
+            return result;
+        }
+
+        function AddDataForUser() {
+            $.post("/Plan/Add", { Id: 1},
+                function (result) {
+                    console.log("Add Result: " + JSON.stringify(result));
+                    $("#output").append(JSON.stringify(result));
+                });
+        }
+    </script>
+}

@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Diet Info";    // Change the displayed page name here
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to talk about diets and nutrition.</p>
+<div class="jumbotron">
+    <h2>
+        Diets and Nutrition
+    </h2>
+    <p>
+        This is a template supporting information about diets.
+    </p>
+    <p>
+        <a class="btn btn-primary btn-large" asp-area="" asp-controller="Home" asp-action="Dashboard">Start planning meals now</a>
+    </p>
+</div>
+<div id="card-1">
+    <div class="card">
+        <div class="card-header">
+            <a class="card-link collapsed" data-toggle="collapse" data-parent="#card-1" href="#card-element-1">What is Nutrition</a>
+        </div>
+        <div id="card-element-1" class="collapse">
+            <div class="card-body">
+                1
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <a class="card-link collapsed" data-toggle="collapse" data-parent="#card-1" href="#card-element-2">What is a diet</a>
+        </div>
+        <div id="card-element-2" class="collapse">
+            <div class="card-body">
+                2
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <a class="card-link collapsed" data-toggle="collapse" data-parent="#card-1" href="#card-element-3">What diets do you have?</a>
+        </div>
+        <div id="card-element-3" class="collapse">
+            <div class="card-body">
+                3
+            </div>
+        </div>
+    </div>
+</div> 

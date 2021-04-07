@@ -1,0 +1,200 @@
+﻿@model Meal_Planner.Models.RecipeModel
+
+@{
+    ViewData["Title"] = Model.Title; 
+}
+
+
+<div>
+    <div class="float-right">
+        <a href="#" id="addToPlanner" class="btn btn-outline-primary">Add to Meal Plan</a>
+    </div>
+    <h4>@ViewData["Title"]</h4>
+    <hr />
+    <div class="container">
+
+        <div class="row">
+            <div class="col">
+                <img id="recipeImg" class="img-fluid" src="https://via.placeholder.com/750" />
+                <br /><br />
+                <h3>Ingredients</h3>
+                <br />
+                <dl>
+                    <dd class="col-sm-10">
+                        @*@Html.DisplayFor(model => model.ExtendedIngredients)*@
+                        <ol>
+                            @foreach (var item in @Model.ExtendedIngredients)
+                            {
+                                <li>@item.Name</li>
+                            }
+                        </ol>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col">
+                <h5>Recipe Nutrition Breakdown</h5>
+                <div id="test1"></div>
+                <pre id="spoonacular-ingredients" style="display:none"></pre>
+                <div id="spoonacular-nutrition-visualizer" style="display:none"></div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+    <!--        Left for refrence
+    <h3>Ingredients</h3>
+    <br />
+    <dl class="row">
+         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Image)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Servings)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Servings)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ReadyInMinutes)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReadyInMinutes)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SourceName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SourceName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SourceUrl)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SourceUrl)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AggregateLikes)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AggregateLikes)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.HealthScore)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.HealthScore)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PricePerServing)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PricePerServing)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DairyFree)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DairyFree)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GlutenFree)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GlutenFree)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Vegan)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Vegan)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Vegetarian)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Vegetarian)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Ketogenic)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Ketogenic)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ExtendedIngredients)
+           </dt>-->
+
+    <h3>Directions</h3>
+    <br />
+    <dl>
+        <!--<dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Instructions)
+        </dt>-->
+
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Instructions)
+        </dd>
+
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="https://spoonacular.com/cdn/spoonacular-1.6.min.js"></script>
+    <script type="text/javascript">
+        var spoonacularServings = 1;
+    </script>
+    <script type="text/javascript">
+        function GetNutritionVisual() {
+            const settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/" + @Model.Id + "/nutritionWidget",
+                "method": "GET",
+                "headers": {
+                    "accept": "text/html",
+                    "x-rapidapi-key": "233fcd5469msh50148c2c9897d40p10f14cjsneaa6c8580ee8",
+                    "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+                }
+            };
+
+            $.ajax(settings).done(function (response) {
+                console.log(response); //log to browser console the api data
+
+                var recipeImg = '@Model.Image';
+                $('#recipeImg').attr('src', recipeImg);     //replace placeholder image src attribute with recipeImg
+                $("#test1").append(response);               //inject response result into
+            });
+
+        function htmlDecode(input) {
+            var doc = new DOMParser().parseFromString(input, "text/html");
+            return doc.documentElement.textContent;
+            }
+
+            $("#instructions").append(htmlDecode("@Model.Instructions"));   //inject response result into
+        }
+
+        GetNutritionVisual();
+        htmlDecode();   // FIXME: format recipe instructions 
+    </script>
+}
