@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +18,6 @@ namespace Meal_Planner.Controllers
     public class MealPlanController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public SearchViewModel SearchModel = new();
-
         public MealPlanController(ApplicationDbContext context)
         {
             _context = context;
@@ -91,86 +87,38 @@ namespace Meal_Planner.Controllers
             }
             return Json("User Already Exists");
         }
-        // Multiple models in a single view https://stackoverflow.com/questions/23536299/mvc-5-multiple-models-in-a-single-view
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("Plan/Add", Name = "AddMeal")]
-        public async Task<JsonResult> Add(SearchViewModel addMeal)
+        [Route("Plan/Add")]
+        public async Task<JsonResult> Add(int? id)
         {
-            ///  SearchModel.MealPlanAdd = addMeal;
-            ///  
-            MealPlanAddModel Model = addMeal.MealPlanAdd;
-
-            if (ModelState.IsValid)
+            if (id > 0)
             {
-                //Get the current user's Id
-                var claimsIdentity = (ClaimsIdentity)this.User.Identity;
-                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                var userId = claim.Value;
-
-                //Find the current user's account based on Id
-                var currentUser = await _context.Users
-                    .Include(s => s.SpoonAccount)
-                    .Include(n => n.Meals)
-                    .Where(m => m.Id == userId)
-                    .FirstOrDefaultAsync();
-
-
-                //get user's API information
-                var user = currentUser.SpoonAccount.Username;
-                var hash = currentUser.SpoonAccount.Hash;
-                var key = currentUser.SpoonAccount.ApiKey;
-                //////////
-                ///
-                JObject obj = JObject.FromObject(new
-                {
-                    date = EpochTime.ToUnixTime(Model.Date),
-                    slot = Model.Slot,
-                    position = 0,
-                    type = Model.Type,
-                    value = JObject.FromObject(new
-                    {
-                        title = Model.Meal.Title,
-                        id = Model.Meal.Id,
-                        servings = Model.Meal.Servings
-                    })
-                });
-                ////////
-                //Json the meal object
-                var dataJson = JsonConvert.SerializeObject(obj);
+                var key = new RandomSpoonacularApiKey().Generate();
+                var data = new MockMealPlanList().GetRecipes();//Mock Data
+                var dataJson = JsonConvert.SerializeObject(data);
                 var content = new StringContent(dataJson, Encoding.UTF8, "application/json");
 
                 var client = new HttpClient();
                 var request = new HttpRequestMessage
                 {
                     Method = HttpMethod.Post,
-                    RequestUri = new Uri("https://api.spoonacular.com/mealplanner/" + user + "/items?apiKey=" + key + "&hash=" + hash),
+                    RequestUri = new Uri("https://api.spoonacular.com/mealplanner/api-76891-pizza/items?apiKey=cc3a1f5670574b379c682e1e1ce052af&hash=ce93ada0e3fda7ef5a211cc5bdb5ddb33f9257e8"),
                     Content = content
                 };
                 using (var response = await client.SendAsync(request))
                 {
+                    // response.EnsureSuccessStatusCode();
+                    var result = await response.Content.ReadAsStringAsync();
+                    //Get header values and save them to our RequestLimit
+                    //var headerLimit = response.Headers.GetValues("x-ratelimit-requests-remaining").FirstOrDefault();
 
-                    //{"status":"success","id":4999759}
-                    if (response != null)
-                    {
-                        var result = await response.Content.ReadAsStringAsync();
-                        //Convert the response into the MealPlanUser model
-                        var id = JObject.Parse(result);
-                        Console.WriteLine(id.SelectToken("id").Value<string>());
-                        UserMealPlan created = new()
-                        {
-                            RecipeId = id.SelectToken("id").Value<int>(),
-                            Date = DateTime.Now
-                        };
-                        //Add the data to our account
-                        currentUser.Meals.Add(created);
+                    // RecipeModel recipeRequest = JsonConvert.DeserializeObject<RecipeModel>(result);
 
-                        //Save the changes to the database
-                        _context.Entry(currentUser).State = EntityState.Modified;
-                        await _context.SaveChangesAsync();
-
-                        return Json(id.SelectToken("id").Value<int>());
-                    }
+                    //   _context.Add(recipeRequest);//details 966429 and 578451 breaks model         // this saves the data to the DB, removed because it caused crashes
+                    //   await _context.SaveChangesAsync();
+                    //Add result to our database
+                    return Json(result);
                 }
             }
             return Json("Error");

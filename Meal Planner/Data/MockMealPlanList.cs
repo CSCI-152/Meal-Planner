@@ -8,11 +8,15 @@ namespace Meal_Planner.Data
 {
     public class MockMealPlanList
     {
-        public MealPlanAddModel GetRecipes() => new() { Date = DateTime.Now, Position = 0, Slot = 1, Type = "RECIPE", Meal = Recipe() };
+        public MealPlanAddModel GetRecipes() => new() { Date = DateTime.Now, Position = 0, Slot = 1, Type = "RECIPE", value = Recipe() };
 
-        private RecipeInfo Recipe()
+        private ICollection<RecipeInfo> Recipe()
         {
-            return new RecipeInfo { Id = 296213, Servings = 2 };
+            var list = new List<RecipeInfo>
+            {
+                new RecipeInfo { Id = 296213, Servings = 2 }
+            };
+            return list;
         }
     }
 }

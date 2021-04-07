@@ -51,7 +51,7 @@
                 $("#saved-output").empty();
                 $("#output").empty();
                 $("#macros").empty();
-                getWeekPlan();
+                getPostData();
             })
         });
 
@@ -66,7 +66,7 @@
             var d = new Date();
             var offset = d.getTimezoneOffset() * 60 * (-1);              // get user's offset from UTC in minutes, convert to seconds
             var object = {
-                "date": (Math.floor(Date.now() / 1000) + offset),        // API uses seconds, Date.now() gives in milliseconds
+                "date": (Math.floor(Date.now() / 1000) + offset),        // API uses seconds, Date.now() gives in milliseconds 
                 "slot": 1,
                 "position": 0,
                 "type": "RECIPE",
@@ -88,90 +88,38 @@
             return Math.floor(Math.random() * Math.floor(max));
         }
 
-        function setToMonday(date) {
-            console.log("Date before: " + date);
-            var day = date.getDay() || 7;
-            if (day !== 1)
-                date.setHours(-24 * (day - 1));
-            return date;
-        }
-
-        function deleteMeal(id) {
-            console.log(id);
-            $.ajax({
-                url: "https://api.spoonacular.com/mealplanner/" + user + "/items/" + id + "?hash=" + hash + "&apiKey=" + key,
-                method: 'delete',
-                success: function (result) {
-                    console.log(JSON.stringify(result));
-                    var element = $('#delete-recipe-' + id).parent();
-                    element.remove('.card');
-                }
-            });
-        }
-
-        function getWeekPlan() {
-            var date = setToMonday(new Date(Math.floor(Date.now()))); //Get the monday date from the current day of the week
-            console.log("New date: " + date + " Day: " + date.getDate());
+        function getPostData() {
+            var date = new Date(Math.floor(Date.now())); //Epoch time in milliseconds for JS
             var year = date.getFullYear();
             var month = date.getMonth() + 1;
             var day = date.getDate();
             var YMD = year + "-" + month + "-" + day;
-            var url = 'https://api.spoonacular.com/mealplanner/' + user + '/week/' + YMD + '?apiKey=' + key + '&hash=' + hash;
+            var url = 'https://api.spoonacular.com/mealplanner/' + user + '/day/' + YMD + '?apiKey=' + key + '&hash=' + hash;
 
             $.get(url, null,
                 function (result) {
                     console.log("Get Result: " + JSON.stringify(result));
-                    result.days.forEach(function (day) {
-                        $("<div/>").attr('id', 'm' + day.day).appendTo('#macros'); //[Macros] Create div for each day    
-                        //Create card for macros
-                        var macroCard = '<div class="col-md-4"><div class="card" style="width: 12rem;"><div class="card-header">' + day.day + '</div ><div class="card-body" id=c' + day.day + '></div></div></div>';
-                        $("#m" + day.day).append(macroCard);
 
-                        //Display macros
-                        day.nutritionSummary.nutrients.forEach(function (macro) {
-                            $('#c' + day.day).append("<span class='badge badge-secondary'> " + macro.title + ": " + macro.amount + macro.unit + "</span> ");
-                        });
-                        console.log("Day: " + day.day);
+                    //Display macros
+                    result.nutritionSummary.nutrients.forEach(function (m) {
+                        $("#macros").append("<span class='badge badge-secondary'>" + m.title + ": " + m.amount + m.unit + "</span> ");
+                    });
 
-                        //[Meals] Create div for each day
-                        $("<div/>").attr('id', 'p' + day.day).appendTo('#saved-output'); //Create div for each day
+                    //Display meals
+                    result.items.forEach(function (element) {
 
-                        //Create card of the day
-                        var dayCard = '<div class="col-md-4"><div class="card" style="width: 18rem;">' +
-                            '<div class="card-header">' +
-                                day.day +
+                        res = '<div class="col-md-4"><div class="card mb-4 shadow-sm" style="width: 18rem;">' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title">' + element.value.title + '</h5>' +
+                            '<h6 class="card-subtitle mb-2 text-muted">' + 'Servings: '+element.value.servings+ '<br/>Id: ' + element.id +'</h6>' +
+                                '<p class="card-text">Recipe Id: ' + element.value.id + '</p>' +
                             '</div>' +
-                            '<ul class="list-group list-group-flush" id=d' + day.day +'></ul></div></div>';
-                            $("#p" + day.day).append(dayCard); //start the day card
+                            '</div></div>';
 
-                            //Display meals
-                        day.items.forEach(function (item, index) {
-                            console.log("Length: " + day.items.length);
-                            console.log("Current index: " + index);
-                            //var add = '<li class="list-group-item">' + item.value.title + '</li>';
-
-                            res = '<div class="card mb-4 shadow-sm" style="width: 18rem;">' +
-                                '<div class="card-body">' +
-                                '<h5 class="card-title">' + item.value.title + '</h5>' +
-                                '<h6 class="card-subtitle mb-2 text-muted">' + 'Servings: ' + item.value.servings + '<br/>Id: ' + item.id + '</h6>' +
-                                '<p class="card-text">' + mealType(item.slot) + '</p>' +
-                                '</div>' +
-                                '<button class="btn btn-outline-danger btn-sm" id="delete-recipe-' + item.id + '" onclick="deleteMeal(' + item.id + ')">Delete</button></div>';
-
-                            //Append results to the card
-                            $("#d" + day.day).append(res);
-                        });
+                        //Insert to page HTML
+                        $("#saved-output").append(res);
                     });
                 });
-        }
-
-        function mealType(id) {
-            let result = ({
-                1: 'Breakfast',
-                2: 'Lunch',
-                3: 'Dinner'
-            })[id] ?? 'Lunch'
-            return result;
         }
 
         function AddDataForUser() {
@@ -180,6 +128,101 @@
                     console.log("Add Result: " + JSON.stringify(result));
                     $("#output").append(JSON.stringify(result));
                 });
+        }
+
+        function searchRecipes() {//query=burger&diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C%20gluten&number=10&offset=0&type=main%20course
+            if (oldSearch == $("#search-recipes").val())
+                return;
+
+            //Block sending more API requests
+            if (reqLimit == 0) {
+                alert("API Search Limit reached");
+                return;
+            }
+
+            oldSearch = $("#search-recipes").val();
+            var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search';
+            var paramUrl = new URL(url);
+            var restrictions = $("#diet-restrictions option:selected").text();
+
+            if (restrictions != "Diet Restrictions") {
+                paramUrl.searchParams.set("diet", restrictions);
+            }
+
+            var intolerances = $("#intolerances option:selected").map(function () {
+                return $(this).text();
+            }).get().join(',');
+            if (intolerances != "") {
+                paramUrl.searchParams.set("ModelntolerancesKey", intolerances);
+            }
+
+            //testing
+            paramUrl.searchParams.set("addRecipeInformation", true);
+            paramUrl.searchParams.set("addRecipeNutrition", true);
+
+            var queryString = $("#search-recipes").val();
+            //var params = { 'query': queryString, 'diet': restrictions, 'intolerances': intolerances };
+            //var params = { 'query': queryString };
+
+            //var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search?' + jQuery.param(params);
+            paramUrl.searchParams.set("query", queryString);//Add query string
+            console.log("URL: " + paramUrl);
+            const settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": paramUrl,
+                "method": "GET",
+                "headers": {
+                }
+            };
+
+            //Reset the results page
+            $("#search-results").empty();
+            //Check headers
+            //x-ratelimit-requests-remaining: 4991
+            //x-ratelimit-results-remaining: 19975
+
+            $.ajax(settings).done(function (response, status, xhr) {
+                console.log(response); //log to browser console the api data
+                reqLimit = xhr.getResponseHeader('x-ratelimit-requests-remaining');
+                console.log("API Request limit: \t" + reqLimit + "/" + xhr.getResponseHeader('X-RateLimit-requests-Limit') +
+                    "\nAPI Result limit: \t" + xhr.getResponseHeader('x-ratelimit-results-remaining') + "/" + xhr.getResponseHeader('X-RateLimit-results-Limit'));
+                //Send API header to API
+                $.post("/Recipe/UpdateApi", { RequestLimit: reqLimit }, function (result) { console.log(result) });
+                var searchResult = document.getElementById("search-results");
+                var results;
+                console.log("Results: " + response.totalResults);
+                if (response.totalResults === 0) {
+                    searchResult.insertAdjacentHTML('beforeend', "<h4>No results</h4>");
+                }
+                //Loop through all recipes
+                response.results.forEach(function (element) {
+                    /*
+                     * response.baseUri;
+                     * response.totalResults
+                     * element
+                     * id
+                     * image
+                     * readyinminutes
+                     * servings
+                     * sourceurl
+                     * title
+                     */
+                    console.log("Results: " + response.totalResults);
+                    results = "<div class=\"col-md-4\"> <div class=\"card mb-4 shadow-sm\"> <img class=\"card-img-top\" src="
+                        + response.baseUri + element.image + " alt=" + element.title
+                        + "> <div class=\"card-img-overlay\"> <h5 class=\"card-title\">"
+                        + element.readyInMinutes
+                        + "</h5> <p class=\"card-text align-content-end\">Quick Add</p> </div> <div class=\"card-body\"> <p class=\"card-text\">"
+                        + element.title
+                        + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a href=\"/recipe/details/"
+                        + element.id
+                        + "\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
+                        + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
+                    //Insert to page HTML
+                    searchResult.insertAdjacentHTML('beforeend', results);
+                });
+            });
         }
     </script>
 }

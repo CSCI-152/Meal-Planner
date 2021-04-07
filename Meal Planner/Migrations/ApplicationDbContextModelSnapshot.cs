@@ -75,6 +75,26 @@ namespace Meal_Planner.Migrations
                     b.ToTable("IngredientsModel");
                 });
 
+            modelBuilder.Entity("Meal_Planner.Models.MealModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("instructions")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("title")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Meals");
+                });
+
             modelBuilder.Entity("Meal_Planner.Models.MealPlanUser", b =>
                 {
                     b.Property<Guid>("Id")
@@ -164,28 +184,6 @@ namespace Meal_Planner.Migrations
                     b.HasIndex("Id");
 
                     b.ToTable("RecipeModel");
-                });
-
-            modelBuilder.Entity("Meal_Planner.Models.UserMealPlan", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserModelId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserModelId");
-
-                    b.ToTable("UserMealPlan");
                 });
 
             modelBuilder.Entity("Meal_Planner.Models.UserModel", b =>
@@ -421,13 +419,6 @@ namespace Meal_Planner.Migrations
                         .HasForeignKey("RecipeModelRecipeId");
                 });
 
-            modelBuilder.Entity("Meal_Planner.Models.UserMealPlan", b =>
-                {
-                    b.HasOne("Meal_Planner.Models.UserModel", null)
-                        .WithMany("Meals")
-                        .HasForeignKey("UserModelId");
-                });
-
             modelBuilder.Entity("Meal_Planner.Models.UserModel", b =>
                 {
                     b.HasOne("Meal_Planner.Models.MealPlanUser", "SpoonAccount")
@@ -491,11 +482,6 @@ namespace Meal_Planner.Migrations
             modelBuilder.Entity("Meal_Planner.Models.RecipeModel", b =>
                 {
                     b.Navigation("ExtendedIngredients");
-                });
-
-            modelBuilder.Entity("Meal_Planner.Models.UserModel", b =>
-                {
-                    b.Navigation("Meals");
                 });
 #pragma warning restore 612, 618
         }
