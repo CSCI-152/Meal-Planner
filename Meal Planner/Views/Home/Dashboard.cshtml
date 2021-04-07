@@ -81,11 +81,13 @@
             </tr>
         </tbody>
     </table>
+    <div id="chartContainer"></div>
+</div>
 
-    @section Scripts
+@section Scripts
 {
-        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-        <script type="text/javascript">
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script type="text/javascript">
         window.onload = function() {
             var chart = new CanvasJS.Chart("chartContainer", {
                 // theme: "light2",
@@ -103,7 +105,8 @@
             });
             chart.render();
         };
-        </script>
+    </script>
+
     }
 
     @* C# Commenting out
