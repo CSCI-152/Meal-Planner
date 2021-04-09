@@ -1,12 +1,12 @@
 ﻿@model Meal_Planner.Models.RecipeMealPlanModel
 
 @{
-    ViewData["Title"] = Model.Recipe.Title; 
+    ViewData["Title"] = Model.Recipe.Title;
 }
 
 <div>
     <div class="float-right">
-        <a href="#" id="addToPlanner" class="btn btn-outline-primary">Add to Meal Plan</a>
+        <button type="button" data-toggle="modal" data-target="#addMealModal" data-id="@Model.Recipe.Id" data-title="@Model.Recipe.Title" class="btn btn-outline-primary">Add to Meal Plan</button>
     </div>
     <h4>@ViewData["Title"]</h4>
     <hr />
@@ -158,93 +158,91 @@
 </div>
 
 @section Scripts {
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="https://spoonacular.com/cdn/spoonacular-1.6.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://spoonacular.com/cdn/spoonacular-1.6.min.js"></script>
     <script type="text/javascript">
         var spoonacularServings = 1;
-    </script>
-    <script type="text/javascript">
 
-        $('#addMealModal').on('show.bs.modal', function () {
-            var button = $(event.relatedTarget);    // Button that triggered the modal
-            var id = button.data('id');             // Extract info from data-* attributes
-            var title = button.data('title');
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-            var modal = $(this);
-            modal.find('.modal-title').text(title);
-            modal.find('#modal-recipe-id').val(id);
-            modal.find('#modal-recipe-title').val(title);
-        });
-        $('#addMealModal').on('hidden.bs.modal', function (event) {
-            // Destroy modal
-            console.log("KILL MODEL");
-            $(this).find('form').trigger('reset');
-        });
-        $('#save-to-planner').click(function () {
-            var btn = $('#save-to-planner');
+        $(document).ready(function () {
+            $('#addMealModal').on('show.bs.modal', function () {
+                var id = @Model.Recipe.Id;
+                var title = "@Model.Recipe.Title";
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                modal.find('.modal-title').text(title);
+                modal.find('#modal-recipe-id').val(id);
+                modal.find('#modal-recipe-title').val(title);
+            });
+            $('#addMealModal').on('hidden.bs.modal', function (event) {
+                // Destroy modal
+                console.log("KILL MODEL");
+                $(this).find('form').trigger('reset');
+            });
+            $('#save-to-planner').click(function () {
+                var btn = $('#save-to-planner');
 
 
-            if ($('#MealPlanAdd_Date').val().length > 0) { //date is required
-                //Change button text
-                btn.html("Adding...");
-                btn.prop('disabled', true);
-                setTimeout(function () {//Just in case it fails
-                    btn.html("Add to plan");
-                    btn.prop('disabled', false);
-                }, 5000);
+                if ($('#MealPlanAdd_Date').val().length > 0) { //date is required
+                    //Change button text
+                    btn.html("Adding...");
+                    btn.prop('disabled', true);
+                    setTimeout(function () {//Just in case it fails
+                        btn.html("Add to plan");
+                        btn.prop('disabled', false);
+                    }, 5000);
 
-                console.log($('#MealPlanAdd_Date').val());
-                console.log("To epoch: " + Date.parse($('#MealPlanAdd_Date').val()) / 1000);
+                    console.log($('#MealPlanAdd_Date').val());
+                    console.log("To epoch: " + Date.parse($('#MealPlanAdd_Date').val()) / 1000);
 
-                //Send post request
-                $.post("/Plan/add", {
-                    'MealPlanAdd.Meal.Servings': $('#MealPlanAdd_Meal_Servings').val(),
-                    'MealPlanAdd.Slot': $('#MealPlanAdd_Slot').val(),
-                    'MealPlanAdd.Type': "RECIPE",
-                    'MealPlanAdd.Date': $('#MealPlanAdd_Date').val(),
-                    'MealPlanAdd.Meal.Id': $('#modal-recipe-id').val(),
-                    'MealPlanAdd.Meal.Title': $('#modal-recipe-title').val(),
-                    '__RequestVerificationToken': $("input[name=__RequestVerificationToken]").val()
-                }, function (result) {
-                    console.log(result);
-                    $('#addMealModal').modal('hide');
-                    btn.html("Add to plan");
-                    btn.prop('disabled', false);
-                });
-            }
-        });
-
-        function GetNutritionVisual() {
-            const settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/" + @Model.Recipe.Id + "/nutritionWidget",
-                "method": "GET",
-                "headers": {
-                    "accept": "text/html",
-                    "x-rapidapi-key": "233fcd5469msh50148c2c9897d40p10f14cjsneaa6c8580ee8",
-                    "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+                    //Send post request
+                    $.post("/Plan/add", {
+                        'MealPlanAdd.Meal.Servings': $('#MealPlanAdd_Meal_Servings').val(),
+                        'MealPlanAdd.Slot': $('#MealPlanAdd_Slot').val(),
+                        'MealPlanAdd.Type': "RECIPE",
+                        'MealPlanAdd.Date': $('#MealPlanAdd_Date').val(),
+                        'MealPlanAdd.Meal.Id': $('#modal-recipe-id').val(),
+                        'MealPlanAdd.Meal.Title': $('#modal-recipe-title').val(),
+                        '__RequestVerificationToken': $("input[name=__RequestVerificationToken]").val()
+                    }, function (result) {
+                        console.log(result);
+                        $('#addMealModal').modal('hide');
+                        btn.html("Add to plan");
+                        btn.prop('disabled', false);
+                    });
                 }
-            };
-
-            $.ajax(settings).done(function (response) {
-                console.log(response); //log to browser console the api data
-
-                var recipeImg = '@Model.Recipe.Image';
-                $('#recipeImg').attr('src', recipeImg);     //replace placeholder image src attribute with recipeImg
-                $("#test1").append(response);               //inject response result into
             });
 
-        function htmlDecode(input) {
-            var doc = new DOMParser().parseFromString(input, "text/html");
-            return doc.documentElement.textContent;
+            function GetNutritionVisual() {
+                const settings = {
+                    "async": true,
+                    "crossDomain": true,
+                    "url": "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/" + @Model.Recipe.Id + "/nutritionWidget",
+                    "method": "GET",
+                    "headers": {
+                        "accept": "text/html",
+                        "x-rapidapi-key": "233fcd5469msh50148c2c9897d40p10f14cjsneaa6c8580ee8",
+                        "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+                    }
+                };
+
+                $.ajax(settings).done(function (response) {
+                    console.log(response); //log to browser console the api data
+
+                    var recipeImg = '@Model.Recipe.Image';
+                    $('#recipeImg').attr('src', recipeImg);     //replace placeholder image src attribute with recipeImg
+                    $("#test1").append(response);               //inject response result into
+                });
+
+                function htmlDecode(input) {
+                    var doc = new DOMParser().parseFromString(input, "text/html");
+                    return doc.documentElement.textContent;
+                }
+
+                $("#instructions").append(htmlDecode("@Model.Recipe.Instructions"));   //inject response result into
             }
-
-            $("#instructions").append(htmlDecode("@Model.Recipe.Instructions"));   //inject response result into
-        }
-
-        GetNutritionVisual();
-        htmlDecode();   // FIXME: format recipe instructions 
+            GetNutritionVisual();
+            //htmlDecode();   // FIXME: format recipe instructions
+        });
     </script>
 }
