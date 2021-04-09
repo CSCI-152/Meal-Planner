@@ -11,7 +11,7 @@
     <h4>@ViewData["Title"]</h4>
     <hr />
     <div class="container">
-
+        <partial name="_AddMealModalPartial" for="@Model.MealPlanAdd" />
         <div class="row">
             <div class="col">
                 <img id="recipeImg" class="img-fluid" src="https://via.placeholder.com/750" />
@@ -165,20 +165,55 @@
     </script>
     <script type="text/javascript">
 
-        /*$.post("/Plan/add", {
-            'MealPlanAdd.Meal.Servings': $('#MealPlanAdd_Meal_Servings').val(),
-            'MealPlanAdd.Slot': $('#MealPlanAdd_Slot').val(),
-            'MealPlanAdd.Type': "RECIPE",
-            'MealPlanAdd.Date': $('#MealPlanAdd_Date').val(),
-            'MealPlanAdd.Meal.Id': $('#modal-recipe-id').val(),
-            'MealPlanAdd.Meal.Title': $('#modal-recipe-title').val(),
-            '__RequestVerificationToken': $("input[name=__RequestVerificationToken]").val()
-        }, function (result) {
-            console.log(result);
-            $('#addMealModal').modal('hide');
-            btn.html("Add to plan");
-            btn.prop('disabled', false);
-        });*/
+        $('#addMealModal').on('show.bs.modal', function () {
+            var button = $(event.relatedTarget);    // Button that triggered the modal
+            var id = button.data('id');             // Extract info from data-* attributes
+            var title = button.data('title');
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+            modal.find('.modal-title').text(title);
+            modal.find('#modal-recipe-id').val(id);
+            modal.find('#modal-recipe-title').val(title);
+        });
+        $('#addMealModal').on('hidden.bs.modal', function (event) {
+            // Destroy modal
+            console.log("KILL MODEL");
+            $(this).find('form').trigger('reset');
+        });
+        $('#save-to-planner').click(function () {
+            var btn = $('#save-to-planner');
+
+
+            if ($('#MealPlanAdd_Date').val().length > 0) { //date is required
+                //Change button text
+                btn.html("Adding...");
+                btn.prop('disabled', true);
+                setTimeout(function () {//Just in case it fails
+                    btn.html("Add to plan");
+                    btn.prop('disabled', false);
+                }, 5000);
+
+                console.log($('#MealPlanAdd_Date').val());
+                console.log("To epoch: " + Date.parse($('#MealPlanAdd_Date').val()) / 1000);
+
+                //Send post request
+                $.post("/Plan/add", {
+                    'MealPlanAdd.Meal.Servings': $('#MealPlanAdd_Meal_Servings').val(),
+                    'MealPlanAdd.Slot': $('#MealPlanAdd_Slot').val(),
+                    'MealPlanAdd.Type': "RECIPE",
+                    'MealPlanAdd.Date': $('#MealPlanAdd_Date').val(),
+                    'MealPlanAdd.Meal.Id': $('#modal-recipe-id').val(),
+                    'MealPlanAdd.Meal.Title': $('#modal-recipe-title').val(),
+                    '__RequestVerificationToken': $("input[name=__RequestVerificationToken]").val()
+                }, function (result) {
+                    console.log(result);
+                    $('#addMealModal').modal('hide');
+                    btn.html("Add to plan");
+                    btn.prop('disabled', false);
+                });
+            }
+        });
 
         function GetNutritionVisual() {
             const settings = {
