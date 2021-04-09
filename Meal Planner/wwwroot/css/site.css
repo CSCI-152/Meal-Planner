@@ -7,6 +7,12 @@ a.navbar-brand {
   word-break: break-all;
 }
 
+ul.nav a:hover, .navbar-nav li.active > a {
+    color: #ffffff;
+    background-color: #82e6d4;
+    border: 1px solid #ffffff;
+}
+
 /* Provide sufficient contrast against white background */
 a {
   color: #0366d6;
