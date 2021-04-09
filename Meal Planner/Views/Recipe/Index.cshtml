@@ -48,6 +48,7 @@
                     Filter calories: <b>0</b> <input id="cal-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="1500" data-slider-step="5" data-slider-value="[0,1000]" /> <b>1500 cals</b> <br />
                     Filter fats: <b>0</b> <input id="fat-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,100]" /> <b>500g</b> <br />
                     Filter protein: <b>0</b> <input id="pro-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,70]" /> <b>500g</b>
+                    <!--Missing slider for Carbs-->
                 </div>
             </div>
             <p>
@@ -122,8 +123,8 @@
             $("#pro-slider").slider({});
 
             $('#addMealModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget); // Button that triggered the modal
-                var id = button.data('id'); // Extract info from data-* attributes
+                var button = $(event.relatedTarget);    // Button that triggered the modal
+                var id = button.data('id');             // Extract info from data-* attributes
                 var title = button.data('title');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
