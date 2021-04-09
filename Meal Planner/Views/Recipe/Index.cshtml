@@ -14,7 +14,7 @@
 }
 <section class="root jumbotron text-center">
     <div class="container">
-        <partial name="_AddMealModalPartial" /> @*Partial view for the add to meal plan popup*@
+        <partial name="_AddMealModalPartial" for="@Model.MealPlanAdd"/> @*Partial view for the add to meal plan popup*@
         <h1 class="jumbotron-heading">Recipe Search</h1>
         <p class="lead text-muted">Find recipes to add to your meal planner.</p>
         <form action="javascript:void(0);" onsubmit="searchRecipes()">
