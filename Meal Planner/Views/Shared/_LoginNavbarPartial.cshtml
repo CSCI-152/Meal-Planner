@@ -3,6 +3,21 @@
 @inject SignInManager<UserModel> SignInManager
 @inject UserManager<UserModel> UserManager
 
+
+    <style>
+        .navbar-nav li {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            margin-left: 3px;
+            margin-right: 3px;
+        }
+
+        .navbar-nav > li > a:focus,
+        .navbar-nav > li > a:hover {
+            background-color: #c0f6d2;
+        }
+    </style>
+
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
