@@ -52,76 +52,505 @@
                 <form id="dietForm" asp-antiforgery="true">
                     <h4 id="list-item-glutenfree"></h4>
                     <img class="d-block w-100" src="/img/glutenfree.png" />
-                    @*Add button with a value that matches the available Diet Preferences*@
-                    @*Gluten Free doesn't actually have a diet preference with our API limits but I'm leaving it here for reference*@
-                    <button class="btn btn-outline-info diet" value="Gluten Free">Add to account</button>
                     <br />
                     <p>Eliminating gluten means avoiding wheat, barley, rye, and other gluten-containing grains and foods made from them (or that may have been cross contaminated).</p>
-
+                    <p />
+                    @*Add button with a value that matches the available Diet Preferences*@
+                    @*Gluten Free doesn't actually have a diet preference with our API limits but I'm leaving it here for reference*@
+                    <button class="btn btn-outline-info diet" value="Gluten Free">Select Diet</button>
+                    <br />
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Calories</th>
+                                <td>1,639</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Fat<p />% of Caloric Intake</th>
+                                <td>40%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Carbohydrates<p />% of Caloric Intake</th>
+                                <td>41%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Protein<p />% of Caloric Intake</th>
+                                <td>21%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sodium</th>
+                                <td>2,180 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Potassium</th>
+                                <td>1,329 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Calcium</th>
+                                <td>711 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin B-12</th>
+                                <td>2.1 mcg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin D</th>
+                                <td>2.7 mcg.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
                     <br />
 
                     <h4 id="list-item-ketogenic"></h4>
                     <img class="d-block w-100" src="/img/keto.png" />
-                    @**The value must be equal to the values inside the user profile in order to work properly*@
-                    <button class="btn btn-outline-info diet" value="Ketogenic">Add to account</button>
                     <br />
                     <p>The keto diet is based more on the ratio of fat, protein, and carbs in the diet rather than specific ingredients. Generally speaking, high fat, protein-rich foods are acceptable and high carbohydrate foods are not.</p>
-
+                    <p />
+                    @**The value must be equal to the values inside the user profile in order to work properly*@
+                    <button class="btn btn-outline-info diet" value="Ketogenic">Select Diet</button>
+                    <br />
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Calories</th>
+                                <td>1,827</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Fat<p />% of Caloric Intake</th>
+                                <td>73%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Carbohydrates<p />% of Caloric Intake</th>
+                                <td>7%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Protein<p />% of Caloric Intake</th>
+                                <td>17%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sodium</th>
+                                <td>1,258 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Potassium</th>
+                                <td>1,747 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Calcium</th>
+                                <td>347 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin B-12</th>
+                                <td>1.52 mcg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin D</th>
+                                <td>9.07 mcg.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
                     <br />
 
                     <h4 id="list-item-vegetarian"></h4>
                     <img class="d-block w-100" src="/img/vegetarian.png" />
                     <br />
                     <p>No ingredients may contain meat or meat by-products, such as bones or gelatin.</p>
-
+                    <p />
+                    <button class="btn btn-outline-info diet" value="Vegetarian">Select Diet</button>
+                    <br />
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Calories</th>
+                                <td>2,005</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Fat<p />% of Caloric Intake</th>
+                                <td>31%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Carbohydrates<p />% of Caloric Intake</th>
+                                <td>57%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Protein<p />% of Caloric Intake</th>
+                                <td>15%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sodium</th>
+                                <td>1,595 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Potassium</th>
+                                <td>3,610 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Calcium</th>
+                                <td>1,345 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin B-12</th>
+                                <td>4.9 mcg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin D</th>
+                                <td>5.75 mcg.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
                     <br />
 
                     <h4 id="list-item-lacto-vegetarian"></h4>
                     <img class="d-block w-100" src="/img/lacto-veg.png" />
                     <br />
                     <p>All ingredients must be vegetarian and none of the ingredients can be or contain egg.</p>
-
+                    <p />
+                    <button class="btn btn-outline-info diet" value="Lacto-Vegetarian">Select Diet</button>
+                    <br />
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Calories</th>
+                                <td>2,005</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Fat<p />% of Caloric Intake</th>
+                                <td>31%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Carbohydrates<p />% of Caloric Intake</th>
+                                <td>57%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Protein<p />% of Caloric Intake</th>
+                                <td>15%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sodium</th>
+                                <td>1,595 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Potassium</th>
+                                <td>3,610 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Calcium</th>
+                                <td>1,345 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin B-12</th>
+                                <td>4.9 mcg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin D</th>
+                                <td>5.75 mcg.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
                     <br />
 
                     <h4 id="list-item-ovo-vegetarian"></h4>
                     <img class="d-block w-100" src="/img/ovo-veg.png" />
                     <br />
                     <p>All ingredients must be vegetarian and none of the ingredients can be or contain dairy.</p>
-
+                    <p />
+                    <button class="btn btn-outline-info diet" value="Ovo-Vegetarian">Select Diet</button>
+                    <br />
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Calories</th>
+                                <td>2,005</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Fat<p />% of Caloric Intake</th>
+                                <td>31%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Carbohydrates<p />% of Caloric Intake</th>
+                                <td>57%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Protein<p />% of Caloric Intake</th>
+                                <td>15%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sodium</th>
+                                <td>1,595 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Potassium</th>
+                                <td>3,610 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Calcium</th>
+                                <td>1,345 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin B-12</th>
+                                <td>4.9 mcg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin D</th>
+                                <td>5.75 mcg.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
                     <br />
 
                     <h4 id="list-item-vegan"></h4>
                     <img class="d-block w-100" src="/img/vegan.png" />
                     <br />
                     <p>No ingredients may contain meat or meat by-products, such as bones or gelatin, nor may they contain eggs, dairy, or honey.</p>
-
+                    <p />
+                    <button class="btn btn-outline-info diet" value="Vegan">Select Diet</button>
+                    <br />
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Calories</th>
+                                <td>2,000</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Fat<p />% of Caloric Intake</th>
+                                <td>33%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Carbohydrates<p />% of Caloric Intake</th>
+                                <td>57%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Protein<p />% of Caloric Intake</th>
+                                <td>13%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sodium</th>
+                                <td>1,224 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Potassium</th>
+                                <td>3,645 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Calcium</th>
+                                <td>1,338 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin B-12</th>
+                                <td>8.1 mcg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin D</th>
+                                <td>7.9 mcg.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
                     <br />
 
                     <h4 id="list-item-pescetarian"></h4>
                     <img class="d-block w-100" src="/img/pesc.png" />
                     <br />
                     <p>Everything is allowed except meat and meat by-products - some pescetarians eat eggs and dairy, some do not.</p>
-
+                    <p />
+                    <button class="btn btn-outline-info diet" value="Pescetarian">Select Diet</button>
+                    <br />
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Calories</th>
+                                <td>?</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Fat<p />% of Caloric Intake</th>
+                                <td>?</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Carbohydrates<p />% of Caloric Intake</th>
+                                <td>?</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Protein<p />% of Caloric Intake</th>
+                                <td>?</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sodium</th>
+                                <td>?</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Potassium</th>
+                                <td>?</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Calcium</th>
+                                <td>?</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin B-12</th>
+                                <td>?</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin D</th>
+                                <td>?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
                     <br />
 
                     <h4 id="list-item-paleo"></h4>
                     <img class="d-block w-100" src="/img/paleo.png" />
                     <br />
                     <p>Allowed ingredients include meat (especially grass fed), fish, eggs, vegetables, some oils (e.g. coconut and olive oil), and in smaller quantities, fruit, nuts, and sweet potatoes. We also allow honey and maple syrup (popular in Paleo desserts, but strict Paleo followers may disagree). Ingredients not allowed include legumes (e.g. beans and lentils), grains, dairy, refined sugar, and processed foods.</p>
-
+                    <p />
+                    <button class="btn btn-outline-info diet" value="Paleo">Select Diet</button>
+                    <br />
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Calories</th>
+                                <td>2,200</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Fat<p />% of Caloric Intake</th>
+                                <td>39%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Carbohydrates<p />% of Caloric Intake</th>
+                                <td>23%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Protein<p />% of Caloric Intake</th>
+                                <td>38%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sodium</th>
+                                <td>726 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Potassium</th>
+                                <td>9,062 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Calcium</th>
+                                <td>691 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin B-12</th>
+                                <td>17.6 mcg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin D</th>
+                                <td>0 mcg.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
                     <br />
 
                     <h4 id="list-item-primal"></h4>
                     <img class="d-block w-100" src="/img/primal.png" />
                     <br />
                     <p>Very similar to Paleo, except dairy is allowed - think raw and full fat milk, butter, ghee, etc.</p>
-
+                    <p />
+                    <button class="btn btn-outline-info diet" value="Primal">Select Diet</button>
+                    <br />
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Calories</th>
+                                <td>2,200</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Fat<p />% of Caloric Intake</th>
+                                <td>39%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Carbohydrates<p />% of Caloric Intake</th>
+                                <td>23%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Protein<p />% of Caloric Intake</th>
+                                <td>38%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sodium</th>
+                                <td>726 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Potassium</th>
+                                <td>9,062 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Calcium</th>
+                                <td>691 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin B-12</th>
+                                <td>17.6 mcg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin D</th>
+                                <td>0 mcg.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
                     <br />
 
                     <h4 id="list-item-whole30"></h4>
                     <img class="d-block w-100" src="/img/whole30.png" />
                     <br />
                     <p>Allowed ingredients include meat, fish/seafood, eggs, vegetables, fresh fruit, coconut oil, olive oil, small amounts of dried fruit and nuts/seeds. Ingredients not allowed include added sweeteners (natural and artificial, except small amounts of fruit juice), dairy (except clarified butter or ghee), alcohol, grains, legumes (except green beans, sugar snap peas, and snow peas), and food additives, such as carrageenan, MSG, and sulfites.</p>
+                    <p />
+                    <button class="btn btn-outline-info diet" value="Whole30">Select Diet</button>
+                    <br />
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Calories</th>
+                                <td>2,490</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Fat<p />% of Caloric Intake</th>
+                                <td>41%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total Carbohydrates<p />% of Caloric Intake</th>
+                                <td>32%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Protein<p />% of Caloric Intake</th>
+                                <td>29%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sodium</th>
+                                <td>4,758 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Potassium</th>
+                                <td>3,963 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Calcium</th>
+                                <td>906 mg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin B-12</th>
+                                <td>16.23 mcg.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Vitamin D</th>
+                                <td>43 mcg.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
                 </form>
             </div>
         </div>
