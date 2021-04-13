@@ -40,6 +40,6 @@ namespace Meal_Planner.Models       // converting JSON results
         public string Instructions { get; set; }
         [JsonProperty("extendedIngredients")]
         [Display(Name ="Ingredients")]
-        public virtual ICollection<IngredientsModel> ExtendedIngredients { get; set; }
+        public ICollection<IngredientsModel> ExtendedIngredients { get; set; }
     }
 }

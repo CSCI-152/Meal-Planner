@@ -10,6 +10,8 @@ using Meal_Planner.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Options;
+using System.Security.Claims;
+using System.Text;
 
 namespace Meal_Planner.Controllers
 {
@@ -17,17 +19,67 @@ namespace Meal_Planner.Controllers
     {
         private readonly SpoonacularApi _options;
         private readonly ApplicationDbContext _context;
+        public SearchViewModel Options2 = new(); //Why does this work and not {get;set;} ????
 
         public RecipeController(IOptions<SpoonacularApi> options, ApplicationDbContext context)
         {
             _options = options.Value;
+            Options2.Spoonacular = _options;
             _context = context;
         }
 
         // GET: Recipe
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View(_options);
+            /**
+             * Check if the user has a spoon account before showing them the search page
+             * This is needed so quick add will function properly
+             */
+            //Get the current user's Id
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = claim.Value;
+
+            //Find the current user's account based on Id
+            var currentUser = await _context.Users
+                .Include(s => s.SpoonAccount)
+                .Where(m => m.Id == userId)
+                .FirstOrDefaultAsync();
+
+            //If the SpoonAccount column is null--register an account
+            if (currentUser.SpoonAccount == null)
+            {
+                //Get a Random Spoonacular Key
+                var key = new RandomSpoonacularApiKey().Generate();
+
+                //Build data to send
+                string json = JsonConvert.SerializeObject(new { username = User.Identity.Name });
+
+                //Api Registration Request
+                using (var client = new HttpClient())
+                {
+                    var response = await client.PostAsync(
+                        "https://api.spoonacular.com/users/connect?apiKey=" + key,
+                         new StringContent(json, Encoding.UTF8, "application/json"));
+
+                    //If the response is successful
+                    if (response != null)
+                    {
+                        var data = await response.Content.ReadAsStringAsync();
+                        //return Ok(data);
+                        //Convert the response into the MealPlanUser model
+                        MealPlanUser created = JsonConvert.DeserializeObject<MealPlanUser>(data);
+                        created.ApiKey = key;
+                        //Add the data to our account
+                        currentUser.SpoonAccount = created;
+
+                        //Save the changes to the database
+                        _context.Entry(currentUser).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+            return View(Options2);
         }
 
         public async Task<IActionResult> Index2()
