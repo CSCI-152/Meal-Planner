@@ -14,23 +14,50 @@
 }
 <section class="root jumbotron text-center">
     <div class="container">
-        <partial name="_AddMealModalPartial" for="@Model.MealPlanAdd"/> @*Partial view for the add to meal plan popup*@
+        <partial name="_AddMealModalPartial" for="@Model.MealPlanAdd" /> @*Partial view for the add to meal plan popup*@
         <h1 class="jumbotron-heading">Recipe Search</h1>
         <p class="lead text-muted">Find recipes to add to your meal planner.</p>
         <form action="javascript:void(0);" onsubmit="searchRecipes()">
             <div class="input-group">
                 <select class="form-control selectpicker mx-sm-1 d-block" id="diet-restrictions" title="Diet Restrictions">
-                    <!--Not a valid diet in API <option>Gluten Free</option>-->
-                    <option>Ketogenic</option>
-                    <option>Vegetarian</option>
-                    <option>Lacto-Vegetarian</option>
-                    <option>Ovo-Vegetarian</option>
-                    <option>Vegan</option>
-                    <option>Pescetarian</option>
-                    <option>Paleo</option>
-                    <option>Primal</option>
-                    <option>Whole30</option>
+                    @{
+                        var dietList = new List<string> {
+                            "Ketogenic",
+                            "Vegetarian",
+                            "Lacto-Vegetarian",
+                            "Ovo-Vegetarian",
+                            "Vegan",
+                            "Pescetarian",
+                            "Paleo",
+                            "Primal",
+                            "Whole30"
+                        };
+                    }
+                    @foreach (var diet in dietList)
+                    {
+                        bool isSelected = diet == (string)ViewData["diet"];
+                        if (isSelected)
+                        {
+                            <option value="@diet" selected>@diet</option>
+                        }
+                        else
+                        {
+                            <option value="@diet">@diet</option>
+                        }
+                    }
                 </select>
+                @*<select class="form-control selectpicker mx-sm-1 d-block" id="diet-restrictions" title="Diet Restrictions">
+                        <!--Not a valid diet in API <option>Gluten Free</option>-->
+                        <option>Ketogenic</option>
+                        <option>Vegetarian</option>
+                        <option>Lacto-Vegetarian</option>
+                        <option>Ovo-Vegetarian</option>
+                        <option>Vegan</option>
+                        <option>Pescetarian</option>
+                        <option>Paleo</option>
+                        <option>Primal</option>
+                        <option>Whole30</option>
+                    </select>*@
                 <select multiple data-style="bg-white" class="form-control selectpicker" id="intolerances" title="Intolerances">
                     <option>Dairy</option>
                     <option>Peanut</option>
@@ -123,6 +150,13 @@
             $("#cal-slider").slider({});
             $("#fat-slider").slider({});
             $("#pro-slider").slider({});
+            $("#personalPrefs").click(function () {
+                var diet = $('#diet-restrictions').val();
+                console.log("Current selected: " + diet);
+             //   $('#diet-restrictions').prop("selected", false).trigger('change');
+                $("#diet-restrictions").val('default').selectpicker("refresh");
+            });
+
 
             $('#addMealModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);    // Button that triggered the modal
