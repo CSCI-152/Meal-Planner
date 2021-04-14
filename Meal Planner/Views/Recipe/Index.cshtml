@@ -1,5 +1,7 @@
-﻿@{
-    ViewData["Title"] = "Create";
+﻿@model SearchViewModel
+
+@{
+    ViewData["Title"] = "Search";
 }
 @section Style {
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-select.min.css" />
@@ -12,7 +14,7 @@
 }
 <section class="root jumbotron text-center">
     <div class="container">
-        <partial name="_AddMealModalPartial" /> @*Partial view for the add to meal plan popup*@
+        <partial name="_AddMealModalPartial" for="@Model.MealPlanAdd"/> @*Partial view for the add to meal plan popup*@
         <h1 class="jumbotron-heading">Recipe Search</h1>
         <p class="lead text-muted">Find recipes to add to your meal planner.</p>
         <form action="javascript:void(0);" onsubmit="searchRecipes()">
@@ -48,6 +50,7 @@
                     Filter calories: <b>0</b> <input id="cal-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="1500" data-slider-step="5" data-slider-value="[0,1000]" /> <b>1500 cals</b> <br />
                     Filter fats: <b>0</b> <input id="fat-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,100]" /> <b>500g</b> <br />
                     Filter protein: <b>0</b> <input id="pro-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,70]" /> <b>500g</b>
+                    <!--Missing slider for Carbs-->
                 </div>
             </div>
             <p>
@@ -122,8 +125,8 @@
             $("#pro-slider").slider({});
 
             $('#addMealModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget); // Button that triggered the modal
-                var id = button.data('id'); // Extract info from data-* attributes
+                var button = $(event.relatedTarget);    // Button that triggered the modal
+                var id = button.data('id');             // Extract info from data-* attributes
                 var title = button.data('title');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
@@ -264,9 +267,11 @@
                         + element.readyInMinutes
                         + "</h5> <p class=\"card-text align-content-end\">Quick Add</p> </div> <div class=\"card-body\"> <p class=\"card-text\">"
                         + element.title
-                        + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a href=\"/recipe/details/"
+                        + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a target='_blank' href=\"/recipe/details/"
                         + element.id
-                        + "\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" data-toggle=\"modal\" data-target=\"#addMealModal\" data-id=" + JSON.stringify(element.id) + " data-title=" + JSON.stringify(element.title) + " + class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
+                        + "\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" data-toggle=\"modal\" data-target=\"#addMealModal\" data-id="
+                        + JSON.stringify(element.id) + " data-title=" + JSON.stringify(element.title)
+                        + " + class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
                         + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
                     //Insert to page HTML
                     searchResult.insertAdjacentHTML('beforeend', results);
