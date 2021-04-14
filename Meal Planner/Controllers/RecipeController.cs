@@ -47,6 +47,10 @@ namespace Meal_Planner.Controllers
                 .Where(m => m.Id == userId)
                 .FirstOrDefaultAsync();
 
+            var currentDiet = currentUser.DietPreferences;
+            if (currentDiet.Length > 0)
+                ViewData["diet"] = currentDiet;
+
             //If the SpoonAccount column is null--register an account
             if (currentUser.SpoonAccount == null)
             {
