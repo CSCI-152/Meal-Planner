@@ -20,6 +20,7 @@ namespace Meal_Planner.Controllers
         private readonly SpoonacularApi _options;
         private readonly ApplicationDbContext _context;
         public SearchViewModel Options2 = new(); //Why does this work and not {get;set;} ????
+        public RecipeMealPlanModel RpmModel = new();
 
         public RecipeController(IOptions<SpoonacularApi> options, ApplicationDbContext context)
         {
@@ -45,6 +46,10 @@ namespace Meal_Planner.Controllers
                 .Include(s => s.SpoonAccount)
                 .Where(m => m.Id == userId)
                 .FirstOrDefaultAsync();
+
+            var currentDiet = currentUser.DietPreferences;
+            if (currentDiet.Length > 0)
+                ViewData["diet"] = currentDiet;
 
             //If the SpoonAccount column is null--register an account
             if (currentUser.SpoonAccount == null)
@@ -95,6 +100,7 @@ namespace Meal_Planner.Controllers
                 return NotFound();
             }
 
+            RecipeMealPlanModel doubleModel = new();
             var recipeModel = await _context.RecipeModel.Include(a => a.ExtendedIngredients)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -137,14 +143,15 @@ namespace Meal_Planner.Controllers
                         string url = "/Recipe/" + realTitle + "/" + id;
                         return new RedirectResult(url, true);
                     }
-
+                    doubleModel.Recipe = recipeRequest;
                     //   _context.Add(recipeRequest);//details 966429 and 578451 breaks model         // this saves the data to the DB, removed because it caused crashes
                     //   await _context.SaveChangesAsync();
                     //Add result to our database
-                    return View(recipeRequest);
+                    return View(doubleModel);
                 }
             }
-            return View(recipeModel);
+            doubleModel.Recipe = recipeModel;
+            return View(doubleModel);
         }
 
         // GET: Recipe/Create

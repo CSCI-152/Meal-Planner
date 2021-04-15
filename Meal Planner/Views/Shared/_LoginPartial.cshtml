@@ -3,25 +3,51 @@
 @inject SignInManager<UserModel> SignInManager
 @inject UserManager<UserModel> UserManager
 
-<ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User) && await UserManager.GetUserAsync(User) != null)
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(UserManager.GetUserAsync(User).Result.Name == null ? User.Identity.Name :  UserManager.GetUserAsync(User).Result.Name)!</a>
-        </li>
-        <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-            </form>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-        </li>
-    }
-</ul>
+    <style>
+        .navbar-nav li {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            margin-left: 3px;
+            margin-right: 3px;
+        }
+
+        .navbar-nav > li > a:focus,
+        .navbar-nav > li > a:hover {
+            background-color: #c0f6d2;
+        }
+
+        .btn-primary {
+            color: #000000;
+            background-color: #ffffff;
+            border-color: #e0e0e0; /*set the color you want here*/
+        }
+
+            .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+                color: #000000;
+                background-color: #c0f6d2;
+                border-color: #e0e0e0; /*set the color you want here*/
+            }
+    </style>
+
+    <ul class="navbar-nav">
+        @if (SignInManager.IsSignedIn(User) && await UserManager.GetUserAsync(User) != null)
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(UserManager.GetUserAsync(User).Result.Name == null ? User.Identity.Name :  UserManager.GetUserAsync(User).Result.Name)!</a>
+            </li>
+            <li class="nav-item">
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="nav-link btn btn-primary btn-link text-dark">Logout</button>
+                </form>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+            </li>
+        }
+    </ul>
