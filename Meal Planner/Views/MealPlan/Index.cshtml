@@ -72,7 +72,7 @@
                 success: function (result) {
                     console.log(JSON.stringify(result));
                     var element = $('#delete-recipe-' + id).parent();
-                    element.remove('.card');
+                    element.remove('.card-body');
                 }
             });
         }
@@ -90,7 +90,7 @@
                 function (result) {
                     console.log("Get Result: " + JSON.stringify(result));
                     if (result.days.length == 0)
-                        $("#saved-output").append("<h4><a href='/Recipe'>No meals to display. Add meals to your account here</a></h4>")
+                        $("#saved-output").append("<h4><a href='/Recipe'>You currently do not have a meal plan. Start building one here</a></h4>")
 
                     result.days.forEach(function (day) {
                         $("<div/>").attr('id', 'm' + day.day).appendTo('#macros'); //[Macros] Create div for each day    
@@ -121,12 +121,12 @@
                             console.log("Current index: " + index);
                             //var add = '<li class="list-group-item">' + item.value.title + '</li>';
 
-                            res = '<div class="card mb-4 shadow-sm" style="width: 18rem;">' +
-                                '<div class="card-body">' +
-                                '<h5 class="card-title">' + item.value.title + '</h5>' +
-                                '<h6 class="card-subtitle mb-2 text-muted">' + 'Servings: ' + item.value.servings + '<br/>Id: ' + item.id + '</h6>' +
+                            res = //'<div class="card mb-4 shadow-sm" style="width: 18rem;">' +
+                                '<div class="card-body" id="' + item.id + '">' +
+                                '<h5 class="card-title"><a href="/recipe/details/' + item.value.id + '" target="_blank">' + item.value.title + '</a></h5>' +
+                                '<h6 class="card-subtitle mb-2 text-muted">' + 'Servings: ' + item.value.servings + '</h6>' +
                                 '<p class="card-text">' + mealType(item.slot) + '</p>' +
-                                '</div>' +
+                               // '</div>' +
                                 '<button class="btn btn-outline-danger btn-sm" id="delete-recipe-' + item.id + '" onclick="deleteMeal(' + item.id + ')">Delete</button></div>';
 
                             //Append results to the card
