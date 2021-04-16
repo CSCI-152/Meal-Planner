@@ -3,37 +3,39 @@
     ViewData["Title"] = "Dashboard";
 }
 
+<style>
+    .div-breakfast {
+        background-color: #f7f3af;
+    }
+    .div-lunch {
+        background-color: #d3f2ab;
+    }
+    .div-dinner {
+        background-color: #abb4ee;
+    }
+</style>
 
 <div class="container-fluid">
-    <div class="p-3 mb-2 bg-info text-white">
+    
+    <div class="p-3 mb-2">
         <div class="container">
-            <div class="row">
-                <div class="col">
-                    Monday
+            <div class="row border w-100 h-100" style="min-height: 500px">
+                <div id="dash_breakfast" class="col border div-breakfast">
+                    <center><b>Breakfast</b></center>
                 </div>
-                <div class="col">
-                    Tuesday
+                <div id="dash_lunch" class="col border div-lunch">
+                    <center><b>Lunch</b></center>
                 </div>
-                <div class="col">
-                    Wednesday
-                </div>
-                <div class="col">
-                    Thursday
-                </div>
-                <div class="col">
-                    Friday
-                </div>
-                <div class="col">
-                    Saturday
-                </div>
-                <div class="col">
-                    Sunday
+                <div id="dash_dinner" class="col border div-dinner">
+                    <center><b>Dinner</b></center>
                 </div>
             </div>
         </div>
         <br />
     </div>
+
     <br />
+
     <div class="card-deck">
         <div class="card">
             <img class="card-img-top" src="..." alt="Card image cap">
