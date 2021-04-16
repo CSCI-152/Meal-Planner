@@ -69,7 +69,7 @@
                     }
                     @foreach (var intolerance in intoleranceList)
                     {
-                        bool isSelected = intolerance == (string)ViewData["gluten"];
+                        bool isSelected = intolerance == (string)ViewData["diet"];
                         if (isSelected)
                         {
                             <option value="@intolerance" selected>@intolerance</option>
