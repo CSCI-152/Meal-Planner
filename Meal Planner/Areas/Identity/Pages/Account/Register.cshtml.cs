@@ -120,7 +120,8 @@ namespace Meal_Planner.Areas.Identity.Pages.Account
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        //return LocalRedirect(returnUrl);
+                        return Redirect("/Diet/DietSelect");
                     }
                 }
                 foreach (var error in result.Errors)
