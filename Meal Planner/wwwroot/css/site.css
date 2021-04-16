@@ -69,3 +69,28 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+/*Partial modifications*/
+.navbar-nav li {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.navbar-nav > li > a:focus,
+.navbar-nav > li > a:hover {
+    background-color: #c0f6d2;
+}
+
+.btn-primary {
+    color: #000000;
+    background-color: #ffffff;
+    border-color: #e0e0e0; /*set the color you want here*/
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+    color: #000000;
+    background-color: #c0f6d2;
+    border-color: #e0e0e0; /*set the color you want here*/
+}
