@@ -3,31 +3,22 @@
 @{
     ViewData["Title"] = "Meal Plan";
 }
-@section Style {
 
-}
 <section class="root jumbotron text-center">
     <div class="container">
         <h1 class="jumbotron-heading">Meal Planning</h1>
-        <p class="lead text-muted">Check Browser Console for data when clicking buttons</p>
-        <div id="macros"></div>
+        <p class="lead text-muted">Macros for each day are displayed</p>
+        <div id="macros" class="row"></div>
         <div class="album py-5">
             <div class="container">
-                <div class="row" id="saved-output"></div>
+                <div id="saved-output" class="row"></div>
             </div>
         </div>
-        <div id="output"></div>
-        <div id="register-out"></div>
-        <form>
-            <p>
-                <a href="#" id="get-my-btn" class="btn btn-outline-primary my-2">View My Spoon Account</a>
-                <a href="#" id="add-btn" class="btn btn-outline-primary my-2">Add Mock Data</a>
-                <a href="#" id="get-btn" class="btn btn-outline-primary my-2">Get Plan Data</a>
-            </p>
-        </form>
     </div>
 </section>
+
 <a asp-action="Index">Back to top</a>
+
 @section Scripts {
     <script lang="en" type="text/javascript">
         var user = "@UserManager.GetUserAsync(User).Result.SpoonAccount.Username";
@@ -35,31 +26,8 @@
         var key = "@UserManager.GetUserAsync(User).Result.SpoonAccount.ApiKey";
 
         $(document).ready(function () {
-            $('#get-my-btn').click(function () {
-                $("#output").empty();
-                $("#saved-output").empty();
-                $("#macros").empty();
-                 getMyData();
-             });
-            $('#add-btn').click(function () {
-                $("#output").empty();
-                $("#saved-output").empty();
-                $("#macros").empty();
-                sendPostData();
-            });
-            $('#get-btn').click(function () {
-                $("#saved-output").empty();
-                $("#output").empty();
-                $("#macros").empty();
-                getWeekPlan();
-            })
+            getWeekPlan();
         });
-
-        function getMyData() {
-            $("#output").append("User: " + user + "<br/>");
-            $("#output").append("API Key: " + key + "<br/>");
-            $("#output").append("Hash: " + hash);
-        }
 
         function sendPostData() {
             var url = 'https://api.spoonacular.com/mealplanner/' + user + '/items?apiKey=' + key + '&hash=' + hash;
@@ -121,10 +89,13 @@
             $.get(url, null,
                 function (result) {
                     console.log("Get Result: " + JSON.stringify(result));
+                    if (result.days.length == 0)
+                        $("#saved-output").append("<h4><a href='/Recipe'>No meals to display. Add meals to your account here</a></h4>")
+
                     result.days.forEach(function (day) {
                         $("<div/>").attr('id', 'm' + day.day).appendTo('#macros'); //[Macros] Create div for each day    
                         //Create card for macros
-                        var macroCard = '<div class="col-md-4"><div class="card" style="width: 12rem;"><div class="card-header">' + day.day + '</div ><div class="card-body" id=c' + day.day + '></div></div></div>';
+                        var macroCard = '<div class="col-sm"><div class="card" style="width: 11rem;"><div class="card-header">' + day.day + '</div ><div class="card-body" id=c' + day.day + '></div></div></div>';
                         $("#m" + day.day).append(macroCard);
 
                         //Display macros
@@ -137,7 +108,7 @@
                         $("<div/>").attr('id', 'p' + day.day).appendTo('#saved-output'); //Create div for each day
 
                         //Create card of the day
-                        var dayCard = '<div class="col-md-4"><div class="card" style="width: 18rem;">' +
+                        var dayCard = '<div class="col-sm"><div class="card" style="width: 18rem;">' +
                             '<div class="card-header">' +
                                 day.day +
                             '</div>' +
