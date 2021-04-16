@@ -11,7 +11,9 @@
         <div id="macros" class="row"></div>
         <div class="album py-5">
             <div class="container">
-                <div id="saved-output" class="row"></div>
+                <div class="justify-content-center">
+                    <div id="saved-output" class="row"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -90,7 +92,7 @@
                 function (result) {
                     console.log("Get Result: " + JSON.stringify(result));
                     if (result.days.length == 0)
-                        $("#saved-output").append("<h4><a href='/Recipe'>You currently do not have a meal plan. Start building one here</a></h4>")
+                        $("#saved-output").append("<h4><a href='/Recipe'>You currently do not have a meal plan. Start building one here.</a></h4>")
 
                     result.days.forEach(function (day) {
                         $("<div/>").attr('id', 'm' + day.day).appendTo('#macros'); //[Macros] Create div for each day    
