@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using System.Text;
 using System.Net.Http;
+using Newtonsoft.Json.Linq;
 
 namespace Meal_Planner.Controllers
 {
@@ -37,7 +38,7 @@ namespace Meal_Planner.Controllers
         [AllowAnonymous]
         public IActionResult DietInfo()
         {
-            
+
             return View();
         }
 
@@ -88,14 +89,52 @@ namespace Meal_Planner.Controllers
                     }
                 }
             }
+            else
+            {
+                //get user's API information
+                var user = currentUser.SpoonAccount.Username;
+                var hash = currentUser.SpoonAccount.Hash;
+                var key = currentUser.SpoonAccount.ApiKey;
+                var date = DateTime.Now;
 
-            List<DataPoint> dataPoints = new List<DataPoint>();
+                ////////
+                //Json the meal object
+                using (var client = new HttpClient())//2020-06-01
+                {
+                    var _url = "https://api.spoonacular.com/mealplanner/" + user + "/day/" + date.Year + "-" + date.Month + "-" + date.Day + "?hash=" + hash + "&apiKey=" + key;
+                    //Console.Write(_url);
+                    var response = await client.GetAsync(_url);
 
-            dataPoints.Add(new DataPoint("Carbohydrates", 25));    // controller will need to get actual values to fill in for constants
-            dataPoints.Add(new DataPoint("Fats", 13));
-            dataPoints.Add(new DataPoint("Protein", 8));
+                    //If the response is successful
+                    if (response != null)
+                    {
+                        var result = await response.Content.ReadAsStringAsync();
+                        //Convert the response into the MealPlanUser model
+                        var id = JObject.Parse(result);
 
-            ViewData["DataPoints"] = JsonConvert.SerializeObject(dataPoints);
+                        if ((string)id.SelectToken("status") != "failure")  // check that meal plan has data
+                        { 
+                            Console.Write(result);
+                            //Add the data to our account
+                            List<DataPoint> dataPoints = new List<DataPoint>();
+
+                            dataPoints.Add(new DataPoint("Carbohydrates", (int)id.SelectToken("nutritionSummary")["nutrients"][2]["amount"]));    // controller will need to get actual values to fill in for constants
+                            dataPoints.Add(new DataPoint("Fats", (int)id.SelectToken("nutritionSummary")["nutrients"][1]["amount"]));
+                            dataPoints.Add(new DataPoint("Protein", (int)id.SelectToken("nutritionSummary")["nutrients"][3]["amount"]));
+                            ViewData["Calories"] = (int)id.SelectToken("nutritionSummary")["nutrients"][0]["amount"];
+                            ViewData["DataPoints"] = JsonConvert.SerializeObject(dataPoints);
+                        }
+                        else
+                        {
+                            List<DataPoint> dataPoints = new List<DataPoint>();
+
+                            dataPoints.Add(new DataPoint("Carbohydrates", 1));    // controller will need to get actual values to fill in for constants
+                            dataPoints.Add(new DataPoint("Fats", 1));
+                            dataPoints.Add(new DataPoint("Protein", 1));
+                        }
+                    }
+                }
+            }
             return View();
         }
 
