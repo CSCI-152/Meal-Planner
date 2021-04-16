@@ -614,24 +614,12 @@
 
             $(".diet").on('click', function () {
                 var value = $(this).val();
-                if (value == 'Gluten Free')
-                    dietIntolerance(value)
-                else
-                    dietPreference(value);
+                dietPreference(value);
             });
 
             function dietPreference(diet) {
                 $.post("/Diet/Update", {
                     'dietPreferences': diet,
-                    '__RequestVerificationToken': $("input[name=__RequestVerificationToken]").val()
-                }, function (result) {
-                    location.reload();
-                });
-            }
-
-            function dietIntolerance(diet) {
-                $.post("/Diet/Intolerance", {
-                    'glutenIntolerance': diet,
                     '__RequestVerificationToken': $("input[name=__RequestVerificationToken]").val()
                 }, function (result) {
                     location.reload();

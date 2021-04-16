@@ -46,26 +46,39 @@
                         }
                     }
                 </select>
-                @*<select class="form-control selectpicker mx-sm-1 d-block" id="diet-restrictions" title="Diet Restrictions">
-                        <!--Not a valid diet in API <option>Gluten Free</option>-->
-                        <option>Ketogenic</option>
-                        <option>Vegetarian</option>
-                        <option>Lacto-Vegetarian</option>
-                        <option>Ovo-Vegetarian</option>
-                        <option>Vegan</option>
-                        <option>Pescetarian</option>
-                        <option>Paleo</option>
-                        <option>Primal</option>
-                        <option>Whole30</option>
+                @*<select multiple data-style="bg-white" class="form-control selectpicker" id="intolerances" title="Intolerances">
+                        <option>Dairy</option>
+                        <option>Peanut</option>
+                        <option>Soy</option>
+                        <option>Gluten</option>
+                        <option>Wheat</option>
+                        <option>Seafood</option>
+                        <option>Shellfish</option>
                     </select>*@
                 <select multiple data-style="bg-white" class="form-control selectpicker" id="intolerances" title="Intolerances">
-                    <option>Dairy</option>
-                    <option>Peanut</option>
-                    <option>Soy</option>
-                    <option>Gluten</option>
-                    <option>Wheat</option>
-                    <option>Seafood</option>
-                    <option>Shellfish</option>
+                    @{
+                        var intoleranceList = new List<string> {
+                            "Dairy",
+                            "Peanut",
+                            "Soy",
+                            "Gluten",
+                            "Wheat",
+                            "Seafood",
+                            "Shellfish"
+                        };
+                    }
+                    @foreach (var intolerance in intoleranceList)
+                    {
+                        bool isSelected = intolerance == (string)ViewData["diet"];
+                        if (isSelected)
+                        {
+                            <option value="@intolerance" selected>@intolerance</option>
+                        }
+                        else
+                        {
+                            <option value="@intolerance">@intolerance</option>
+                        }
+                    }
                 </select>
                 <input type="text" class="form-control mx-sm-1 w-50" id="search-recipes" placeholder="Search for...">
             </div>
@@ -155,6 +168,7 @@
                 console.log("Current selected: " + diet);
              //   $('#diet-restrictions').prop("selected", false).trigger('change');
                 $("#diet-restrictions").val('default').selectpicker("refresh");
+                $("#intolerances").val('default').selectpicker("refresh");
             });
 
 

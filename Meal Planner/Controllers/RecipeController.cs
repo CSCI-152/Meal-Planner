@@ -48,8 +48,13 @@ namespace Meal_Planner.Controllers
                 .FirstOrDefaultAsync();
 
             var currentDiet = currentUser.DietPreferences;
+
             if (currentDiet != null)
+            {
                 ViewData["diet"] = currentDiet;
+                if (currentDiet.StartsWith("Gluten"))
+                    ViewData["diet"] = "Gluten";
+            }
 
             //If the SpoonAccount column is null--register an account
             if (currentUser.SpoonAccount == null)
