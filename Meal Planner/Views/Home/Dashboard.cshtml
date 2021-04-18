@@ -3,6 +3,8 @@
     ViewData["Title"] = "Dashboard";
 }
 
+@section Style
+{
 <style>
     .div-breakfast {
         background-color: #f7f3af;
@@ -13,56 +15,64 @@
     .div-dinner {
         background-color: #abb4ee;
     }
-</style>
+    .div-ex1 {
+        margin-bottom: 10%;
+    }
 
-<div class="container-fluid">
-    
-    <div class="p-3 mb-2">
-        <div class="container">
-            <div class="row border w-100 h-100" style="min-height: 500px">
-                <div id="dash_breakfast" class="col border div-breakfast">
-                    <center><b>Breakfast</b></center>
+</style>
+}
+
+<div class="ex1">
+    <div class="container-fluid">
+
+        <div class="p-3 mb-2">
+            <div class="container">
+                <div class="row border w-100 h-100" style="min-height: 500px">
+                    <div id="dash_breakfast" class="col border div-breakfast">
+                        <center><b>Breakfast</b></center>
+                    </div>
+                    <div id="dash_lunch" class="col border div-lunch">
+                        <center><b>Lunch</b></center>
+                    </div>
+                    <div id="dash_dinner" class="col border div-dinner">
+                        <center><b>Dinner</b></center>
+                    </div>
                 </div>
-                <div id="dash_lunch" class="col border div-lunch">
-                    <center><b>Lunch</b></center>
+            </div>
+            <br />
+        </div>
+
+        <br />
+
+        <div class="card-deck">
+            <div class="card">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                 </div>
-                <div id="dash_dinner" class="col border div-dinner">
-                    <center><b>Dinner</b></center>
+            </div>
+            <div class="card">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                 </div>
             </div>
         </div>
+        <div id="chartContainer"></div>
         <br />
     </div>
-
-    <br />
-
-    <div class="card-deck">
-        <div class="card">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-            </div>
-        </div>
-        <div class="card">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-            </div>
-        </div>
-        <div class="card">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-            </div>
-        </div>
-    </div>
-    <div id="chartContainer"></div>
 </div>
 @section Scripts
 {
@@ -80,7 +90,7 @@
                 ],*/
                 data: [{
                     type: "doughnut", //change type to bar, line, area, pie, etc
-                    dataPoints: @Html.Raw(ViewData["datapoints"]);
+                    dataPoints: @Html.Raw(ViewData["datapoints"])
                 }]
             });
             chart.render();

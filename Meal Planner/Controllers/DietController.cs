@@ -73,5 +73,36 @@ namespace Meal_Planner.Controllers
             }
             return Json("Error");
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> Intolerance([Bind("GlutenIntolerance")] UserModel addMeal)
+        {
+            string preference = addMeal.GlutenIntolerance;
+
+            if (ModelState.IsValid)
+            {
+                //Get the current user's Id
+                var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = claim.Value;
+
+                //Find the current user's account based on Id
+                var currentUser = await _context.Users
+                    .Include(s => s.SpoonAccount)
+                    .Include(n => n.Meals)
+                    .Where(m => m.Id == userId)
+                    .FirstOrDefaultAsync();
+
+                currentUser.GlutenIntolerance = preference;
+
+                //Save the changes to the database
+                _context.Entry(currentUser).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return Json(preference);
+            }
+            return Json("Error");
+        }
     }
 }
