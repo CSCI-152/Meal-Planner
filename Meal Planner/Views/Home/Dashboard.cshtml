@@ -5,26 +5,38 @@
 
 @section Style
 {
-<style>
-    .div-breakfast {
-        background-color: #f7f3af;
-    }
-    .div-lunch {
-        background-color: #d3f2ab;
-    }
-    .div-dinner {
-        background-color: #abb4ee;
-    }
-    .div-ex1 {
-        margin-bottom: 10%;
-    }
+    <style>
+        .div-breakfast {
+            background-color: #f7f3af;
+        }
 
-</style>
+        .div-lunch {
+            background-color: #d3f2ab;
+        }
+
+        .div-dinner {
+            background-color: #abb4ee;
+        }
+
+        .div-ex1 {
+            margin-bottom: 10%;
+        }
+
+        .column {
+            float: left;
+            width: 33.33%;
+            height: 500px;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
 }
-
 <div class="ex1">
     <div class="container-fluid">
-
         <div class="p-3 mb-2">
             <div class="container">
                 <div class="row border w-100 h-100" style="min-height: 500px">
@@ -44,36 +56,46 @@
 
         <br />
 
-        <div class="card-deck">
-            <div class="card">
-                <img class="card-img-top" src="..." alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                </div>
-            </div>
-            <div class="card">
-                <img class="card-img-top" src="..." alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                </div>
-            </div>
-            <div class="card">
-                <img class="card-img-top" src="..." alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                </div>
+<div class="row">
+    <div class="column">
+        <h4>Breakfast</h4>
+        <div class="card">
+        <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
             </div>
         </div>
-        <div id="chartContainer"></div>
-        <br />
+    </div>
+    <div class="column">
+        <h4>Lunch</h4>
+        <div class="card">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <h4>Dinner</h4>
+        <div class="card">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
     </div>
 </div>
+<br />
+<div id="chartContainer"></div>
+<br />
+ 
+
 @section Scripts
 {
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
