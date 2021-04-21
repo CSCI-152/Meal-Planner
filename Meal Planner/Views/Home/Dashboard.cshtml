@@ -18,10 +18,6 @@
             background-color: #abb4ee;
         }
 
-        .div-ex1 {
-            margin-bottom: 10%;
-        }
-
         .column {
             float: left;
             width: 33.33%;
@@ -35,72 +31,31 @@
         }
     </style>
 }
-<div class="ex1">
-    <div class="container-fluid">
-        <div class="p-3 mb-2">
-            <div class="container">
-                <div class="row border w-100 h-100" style="min-height: 500px">
-                    <div id="dash_breakfast" class="col border div-breakfast">
-                        <center><b>Breakfast</b></center>
-                    </div>
-                    <div id="dash_lunch" class="col border div-lunch">
-                        <center><b>Lunch</b></center>
-                    </div>
-                    <div id="dash_dinner" class="col border div-dinner">
-                        <center><b>Dinner</b></center>
-                    </div>
-                </div>
-            </div>
-            <br />
-        </div>
 
-        <br />
-
-<div class="row">
-    <div class="column">
-        <h4>Breakfast</h4>
-        <div class="card">
-        <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-            </div>
+<div class="container">
+    <div class="row border w-100 h-100" style="min-height: 500px">
+        <div id="dash_breakfast" class="col border div-breakfast">
+            <center><b>Breakfast</b></center>
+            <div id="breakfast"></div>
         </div>
-    </div>
-    <div class="column">
-        <h4>Lunch</h4>
-        <div class="card">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-            </div>
+        <div id="dash_lunch" class="col border div-lunch">
+            <center><b>Lunch</b></center>
+            <div id="lunch"></div>
         </div>
-    </div>
-    <div class="column">
-        <h4>Dinner</h4>
-        <div class="card">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-            </div>
+        <div id="dash_dinner" class="col border div-dinner">
+            <center><b>Dinner</b></center>
+            <div id="dinner"></div>
         </div>
     </div>
 </div>
 <br />
-<div id="chartContainer"></div>
-<br />
- 
+<div id="chartContainer" style="position: relative; left: 50px; height: 360px; width: 90%;"></div>
 
 @section Scripts
 {
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script type="text/javascript">
-        window.onload = function() {
+        $(document).ready(function () {
             var chart = new CanvasJS.Chart("chartContainer", {
                 // theme: "light2",
                 animationEnabled: true,
@@ -108,16 +63,54 @@
                     text: "Macro Distrubution"
                 },
                 /*subtitles: [
-        	        { text: "Try Resizing the Browser" }
+                    { text: "Try Resizing the Browser" }
                 ],*/
                 data: [{
                     type: "doughnut", //change type to bar, line, area, pie, etc
                     dataPoints: @Html.Raw(ViewData["datapoints"])
                 }]
+            }).render()
+           // $(".canvasjs-chart-canvas").removeAttr("style");
+        });
+        @if (ViewData.ContainsKey("Meals"))
+        {
+            @Html.Raw("var data = " + ViewData["Meals"] + ";");
+        }
+        if (data != null && data.items.length > 0) {
+            data.items.forEach(function (element) {
+                /*
+                 * response.baseUri;
+                 * response.totalResults
+                 * element
+                 * id
+                 * image
+                 * readyinminutes
+                 * servings
+                 * sourceurl
+                 * title
+                 */
+                console.log("Results: " + data.items.length);
+                console.log(data.items)
+                res = 
+                    '<div class="card-body" id="' + element.id + '">' +
+                '<h5 class="card-title"><a href="/recipe/details/' + element.value.id + '" target="_blank">' + element.value.title + '</a></h5>' +
+                '<h6 class="card-subtitle mb-2 text-muted">' + 'Servings: ' + element.value.servings + '</h6>' +
+                    '</div>';
+
+                //Append results to the card
+                $("#"+mealType(element.slot)).append(res);
             });
-            chart.render();
-        };
+        }
+        function mealType(id) {
+            let result = ({
+                1: 'breakfast',
+                2: 'lunch',
+                3: 'dinner'
+            })[id] ?? 'lunch'
+            return result;
+        }
     </script>
+
 }
 
 @* C# Commenting out

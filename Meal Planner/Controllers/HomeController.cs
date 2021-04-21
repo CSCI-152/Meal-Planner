@@ -123,6 +123,8 @@ namespace Meal_Planner.Controllers
                             dataPoints.Add(new DataPoint("Protein", (int)id.SelectToken("nutritionSummary")["nutrients"][3]["amount"]));
                             ViewData["Calories"] = (int)id.SelectToken("nutritionSummary")["nutrients"][0]["amount"];
                             ViewData["DataPoints"] = JsonConvert.SerializeObject(dataPoints);
+                            //Add the json to viewdata to handle inside the view
+                            ViewData["Meals"] = JsonConvert.SerializeObject(id);
                         }
                         else
                         {
