@@ -196,12 +196,14 @@
                 var button = $(event.relatedTarget);    // Button that triggered the modal
                 var id = button.data('id');             // Extract info from data-* attributes
                 var title = button.data('title');
+                var img = button.data('image');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
                 modal.find('.modal-title').text(title);
                 modal.find('#modal-recipe-id').val(id);
                 modal.find('#modal-recipe-title').val(title);
+                modal.find('#meal-image').val(img);
             });
             $('#addMealModal').on('hidden.bs.modal', function (event) {
                 // Destroy modal
@@ -231,6 +233,7 @@
                         'MealPlanAdd.Date': $('#MealPlanAdd_Date').val(),
                         'MealPlanAdd.Meal.Id': $('#modal-recipe-id').val(),
                         'MealPlanAdd.Meal.Title': $('#modal-recipe-title').val(),
+                        'MealPlanAdd.Meal.Image': $('#meal-image').val(),
                         '__RequestVerificationToken': $("input[name=__RequestVerificationToken]").val()
                     }, function (result) {
                         console.log(result);
@@ -373,7 +376,7 @@
                         + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a target='_blank' href=\"/recipe/details/"
                         + element.id
                         + "\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" data-toggle=\"modal\" data-target=\"#addMealModal\" data-id="
-                        + JSON.stringify(element.id) + " data-title=" + JSON.stringify(element.title)
+                        + JSON.stringify(element.id) + " data-title=" + JSON.stringify(element.title) + " data-image=" + element.image
                         + " + class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
                         + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
 
@@ -385,7 +388,7 @@
                             + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a target='_blank' href=\"/recipe/details/"
                             + element.id
                             + "\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" data-toggle=\"modal\" data-target=\"#addMealModal\" data-id="
-                            + JSON.stringify(element.id) + " data-title=" + JSON.stringify(element.title)
+                            + JSON.stringify(element.id) + " data-title=" + JSON.stringify(element.title) + " data-image=" + element.image
                             + " + class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
                             + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
                     }

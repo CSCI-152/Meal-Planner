@@ -122,6 +122,7 @@
                             //var add = '<li class="list-group-item">' + item.value.title + '</li>';
 
                             res = //'<div class="card mb-4 shadow-sm" style="width: 18rem;">' +
+                                '<img class="card-img-top" src="https://spoonacular.com/recipeImages/' + item.value.image + '" alt="' + item.value.title + '">' + 
                                 '<div class="card-body" id="' + item.id + '">' +
                                 '<h5 class="card-title"><a href="/recipe/details/' + item.value.id + '" target="_blank">' + item.value.title + '</a></h5>' +
                                 '<h6 class="card-subtitle mb-2 text-muted">' + 'Servings: ' + item.value.servings + '</h6>' +

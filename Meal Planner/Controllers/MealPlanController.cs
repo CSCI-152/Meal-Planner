@@ -132,7 +132,8 @@ namespace Meal_Planner.Controllers
                     {
                         title = Model.Meal.Title,
                         id = Model.Meal.Id,
-                        servings = Model.Meal.Servings
+                        servings = Model.Meal.Servings,
+                        image = Model.Meal.Image
                     })
                 });
                 ////////
