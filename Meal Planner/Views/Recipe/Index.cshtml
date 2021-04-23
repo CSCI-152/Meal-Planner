@@ -203,7 +203,7 @@
                 modal.find('.modal-title').text(title);
                 modal.find('#modal-recipe-id').val(id);
                 modal.find('#modal-recipe-title').val(title);
-                modal.find('#meal-image').val(img);
+                modal.find('#meal-image').val(cleanImageLink(img));
             });
             $('#addMealModal').on('hidden.bs.modal', function (event) {
                 // Destroy modal
@@ -244,6 +244,11 @@
                 }
             });
         });
+
+        function cleanImageLink(image_link) {
+            let array = image_link.split('/');
+            return array[array.length - 1];
+        }
 
         function searchRecipes() {//query=burger&diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C%20gluten&number=10&offset=0&type=main%20course
 

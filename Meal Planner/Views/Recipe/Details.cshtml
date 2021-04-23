@@ -173,7 +173,7 @@
                 modal.find('.modal-title').text(title);
                 modal.find('#modal-recipe-id').val(id);
                 modal.find('#modal-recipe-title').val(title);
-                modal.find('#meal-image').val(img);
+                modal.find('#meal-image').val(cleanImageLink(img));
             });
             $('#addMealModal').on('hidden.bs.modal', function (event) {
                 // Destroy modal
@@ -213,6 +213,11 @@
                     });
                 }
             });
+
+            function cleanImageLink(image_link) {
+                let array = image_link.split('/');
+                return array[array.length - 1];
+            }
 
             function GetNutritionVisual() {
                 const settings = {
