@@ -35,23 +35,27 @@
 }
 <section class="root jumbotron text-center">
     <div class="container">
-        <p class="lead text-muted">Todays date is @DateTime.Now.ToString("MM/dd/yyyy")</p>
+        <h1>Today's Meals</h1>
+        <p class="lead text-muted">@DateTime.Now.ToString("MM/dd/yyyy")</p>
+        <br/>
+        <div id="day_cals">Total Calories: </div>
+        <br/>
         <div class="row border w-100 h-100" style="min-height: 500px">
             <div id="dash_breakfast" class="col border div-breakfast">
                 <center><b>Breakfast</b></center>
+                <div id="break_cal">Calories: </div>
                 <div id="breakfast"></div>
             </div>
             <div id="dash_lunch" class="col border div-lunch">
                 <center><b>Lunch</b></center>
+                <div id="lunch_cal">Calories: </div>
                 <div id="lunch"></div>
             </div>
             <div id="dash_dinner" class="col border div-dinner">
                 <center><b>Dinner</b></center>
+                <div id="dindin_cal">Calories: </div>
                 <div id="dinner"></div>
             </div>
-        </div>
-        <div class="row border w-100 my-1 h-25" style="min-height: 50px">
-            <div id="macros"></div>
         </div>
     </div>
 </section>
@@ -77,7 +81,7 @@
                     ],*/
                     data: [{
                         type: "doughnut", //change type to bar, line, area, pie, etc
-                        dataPoints: @Html.Raw(ViewData["datapoints"])
+                        dataPoints: @Html.Raw(ViewData["datapoints"]),
                     }]
                 }).render()
                // $(".canvasjs-chart-canvas").removeAttr("style");
@@ -88,6 +92,13 @@
         }
         if (data != null && data.items.length > 0) {
             $("#macros").append('<span class="badge badge-secondary">SOON</span>');
+            $("#day_cals").append(data.nutritionSummary.nutrients[0].amount);
+
+            $("#break_cal").append(data.nutritionSummaryBreakfast.nutrients[0].amount);
+            $("#lunch_cal").append(data.nutritionSummaryLunch.nutrients[0].amount);
+            $("#dindin_cal").append(data.nutritionSummaryDinner.nutrients[0].amount);
+
+           // console.log(data);
 
             data.items.forEach(function (element) {
                 /*
