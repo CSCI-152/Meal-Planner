@@ -87,9 +87,10 @@
                     Advanced Search
                 </div>
                 <div class="card-body my-1">
-                    Filter calories: <b>0</b> <input id="cal-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="1500" data-slider-step="5" data-slider-value="[0,1000]" /> <b>1500 cals</b> <br />
-                    Filter fats: <b>0</b> <input id="fat-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,100]" /> <b>500g</b> <br />
-                    Filter protein: <b>0</b> <input id="pro-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,70]" /> <b>500g</b>
+                    Filter calories: <b>0</b> <input id="cal-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="1500" data-slider-step="5" data-slider-value="[0,1000]" /> <b>1500 cals</b> <br /><br />
+                    Filter fats: <b>0</b> <input id="fat-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,100]" /> <b>500g</b> <br /><br />
+                    Filter protein: <b>0</b> <input id="pro-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,70]" /> <b>500g</b> <br /><br />
+                    Filter carbs: <b>0</b> <input id="carb-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,70]" /> <b>500g</b>
                     <!--Missing slider for Carbs-->
                 </div>
             </div>
@@ -140,21 +141,39 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap-select.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
     <script lang="en" type="text/javascript">
-        var oldSearch;
         var reqLimit = @Model.Spoonacular.Key.RequestLimit;
         $(document).ready(function () {
             $('#intolerances').selectpicker();
             $('#search-btn').click(function () {
                 console.log("Limit: " + @Model.Spoonacular.Key.RequestLimit);
-                if (oldSearch != $("#search-recipes").val())
-                    searchRecipes();
-                oldSearch = $("#search-recipes").val();
+
+                // Change button html
+                $('#search-btn').html("Searching...");
+                $('#search-btn').prop('disabled', true);
+
+                //Search for meals
+                searchRecipes();
+
+                //Reset button if it fails
+                setTimeout(function () { //Just in case search fails
+                    $('#search-btn').html("Search");
+                    $('#search-btn').prop('disabled', false);
+                }, 3000);
             });
             $('#search-recipes').keypress((e) => {      // allows search to be initiated with the enter key
                 if (e.which === 13) { //13 is enter key
-                    if (oldSearch != $("#search-recipes").val())
-                        searchRecipes();
-                    oldSearch = $("#search-recipes").val();
+                    // Change button html
+                    $('#search-btn').html("Searching...");
+                    $('#search-btn').prop('disabled', true);
+
+                    //Search for meals
+                    searchRecipes();
+
+                    //Reset button if it fails
+                    setTimeout(function () { //Just in case search fails
+                        $('#search-btn').html("Search");
+                        $('#search-btn').prop('disabled', false);
+                    }, 3000);
                 }
             });
             $('#adv-search-btn').click(function () {
@@ -163,6 +182,7 @@
             $("#cal-slider").slider({});
             $("#fat-slider").slider({});
             $("#pro-slider").slider({});
+            $("#carb-slider").slider({});
             $("#personalPrefs").click(function () {
                 var diet = $('#diet-restrictions').val();
                 console.log("Current selected: " + diet);
@@ -190,7 +210,6 @@
             });
             $('#save-to-planner').click(function () {
                 var btn = $('#save-to-planner');
-
 
                 if ($('#MealPlanAdd_Date').val().length > 0) { //date is required
                     //Change button text
@@ -224,8 +243,6 @@
         });
 
         function searchRecipes() {//query=burger&diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C%20gluten&number=10&offset=0&type=main%20course
-            if (oldSearch == $("#search-recipes").val())
-                return;
 
             //Block sending more API requests
             if (reqLimit == 0) {
@@ -233,13 +250,20 @@
                 return;
             }
 
-            oldSearch = $("#search-recipes").val();
-            var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search';
+            var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search';             // takes 1 API request
+            var adv_url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch';  // takes 3 API requests 
+
+            let using_adv_search = $('#adv-search.hidden').length == 0;
+
             var paramUrl = new URL(url);
+
+            // FIXME: needs to be configured to support the extra data. Currently images do not show
+            var adv_paramUrl = new URL(adv_url);
             var restrictions = $("#diet-restrictions option:selected").text();
 
             if (restrictions != "Diet Restrictions") {
                 paramUrl.searchParams.set("diet", restrictions);
+                adv_paramUrl.searchParams.set("diet", restrictions);
             }
 
             var intolerances = $("#intolerances option:selected").map(function () {
@@ -247,11 +271,39 @@
             }).get().join(',');
             if (intolerances != "") {
                 paramUrl.searchParams.set("intolerances", intolerances);
+                adv_paramUrl.searchParams.set("intolerances", intolerances);
+            }
+
+            //ADVANSE HEATHEN SERCH
+            if (using_adv_search) {
+                console.log("NOT HIDDEN");
+
+                // min vals are at index 0, max vals at index 1
+                let calories = $('#cal-slider').data('slider').getValue();
+                let fats = $('#fat-slider').data('slider').getValue();
+                let protein = $('#pro-slider').data('slider').getValue();
+                let carbs = $('#carb-slider').data('slider').getValue();
+
+                adv_paramUrl.searchParams.set("minCalories", calories[0]);
+                adv_paramUrl.searchParams.set("maxCalories", calories[1]);
+
+                adv_paramUrl.searchParams.set("minFat", fats[0]);
+                adv_paramUrl.searchParams.set("maxFat", fats[1]);
+
+                adv_paramUrl.searchParams.set("minProtein", protein[0]);
+                adv_paramUrl.searchParams.set("maxProtein", protein[1]);
+
+                adv_paramUrl.searchParams.set("minCarbs", carbs[0]);
+                adv_paramUrl.searchParams.set("maxCarbs", carbs[1]);
+
+                // minCalories, maxCalories, minFat, maxFat, minProtein, maxProtein << all params accepted by api
             }
 
             //testing
             paramUrl.searchParams.set("addRecipeInformation", true);
+            adv_paramUrl.searchParams.set("addRecipeInformation", true);
             paramUrl.searchParams.set("addRecipeNutrition", true);
+            adv_paramUrl.searchParams.set("addRecipeNutrition", true);
 
             var queryString = $("#search-recipes").val();
             //var params = { 'query': queryString, 'diet': restrictions, 'intolerances': intolerances };
@@ -259,11 +311,12 @@
 
             //var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search?' + jQuery.param(params);
             paramUrl.searchParams.set("query", queryString);//Add query string
+            adv_paramUrl.searchParams.set("query", queryString);
             console.log("URL: " + paramUrl);
             const settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": paramUrl,
+                "url": using_adv_search ? adv_paramUrl : paramUrl,
                 "method": "GET",
                 "headers": {
                     "@Model.Spoonacular.Key.KeyHeader": "@Model.Spoonacular.Key.ApiKey",
@@ -285,6 +338,10 @@
                     "\nAPI Result limit: \t" + xhr.getResponseHeader('x-ratelimit-results-remaining') + "/" + xhr.getResponseHeader('X-RateLimit-results-Limit'));
                 //Send API header to API
                 $.post("/Recipe/UpdateApi", { RequestLimit: reqLimit }, function (result) { console.log(result) });
+
+                //Reset buttons back to stonk
+                $('#search-btn').html("Search");
+                $('#search-btn').prop('disabled', false);
 
                 //Remove the loading html
                 $("#search-results").empty();
@@ -311,9 +368,7 @@
                     console.log("Results: " + response.totalResults);
                     results = "<div class=\"col-md-4\"> <div class=\"card mb-4 shadow-sm\"> <img class=\"card-img-top\" src="
                         + response.baseUri + element.image + " alt=" + element.title
-                        + "> <div class=\"card-img-overlay\"> <h5 class=\"card-title\">"
-                        + element.readyInMinutes
-                        + "</h5> <p class=\"card-text align-content-end\">Quick Add</p> </div> <div class=\"card-body\"> <p class=\"card-text\">"
+                        + "> <div class=\"card-body\"> <p class=\"card-text\">"
                         + element.title
                         + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a target='_blank' href=\"/recipe/details/"
                         + element.id
@@ -321,6 +376,19 @@
                         + JSON.stringify(element.id) + " data-title=" + JSON.stringify(element.title)
                         + " + class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
                         + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
+
+                    if (using_adv_search) {
+                        results = "<div class=\"col-md-4\"> <div class=\"card mb-4 shadow-sm\"> <img class=\"card-img-top\" src="
+                            + element.image + " alt=" + element.title
+                            + "> <div class=\"card-body\"> <p class=\"card-text\">"
+                            + element.title
+                            + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a target='_blank' href=\"/recipe/details/"
+                            + element.id
+                            + "\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" data-toggle=\"modal\" data-target=\"#addMealModal\" data-id="
+                            + JSON.stringify(element.id) + " data-title=" + JSON.stringify(element.title)
+                            + " + class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
+                            + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
+                    }
                     //Insert to page HTML
                     searchResult.insertAdjacentHTML('beforeend', results);
                 });
