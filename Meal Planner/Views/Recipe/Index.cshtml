@@ -243,8 +243,6 @@
         });
 
         function searchRecipes() {//query=burger&diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C%20gluten&number=10&offset=0&type=main%20course
-            //if (oldSearch == $("#search-recipes").val())
-                //return;
 
             //Block sending more API requests
             if (reqLimit == 0) {
@@ -255,8 +253,9 @@
             var url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search';             // takes 1 API request
             var adv_url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch';  // takes 3 API requests 
 
-            // currently set to adv_url for testing, should be set to the normal url 
-            var paramUrl = new URL(adv_url);
+            let using_adv_search = $('#adv-search.hidden').length == 0;
+
+            var paramUrl = new URL(url);
 
             // FIXME: needs to be configured to support the extra data. Currently images do not show
             var adv_paramUrl = new URL(adv_url);
@@ -276,7 +275,7 @@
             }
 
             //ADVANSE HEATHEN SERCH
-            if ($('#adv-search.hidden').length == 0) {
+            if (using_adv_search) {
                 console.log("NOT HIDDEN");
 
                 // min vals are at index 0, max vals at index 1
@@ -285,17 +284,17 @@
                 let protein = $('#pro-slider').data('slider').getValue();
                 let carbs = $('#carb-slider').data('slider').getValue();
 
-                paramUrl.searchParams.set("minCalories", calories[0]);
-                paramUrl.searchParams.set("maxCalories", calories[1]);
+                adv_paramUrl.searchParams.set("minCalories", calories[0]);
+                adv_paramUrl.searchParams.set("maxCalories", calories[1]);
 
-                paramUrl.searchParams.set("minFat", fats[0]);
-                paramUrl.searchParams.set("maxFat", fats[1]);
+                adv_paramUrl.searchParams.set("minFat", fats[0]);
+                adv_paramUrl.searchParams.set("maxFat", fats[1]);
 
-                paramUrl.searchParams.set("minProtein", protein[0]);
-                paramUrl.searchParams.set("maxProtein", protein[1]);
+                adv_paramUrl.searchParams.set("minProtein", protein[0]);
+                adv_paramUrl.searchParams.set("maxProtein", protein[1]);
 
-                paramUrl.searchParams.set("minCarbs", carbs[0]);
-                paramUrl.searchParams.set("maxCarbs", carbs[1]);
+                adv_paramUrl.searchParams.set("minCarbs", carbs[0]);
+                adv_paramUrl.searchParams.set("maxCarbs", carbs[1]);
 
                 // minCalories, maxCalories, minFat, maxFat, minProtein, maxProtein << all params accepted by api
             }
@@ -317,7 +316,7 @@
             const settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": paramUrl,
+                "url": using_adv_search ? adv_paramUrl : paramUrl,
                 "method": "GET",
                 "headers": {
                     "@Model.Spoonacular.Key.KeyHeader": "@Model.Spoonacular.Key.ApiKey",
@@ -369,9 +368,7 @@
                     console.log("Results: " + response.totalResults);
                     results = "<div class=\"col-md-4\"> <div class=\"card mb-4 shadow-sm\"> <img class=\"card-img-top\" src="
                         + response.baseUri + element.image + " alt=" + element.title
-                        + "> <div class=\"card-img-overlay\"> <h5 class=\"card-title\">"
-                        + element.readyInMinutes
-                        + "</h5> <p class=\"card-text align-content-end\">Quick Add</p> </div> <div class=\"card-body\"> <p class=\"card-text\">"
+                        + "> <div class=\"card-body\"> <p class=\"card-text\">"
                         + element.title
                         + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a target='_blank' href=\"/recipe/details/"
                         + element.id
@@ -379,6 +376,19 @@
                         + JSON.stringify(element.id) + " data-title=" + JSON.stringify(element.title)
                         + " + class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
                         + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
+
+                    if (using_adv_search) {
+                        results = "<div class=\"col-md-4\"> <div class=\"card mb-4 shadow-sm\"> <img class=\"card-img-top\" src="
+                            + element.image + " alt=" + element.title
+                            + "> <div class=\"card-body\"> <p class=\"card-text\">"
+                            + element.title
+                            + "</p> <div class=\"d-flex justify-content-between align-items-center\"> <div class=\"btn-group\"> <a target='_blank' href=\"/recipe/details/"
+                            + element.id
+                            + "\" class=\"btn btn-sm btn-outline-primary\">View</a> <button type=\"button\" data-toggle=\"modal\" data-target=\"#addMealModal\" data-id="
+                            + JSON.stringify(element.id) + " data-title=" + JSON.stringify(element.title)
+                            + " + class=\"btn btn-sm btn-outline-success\">Quick add</button> </div> <small class=\"text-muted\">Ready in "
+                            + element.readyInMinutes + " mins</small> </div> </div> </div> </div>";
+                    }
                     //Insert to page HTML
                     searchResult.insertAdjacentHTML('beforeend', results);
                 });
