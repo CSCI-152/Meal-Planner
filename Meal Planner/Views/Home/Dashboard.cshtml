@@ -62,25 +62,28 @@
 {
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
-            var chart = new CanvasJS.Chart("chartContainer", {
-                // theme: "light2",
-                animationEnabled: true,
-                title: {
-                    text: "Macro Distrubution"
-                },
-                /*subtitles: [
-                    { text: "Try Resizing the Browser" }
-                ],*/
-                data: [{
-                    type: "doughnut", //change type to bar, line, area, pie, etc
-                    dataPoints: @Html.Raw(ViewData["datapoints"])
-                }]
-            }).render()
-           // $(".canvasjs-chart-canvas").removeAttr("style");
-        });
         @if (ViewData.ContainsKey("Meals"))
         {
+         <text>
+            $(document).ready(function () {
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    // theme: "light2",
+                    animationEnabled: true,
+                    title: {
+                        text: "Macro Distrubution"
+                    },
+                    /*subtitles: [
+                        { text: "Try Resizing the Browser" }
+                    ],*/
+                    data: [{
+                        type: "doughnut", //change type to bar, line, area, pie, etc
+                        dataPoints: @Html.Raw(ViewData["datapoints"])
+                    }]
+                }).render()
+               // $(".canvasjs-chart-canvas").removeAttr("style");
+            });
+         </text>
+
             @Html.Raw("var data = " + ViewData["Meals"] + ";");
         }
         if (data != null && data.items.length > 0) {

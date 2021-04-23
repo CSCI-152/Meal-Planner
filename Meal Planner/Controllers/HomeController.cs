@@ -130,9 +130,9 @@ namespace Meal_Planner.Controllers
                         {
                             List<DataPoint> dataPoints = new List<DataPoint>();
 
-                            dataPoints.Add(new DataPoint("Carbohydrates", 1));    // controller will need to get actual values to fill in for constants
-                            dataPoints.Add(new DataPoint("Fats", 1));
-                            dataPoints.Add(new DataPoint("Protein", 1));
+                            dataPoints.Add(new DataPoint("Carbohydrates", 0));    // controller will need to get actual values to fill in for constants
+                            dataPoints.Add(new DataPoint("Fats", 0));
+                            dataPoints.Add(new DataPoint("Protein", 0));
                             ViewData["DataPoints"] = JsonConvert.SerializeObject(dataPoints);
                         }
                     }
