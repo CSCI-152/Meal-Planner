@@ -71,8 +71,10 @@
                 method: 'delete',
                 success: function (result) {
                     console.log(JSON.stringify(result));
-                    var element = $('#delete-recipe-' + id).parent();
-                    element.remove('.card-body');
+                    var del = $('#meal-' + id);
+                    del.remove();
+                    //var element = $('#delete-recipe-' + id).parent();
+                    //element.remove('.card-body');
                 }
             });
         }
@@ -122,13 +124,14 @@
                             //var add = '<li class="list-group-item">' + item.value.title + '</li>';
 
                             res = //'<div class="card mb-4 shadow-sm" style="width: 18rem;">' +
-                                '<img class="card-img-top" src="https://spoonacular.com/recipeImages/' + item.value.image + '" alt="' + item.value.title + '">' + 
-                                '<div class="card-body" id="' + item.id + '">' +
+                                '<div id="meal-' + item.id + '"><img class="card-img-top" src="https://spoonacular.com/recipeImages/' + item.value.image + '" alt="' + item.value.title + '">' + 
+                                //'<div class="card-body" id="' + item.id + '">' +
+                                '<div class="card-body">' +
                                 '<h5 class="card-title"><a href="/recipe/details/' + item.value.id + '" target="_blank">' + item.value.title + '</a></h5>' +
                                 '<h6 class="card-subtitle mb-2 text-muted">' + 'Servings: ' + item.value.servings + '</h6>' +
                                 '<p class="card-text">' + mealType(item.slot) + '</p>' +
                                // '</div>' +
-                                '<button class="btn btn-outline-danger btn-sm" id="delete-recipe-' + item.id + '" onclick="deleteMeal(' + item.id + ')">Delete</button></div>';
+                                '<button class="btn btn-outline-danger btn-sm" id="delete-recipe-' + item.id + '" onclick="deleteMeal(' + item.id + ')">Delete</button></div></div>';
 
                             //Append results to the card
                             $("#d" + day.day).append(res);
