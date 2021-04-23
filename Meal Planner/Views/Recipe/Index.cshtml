@@ -87,9 +87,10 @@
                     Advanced Search
                 </div>
                 <div class="card-body my-1">
-                    Filter calories: <b>0</b> <input id="cal-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="1500" data-slider-step="5" data-slider-value="[0,1000]" /> <b>1500 cals</b> <br />
-                    Filter fats: <b>0</b> <input id="fat-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,100]" /> <b>500g</b> <br />
-                    Filter protein: <b>0</b> <input id="pro-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,70]" /> <b>500g</b>
+                    Filter calories: <b>0</b> <input id="cal-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="1500" data-slider-step="5" data-slider-value="[0,1000]" /> <b>1500 cals</b> <br /><br />
+                    Filter fats: <b>0</b> <input id="fat-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,100]" /> <b>500g</b> <br /><br />
+                    Filter protein: <b>0</b> <input id="pro-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,70]" /> <b>500g</b> <br/><br />
+                    Filter carbs: <b>0</b> <input id="carb-slider" type="text" class="form-control span2" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[20,70]" /> <b>500g</b>
                     <!--Missing slider for Carbs-->
                 </div>
             </div>
@@ -163,6 +164,7 @@
             $("#cal-slider").slider({});
             $("#fat-slider").slider({});
             $("#pro-slider").slider({});
+            $("#carb-slider").slider({});
             $("#personalPrefs").click(function () {
                 var diet = $('#diet-restrictions').val();
                 console.log("Current selected: " + diet);
@@ -247,6 +249,15 @@
             }).get().join(',');
             if (intolerances != "") {
                 paramUrl.searchParams.set("intolerances", intolerances);
+            }
+
+            if ($('#adv-search.hidden').length == 0) {
+
+                // min vals are at index 0, max vals at index 1
+                let calories = $('#cal-slider').data('slider').getValue();
+                let fats = $('#fat-slider').data('slider').getValue();
+                let protein = $('#pro-slider').data('slider').getValue();
+                let carbs = $('#carb-slider').data('slider').getValue();
             }
 
             //testing
