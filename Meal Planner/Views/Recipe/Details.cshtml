@@ -166,12 +166,14 @@
             $('#addMealModal').on('show.bs.modal', function () {
                 var id = @Model.Recipe.Id;
                 var title = "@Model.Recipe.Title";
+                var img = "@Model.Recipe.Image";
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
                 modal.find('.modal-title').text(title);
                 modal.find('#modal-recipe-id').val(id);
                 modal.find('#modal-recipe-title').val(title);
+                modal.find('#meal-image').val(img);
             });
             $('#addMealModal').on('hidden.bs.modal', function (event) {
                 // Destroy modal
@@ -180,7 +182,6 @@
             });
             $('#save-to-planner').click(function () {
                 var btn = $('#save-to-planner');
-
 
                 if ($('#MealPlanAdd_Date').val().length > 0) { //date is required
                     //Change button text
@@ -202,6 +203,7 @@
                         'MealPlanAdd.Date': $('#MealPlanAdd_Date').val(),
                         'MealPlanAdd.Meal.Id': $('#modal-recipe-id').val(),
                         'MealPlanAdd.Meal.Title': $('#modal-recipe-title').val(),
+                        'MealPlanAdd.Meal.Image': $('#meal-image').val(),
                         '__RequestVerificationToken': $("input[name=__RequestVerificationToken]").val()
                     }, function (result) {
                         console.log(result);
