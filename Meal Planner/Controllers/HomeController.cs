@@ -34,7 +34,7 @@ namespace Meal_Planner.Controllers
             return View();
         }
 
-        [Route("Diet-Info")]
+        [Route("About")]
         [AllowAnonymous]
         public IActionResult DietInfo()
         {
