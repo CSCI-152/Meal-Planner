@@ -7,7 +7,7 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Dashboard">Dashboard (test)</a>
+        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
     </li>
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="" asp-controller="Diet" asp-action="DietSelect">Select Diet</a>
@@ -17,11 +17,5 @@
     </li>
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="" asp-controller="MealPlan" asp-action="Index">Meal Planner</a>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Dashboard">Not Logged Test</a>
     </li>
 }
