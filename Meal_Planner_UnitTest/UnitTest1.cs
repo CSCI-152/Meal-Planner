@@ -5,13 +5,12 @@ using Meal_Planner.Models;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System;
-using Xunit;
 
 namespace Meal_Planner_UnitTest
 {
     public class Tests
     {
-        [Fact]
+        [Test]
         public void PieChartTest()
         {
             // Arrange
