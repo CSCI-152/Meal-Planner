@@ -92,5 +92,18 @@ namespace Unit_Testing
             Assert.AreSame(model.GetType(), repo.GetType());
             Assert.AreNotEqual(new MealPlanAddModel(), mockNew.GetRecipes());
         }
+
+        [Test]
+        public void RecipeDetails_Test()
+        {
+            // Arrange
+            DietController controller = new(_context);
+
+            // Act
+            var result = controller.DietSelectAsync();
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
     }
 }
