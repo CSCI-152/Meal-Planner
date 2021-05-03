@@ -2,23 +2,52 @@ using Meal_Planner.Controllers;
 using Meal_Planner.Data;
 using Meal_Planner.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System;
+using System.Threading.Tasks;
 
 namespace Unit_Testing
 {
-    public class Tests
+    public class Tests : Controller
     {
+        private ApplicationDbContext _context;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var contextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlServer(@"Server=(localdb)\\mssqllocaldb;Database=Meal_Planner-0B3A25A99;Trusted_Connection=True;MultipleActiveResultSets=true")
+            .Options;
+
+            _context = new ApplicationDbContext(contextOptions);
+        }
+
         [Test]
         public void PieChartTest_NotNull()
         {
             // Arrange
             PieChartController controller = new();
+
             // Act
             ViewResult result = controller.Dashboard() as ViewResult;
+
             // Assert
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.ViewData["DataPoints"]); //Check if ViewData is set as well
+        }
+
+        [Test]
+        public void MealPlanIndex_NotNull()
+        {
+            // Arrange
+            MealPlanController controller = new(_context);
+
+            // Act
+            var result = controller.IndexAsync(); 
+
+            // Assert
+            Assert.IsNotNull(result);
         }
 
         [Test]
