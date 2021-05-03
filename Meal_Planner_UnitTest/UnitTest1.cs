@@ -1,27 +1,45 @@
-using NUnit.Framework;
 using Meal_Planner;
+using Meal_Planner.Controllers;
+using Meal_Planner.Data;
+using Meal_Planner.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using System;
+using Xunit;
 
 namespace Meal_Planner_UnitTest
 {
     public class Tests
     {
-        private const string Expected = "Hello World!";
-
-        [SetUp]
-        public void Setup()
+        [TestClass]
+        public class HomeControllerTest
         {
-        }
-        [Test]
-        public void TestMethod1()
-        {
-            using (var sw = new StringWriter())
+            [TestMethod]
+            public void Index()
             {
-                Console.SetOut(sw);
-                HelloWorldCore.Program.Main();
-
-                var result = sw.ToString().Trim();
-                Assert.AreEqual(Expected, result);
+                // Arrange
+                PieChartController controller = new PieChartController();
+                // Act
+                ViewResult result = controller.Dashboard() as ViewResult;
+                // Assert
+                NUnit.Framework.Assert.IsNotNull(result);
             }
+        }
+
+        [Fact]
+        public void ModelTest()
+        {
+            MockMealPlanList mockNew = new();
+            try
+            {
+                NUnit.Framework.Assert.AreSame(new MealPlanUser(), mockNew.TestUser().GetType());
+            }
+            catch (AssertionException e)
+            {
+                Console.WriteLine(e);
+            }
+            NUnit.Framework.Assert.AreNotEqual(new MealPlanUser(), mockNew.TestUser().GetType());
         }
     }
 }
