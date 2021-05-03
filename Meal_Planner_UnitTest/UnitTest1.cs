@@ -14,6 +14,14 @@ namespace Meal_Planner_UnitTest
         [Test]
         public void TestMethod1()
         {
+            using (var sw = new StringWriter())
+            {
+                Console.SetOut(sw);
+                HelloWorldCore.Program.Main();
+
+                var result = sw.ToString().Trim();
+                Assert.AreEqual(Expected, result);
+            }
         }
     }
 }
