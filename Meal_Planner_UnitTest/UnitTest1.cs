@@ -18,23 +18,13 @@ namespace Meal_Planner_UnitTest
             // Act
             ViewResult result = controller.Dashboard() as ViewResult;
             // Assert
-            Assert.IsNotNull(result); //Compare to object type in controller
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.ViewData["DataPoints"]); //Check if ViewData is set as well
         }
 
         [Test]
-        public void ModelTest()
+        public void BaseTest()
         {
-            MockMealPlanList mockNew = new();
-            try
-            {
-                Assert.AreSame(new MealPlanUser().GetType(), mockNew.TestUser().GetType());
-            }
-            catch (AssertionException e)
-            {
-                Console.WriteLine(e);
-            }
-            Assert.AreNotEqual(new MealPlanUser(), mockNew.TestUser());
-
             try
             {
                 Assert.AreEqual(10, 10, 0.001, "WOT THE FOK OVER");
@@ -43,6 +33,21 @@ namespace Meal_Planner_UnitTest
             {
                 Console.WriteLine("ERRRRR" + e.Message);
             }
+        }
+
+        [Test]
+        public void ModelTest()
+        {
+            // Arrange
+            MockMealPlanList mockNew = new();
+            MealPlanUser model = new();
+
+            // Act
+            MealPlanUser repo = mockNew.TestUser();
+
+            // Assert
+            Assert.AreSame(model.GetType(), repo.GetType());
+            // Assert.AreNotEqual(new MealPlanUser(), mockNew.TestUser());
         }
     }
 }
