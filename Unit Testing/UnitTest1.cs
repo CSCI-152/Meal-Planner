@@ -1,4 +1,3 @@
-using Meal_Planner;
 using Meal_Planner.Controllers;
 using Meal_Planner.Data;
 using Meal_Planner.Models;
@@ -6,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System;
 
-namespace Meal_Planner_UnitTest
+namespace Unit_Testing
 {
     public class Tests
     {
@@ -47,7 +46,7 @@ namespace Meal_Planner_UnitTest
 
             // Assert
             Assert.AreSame(model.GetType(), repo.GetType());
-            // Assert.AreNotEqual(new MealPlanUser(), mockNew.TestUser());
+            Assert.AreNotEqual(new MealPlanUser(), mockNew.TestUser());
         }
     }
 }
