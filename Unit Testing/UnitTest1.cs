@@ -10,7 +10,7 @@ namespace Unit_Testing
     public class Tests
     {
         [Test]
-        public void PieChartTest()
+        public void PieChartTest_NotNull()
         {
             // Arrange
             PieChartController controller = new();
@@ -22,11 +22,11 @@ namespace Unit_Testing
         }
 
         [Test]
-        public void BaseTest()
+        public void BaseTest_AlwaysEqual()
         {
             try
             {
-                Assert.AreEqual(10, 10, 0.001, "WOT THE FOK OVER");
+                Assert.AreEqual(10, 10, 0.001, "This should always work");
             }
             catch (AssertionException e)
             {
@@ -35,7 +35,7 @@ namespace Unit_Testing
         }
 
         [Test]
-        public void ModelTest()
+        public void MealPlanUser_ValidModel()
         {
             // Arrange
             MockMealPlanList mockNew = new();
@@ -47,6 +47,21 @@ namespace Unit_Testing
             // Assert
             Assert.AreSame(model.GetType(), repo.GetType());
             Assert.AreNotEqual(new MealPlanUser(), mockNew.TestUser());
+        }
+
+        [Test]
+        public void MealPlanAddModel_ValidModel()
+        {
+            // Arrange
+            MockMealPlanList mockNew = new();
+            MealPlanAddModel model = new();
+
+            // Act
+            MealPlanAddModel repo = mockNew.GetRecipes();
+
+            // Assert
+            Assert.AreSame(model.GetType(), repo.GetType());
+            Assert.AreNotEqual(new MealPlanAddModel(), mockNew.GetRecipes());
         }
     }
 }
