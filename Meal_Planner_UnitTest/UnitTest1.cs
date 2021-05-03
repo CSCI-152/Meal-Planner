@@ -3,7 +3,6 @@ using Meal_Planner.Controllers;
 using Meal_Planner.Data;
 using Meal_Planner.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using System;
 using Xunit;
@@ -12,34 +11,39 @@ namespace Meal_Planner_UnitTest
 {
     public class Tests
     {
-        [TestClass]
-        public class HomeControllerTest
+        [Fact]
+        public void PieChartTest()
         {
-            [TestMethod]
-            public void Index()
-            {
-                // Arrange
-                PieChartController controller = new PieChartController();
-                // Act
-                ViewResult result = controller.Dashboard() as ViewResult;
-                // Assert
-                NUnit.Framework.Assert.IsNotNull(result);
-            }
+            // Arrange
+            PieChartController controller = new();
+            // Act
+            ViewResult result = controller.Dashboard() as ViewResult;
+            // Assert
+            Assert.IsNotNull(result); //Compare to object type in controller
         }
 
-        [Fact]
+        [Test]
         public void ModelTest()
         {
             MockMealPlanList mockNew = new();
             try
             {
-                NUnit.Framework.Assert.AreSame(new MealPlanUser(), mockNew.TestUser().GetType());
+                Assert.AreSame(new MealPlanUser().GetType(), mockNew.TestUser().GetType());
             }
             catch (AssertionException e)
             {
                 Console.WriteLine(e);
             }
-            NUnit.Framework.Assert.AreNotEqual(new MealPlanUser(), mockNew.TestUser().GetType());
+            Assert.AreNotEqual(new MealPlanUser(), mockNew.TestUser());
+
+            try
+            {
+                Assert.AreEqual(10, 10, 0.001, "WOT THE FOK OVER");
+            }
+            catch (AssertionException e)
+            {
+                Console.WriteLine("ERRRRR" + e.Message);
+            }
         }
     }
 }
