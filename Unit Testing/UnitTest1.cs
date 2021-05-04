@@ -94,13 +94,26 @@ namespace Unit_Testing
         }
 
         [Test]
-        public void RecipeDetails_Test()
+        public void RecipeController_Test1()
         {
             // Arrange
             DietController controller = new(_context);
 
             // Act
             var result = controller.DietSelectAsync();
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public void MealPlan_Test1()
+        {
+            // Arrange
+            MealPlanController controller = new(_context);
+
+            // Act
+            var result = controller.IndexAsync();
 
             // Assert
             Assert.IsNotNull(result);
