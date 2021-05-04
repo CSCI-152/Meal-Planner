@@ -13,18 +13,23 @@ namespace Unit_Testing
     {
         private ApplicationDbContext _context;
 
+        /**
+         * Setup is called before each test is run
+         */
         [SetUp]
         public void SetUp()
         {
+            //Setup a direct connection to the database for controller test methods
             var contextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseSqlServer(@"Server=(localdb)\\mssqllocaldb;Database=Meal_Planner-0B3A25A99;Trusted_Connection=True;MultipleActiveResultSets=true")
             .Options;
 
+            // DBContext is used inside of the controllers constructors
             _context = new ApplicationDbContext(contextOptions);
         }
 
         [Test]
-        public void PieChartTest_NotNull()
+        public void PieChartController_Dashboard_NotNull()
         {
             // Arrange
             PieChartController controller = new();
@@ -38,7 +43,7 @@ namespace Unit_Testing
         }
 
         [Test]
-        public void MealPlanIndex_NotNull()
+        public void MealPlanController_Index_NotNull()
         {
             // Arrange
             MealPlanController controller = new(_context);
@@ -53,6 +58,8 @@ namespace Unit_Testing
         [Test]
         public void BaseTest_AlwaysEqual()
         {
+            // This test should always pass
+            // The case is also an example on how to use exception handling for test cases
             try
             {
                 Assert.AreEqual(10, 10, 0.001, "This should always work");
@@ -64,7 +71,7 @@ namespace Unit_Testing
         }
 
         [Test]
-        public void MealPlanUser_ValidModel()
+        public void MealPlanUser_ValidateModel()
         {
             // Arrange
             MockMealPlanList mockNew = new();
@@ -79,7 +86,7 @@ namespace Unit_Testing
         }
 
         [Test]
-        public void MealPlanAddModel_ValidModel()
+        public void MealPlanAddModel_ValidateModel()
         {
             // Arrange
             MockMealPlanList mockNew = new();
@@ -90,11 +97,11 @@ namespace Unit_Testing
 
             // Assert
             Assert.AreSame(model.GetType(), repo.GetType());
-            Assert.AreNotEqual(new MealPlanAddModel(), mockNew.GetRecipes());
+            Assert.AreNotEqual(model, mockNew.GetRecipes());
         }
 
         [Test]
-        public void RecipeController_Test1()
+        public void RecipeController_SelectAsync_NotNull()
         {
             // Arrange
             DietController controller = new(_context);
@@ -107,7 +114,7 @@ namespace Unit_Testing
         }
 
         [Test]
-        public void MealPlan_Test1()
+        public void MealPlanController_IndexAsync_NotNull()
         {
             // Arrange
             MealPlanController controller = new(_context);
